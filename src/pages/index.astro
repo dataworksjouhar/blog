@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const recent = posts.slice(0, 6);
+---
+<BaseLayout title="Mohammed Jouhar — Notes on data, AI, and learning">
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">A digital notebook</div>
+      <h1>Notes on data, AI,<br />and the things <em>I'm learning</em>.</h1>
+      <p class="tagline">
+        I'm Mohammed Jouhar, a Business Data Analyst. This is where I share my
+        learning notes, the projects I build, and the occasional lesson from
+        work and life.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Latest posts</h2>
+        <span class="meta">most recent first</span>
+      </div>
+      {recent.length > 0 ? (
+        <div class="card-grid">
+          {recent.map((post) => <PostCard post={post} />)}
+        </div>
+      ) : (
+        <div class="empty">
+          <p><strong>Nothing here yet.</strong></p>
+          <p>The first posts are on their way.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.category === 'reflections')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<BaseLayout title="Reflections — Mohammed Jouhar" description="Personal reflections — lessons from work and life, books, discipline, and everyday learning.">
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Reflections</div>
+      <div class="section-head">
+        <h2>Lessons from work &amp; life</h2>
+      </div>
+      <p class="page-intro">
+        The human side of the notebook — reflections, books, and lessons learned
+        along the way.
+      </p>
+      {posts.length > 0 ? (
+        <div class="card-grid">
+          {posts.map((post) => <PostCard post={post} />)}
+        </div>
+      ) : (
+        <div class="empty"><p><strong>Nothing here yet.</strong></p><p>Some thoughts are coming.</p></div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

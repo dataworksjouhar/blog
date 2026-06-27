@@ -1,0 +1,43 @@
+---
+interface Props {
+  post: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      date: Date;
+      level?: 'beginner' | 'intermediate' | 'advanced';
+      tags: string[];
+      featured: boolean;
+      external?: string;
+    };
+  };
+}
+const { post } = Astro.props;
+const { title, description, date, level, featured, external } = post.data;
+const href = external ?? `/posts/${post.id}`;
+const fmtDate = date.toLocaleDateString('en-GB', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+const isExternal = Boolean(external);
+---
+<article class="post-card">
+  <div class="badges">
+    {featured && <span class="badge featured">Featured</span>}
+    {level && <span class={`badge level-${level}`}>{level}</span>}
+  </div>
+  <a
+    class="card-link"
+    href={href}
+    {...(isExternal ? { target: '_self' } : {})}
+  >
+    <h3>{title}</h3>
+  </a>
+  <p class="excerpt">{description}</p>
+  <div class="card-meta">
+    <span>{fmtDate}</span>
+    {isExternal && <span>· full guide</span>}
+  </div>
+</article>

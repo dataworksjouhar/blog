@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.category === 'notes')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<BaseLayout title="Notes — Mohammed Jouhar" description="Learning notes from books, courses and certifications — data, AI, Power BI, SQL and Python.">
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Notes</div>
+      <div class="section-head">
+        <h2>Notes from books, courses &amp; certifications</h2>
+      </div>
+      <p class="page-intro">
+        Notes I take while learning, written so they're easy to follow. Look for
+        the difficulty badge on each post — beginner, intermediate, or advanced.
+      </p>
+      {posts.length > 0 ? (
+        <div class="card-grid">
+          {posts.map((post) => <PostCard post={post} />)}
+        </div>
+      ) : (
+        <div class="empty"><p><strong>No notes yet.</strong></p><p>First one coming soon.</p></div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
