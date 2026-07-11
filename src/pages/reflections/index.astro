@@ -7,7 +7,7 @@ const posts = (await getCollection('posts'))
   .filter((p) => p.data.category === 'reflections')
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
-<BaseLayout title="Reflections — Mohammed Jouhar" description="Personal reflections — lessons from work and life, books, discipline, and everyday learning.">
+<BaseLayout title="Reflections · Mohammed Jouhar" description="Personal reflections: lessons from work and life, books, discipline, and everyday learning.">
   <section class="section">
     <div class="wrap">
       <div class="eyebrow">Reflections</div>
@@ -15,7 +15,7 @@ const posts = (await getCollection('posts'))
         <h2>Lessons from work &amp; life</h2>
       </div>
       <p class="page-intro">
-        The human side of the notebook — reflections, books, and lessons learned
+        The human side of the notebook: reflections, books, and lessons learned
         along the way.
       </p>
       {posts.length > 0 ? (
