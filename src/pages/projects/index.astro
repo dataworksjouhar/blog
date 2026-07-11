@@ -7,7 +7,7 @@ const posts = (await getCollection('posts'))
   .filter((p) => p.data.category === 'projects')
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
-<BaseLayout title="Projects — Mohammed Jouhar" description="Projects I'm building — Power BI dashboards, Python automation, analytics and more. Documented as I go.">
+<BaseLayout title="Projects · Mohammed Jouhar" description="Projects I'm building: Power BI dashboards, Python automation, analytics and more. Documented as I go.">
   <section class="section">
     <div class="wrap">
       <div class="eyebrow">Projects</div>
@@ -15,7 +15,7 @@ const posts = (await getCollection('posts'))
         <h2>Things I'm building</h2>
       </div>
       <p class="page-intro">
-        Projects I document as I work on them — Power BI, Python, automation, and
+        Projects I document as I work on them: Power BI, Python, automation, and
         analytics. These double as my portfolio.
       </p>
       {posts.length > 0 ? (
