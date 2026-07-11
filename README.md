@@ -1,4 +1,4 @@
-# Mohammed Jouhar — personal blog
+# Mohammed Jouhar - personal blog
 
 Your blog, built with [Astro](https://astro.build). It gives you a homepage that
 lists your posts, four tabs (Notes, Projects, Reflections, About), tags, and the
