@@ -4,7 +4,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
-  // External showpieces live in /public, so skip them here.
   return posts
     .filter((p) => !p.data.external)
     .map((post) => ({ params: { slug: post.id }, props: { post } }));
@@ -21,7 +20,7 @@ const fmtDate = date.toLocaleDateString('en-GB', {
 const backHref = `/${category}`;
 const backLabel = category.charAt(0).toUpperCase() + category.slice(1);
 ---
-<BaseLayout title={`${title} — Mohammed Jouhar`} description={description}>
+<BaseLayout title={`${title} · Mohammed Jouhar`} description={description}>
   <article class="article">
     <div class="wrap">
       <div class="article-head">
@@ -31,7 +30,7 @@ const backLabel = category.charAt(0).toUpperCase() + category.slice(1);
       </div>
       <div class="prose">
         <Content />
-        <a class="back-link" href={backHref}>← Back to {backLabel}</a>
+        <a class="back-link" href={backHref}>&larr; Back to {backLabel}</a>
       </div>
     </div>
   </article>
