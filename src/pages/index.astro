@@ -1,30 +1,123 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostCard from '../../components/PostCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
 
-const posts = (await getCollection('posts'))
-  .filter((p) => p.data.category === 'notes')
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const recent = posts.slice(0, 6);
 ---
-<BaseLayout title="Notes · Mohammed Jouhar" description="Learning notes from books, courses and certifications: data, AI, Power BI, SQL and Python.">
+<BaseLayout title="Mohammed Jouhar · Notes on data, AI, and learning">
+  <section class="hero">
+    <canvas class="hero-canvas" id="constellation" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="eyebrow">A digital notebook</div>
+      <h1>Notes on data, AI,<br />and the things <em>I'm learning</em>.</h1>
+      <p class="tagline">
+        Where I share my learning notes, the projects I build, and the occasional
+        lesson from work and life.
+      </p>
+      <p class="cred"><b>Mohammed Jouhar</b> · Senior Business Data Analyst · 12+ years in retail analytics</p>
+      <p class="cred" style="margin-top:5px;color:var(--ink-faint)">Previously at Tesco · Lowe's · Alshaya</p>
+    </div>
+  </section>
+
   <section class="section">
     <div class="wrap">
-      <div class="eyebrow">Notes</div>
-      <div class="section-head">
-        <h2>Notes from books, courses &amp; certifications</h2>
+      <div class="section-head reveal">
+        <h2>Latest posts</h2>
+        <span class="meta">most recent first</span>
       </div>
-      <p class="page-intro">
-        Notes I take while learning, written so they're easy to follow. Look for
-        the difficulty badge on each post: beginner, intermediate, or advanced.
-      </p>
-      {posts.length > 0 ? (
+      {recent.length > 0 ? (
         <div class="card-grid">
-          {posts.map((post) => <PostCard post={post} />)}
+          {recent.map((post) => <PostCard post={post} />)}
         </div>
       ) : (
-        <div class="empty"><p><strong>No notes yet.</strong></p><p>First one coming soon.</p></div>
+        <div class="empty reveal">
+          <p><strong>Nothing here yet.</strong></p>
+          <p>The first posts are on their way.</p>
+        </div>
       )}
     </div>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    const canvas = document.getElementById('constellation');
+    if (!canvas) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctx = canvas.getContext('2d');
+    let w, h, dpr, nodes = [], raf = null;
+
+    const AZURE = '28,111,176';
+    const TERRA = '200,98,59';
+
+    function size() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.offsetWidth;
+      h = canvas.offsetHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = w < 640 ? 10 : w < 1000 ? 16 : 22;
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.16,
+        vy: (Math.random() - 0.5) * 0.16,
+        r: Math.random() * 1.6 + 1,
+        c: Math.random() > 0.78 ? TERRA : AZURE,
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        a.x += a.vx; a.y += a.vy;
+        if (a.x < 0 || a.x > w) a.vx *= -1;
+        if (a.y < 0 || a.y > h) a.vy *= -1;
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 150) {
+            ctx.strokeStyle = 'rgba(' + AZURE + ',' + (0.1 * (1 - dist / 150)).toFixed(3) + ')';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+      for (const n of nodes) {
+        ctx.fillStyle = 'rgba(' + n.c + ',0.5)';
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    }
+
+    function start() { if (!raf) draw(); }
+    function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+    size();
+    if (reduce) {
+      draw(); stop();
+    } else {
+      start();
+      document.addEventListener('visibilitychange', () =>
+        document.hidden ? stop() : start()
+      );
+    }
+    let t;
+    window.addEventListener('resize', () => {
+      clearTimeout(t);
+      t = setTimeout(size, 200);
+    });
+  })();
+</script>
