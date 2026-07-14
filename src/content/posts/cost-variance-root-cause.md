@@ -27,22 +27,15 @@ on the dashboards were held back.
 The issue had existed for nearly two years. The team had tried to solve it more
 than once, but limited capacity meant it was never fully chased down.
 
-<figure style="margin:28px 0">
-<svg viewBox="0 0 760 300" role="img" aria-label="Line chart: margin variance between Power BI and finance falling from 48 percent to under 2 percent after the two fixes" style="max-width:100%;height:auto">
+<figure style="margin:28px 0;text-align:center">
+<svg viewBox="0 0 760 300" role="img" aria-label="Line chart: margin variance between reporting and finance falling from 48 percent to under 2 percent after the two fixes" style="max-width:100%;height:auto">
   <style>
     .v-axis{font-family:'JetBrains Mono',monospace;font-size:12px;fill:#8f8371}
     .v-anno{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
     .v-head{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;fill:#726657}
-    .v-line{
-      fill:none;stroke:url(#vTrend);stroke-width:3;
-      stroke-linecap:round;stroke-linejoin:round;
-      stroke-dasharray:760;stroke-dashoffset:760;
-      animation:vDraw 1.6s cubic-bezier(.65,.05,.36,1) .2s forwards;
-    }
+    .v-line{fill:none;stroke:url(#vTrend);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:760;stroke-dashoffset:760;animation:vDraw 1.6s cubic-bezier(.65,.05,.36,1) .2s forwards}
     @keyframes vDraw{to{stroke-dashoffset:0}}
-    @media (prefers-reduced-motion:reduce){
-      .v-line{animation:none;stroke-dashoffset:0}
-    }
+    @media (prefers-reduced-motion:reduce){.v-line{animation:none;stroke-dashoffset:0}}
   </style>
   <defs>
     <linearGradient id="vTrend" x1="0" y1="0" x2="1" y2="0">
@@ -54,28 +47,19 @@ than once, but limited capacity meant it was never fully chased down.
       <stop offset="100%" stop-color="#3f7d54" stop-opacity="0"/>
     </linearGradient>
   </defs>
-
-  <text x="20" y="24" class="v-head">POWER BI VS FINANCE, MARGIN VARIANCE</text>
-
+  <text x="20" y="24" class="v-head">REPORTING VS FINANCE, MARGIN VARIANCE</text>
   <line x1="66" y1="70" x2="740" y2="70" stroke="#e4d9c6"/>
   <line x1="66" y1="132" x2="740" y2="132" stroke="#e4d9c6"/>
   <line x1="66" y1="194" x2="740" y2="194" stroke="#e4d9c6"/>
   <line x1="66" y1="256" x2="740" y2="256" stroke="#d8cbb6"/>
-
   <text x="20" y="74" class="v-axis">48%</text>
   <text x="20" y="136" class="v-axis">32%</text>
   <text x="20" y="198" class="v-axis">16%</text>
   <text x="34" y="260" class="v-axis">0%</text>
-
-  <path fill="url(#vArea)"
-        d="M78,70 L150,96 L222,84 L294,146 L366,157 L438,198 L510,217 L582,236 L730,249 L730,256 L78,256 Z"/>
-
-  <path class="v-line"
-        d="M78,70 L150,96 L222,84 L294,146 L366,157 L438,198 L510,217 L582,236 L730,249"/>
-
+  <path fill="url(#vArea)" d="M78,70 L150,96 L222,84 L294,146 L366,157 L438,198 L510,217 L582,236 L730,249 L730,256 L78,256 Z"/>
+  <path class="v-line" d="M78,70 L150,96 L222,84 L294,146 L366,157 L438,198 L510,217 L582,236 L730,249"/>
   <circle cx="78" cy="70" r="5.5" fill="#c8623b"/>
   <circle cx="730" cy="249" r="5.5" fill="#3f7d54"/>
-
   <text x="94" y="60" class="v-anno" fill="#c8623b">48% variance</text>
   <text x="714" y="278" class="v-anno" fill="#3f7d54" text-anchor="end">under 2%</text>
 </svg>
