@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.category === 'projects')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<BaseLayout title="Projects · Mohammed Jouhar" description="Projects I'm building: Power BI dashboards, Python automation, analytics and more. Documented as I go.">
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Projects</div>
+      <div class="section-head">
+        <h2>Things I'm building</h2>
+      </div>
+      <p class="page-intro">
+        Projects I document as I work on them: Power BI, Python, automation, and
+        analytics. These double as my portfolio.
+      </p>
+      {posts.length > 0 ? (
+        <div class="card-grid">
+          {posts.map((post) => <PostCard post={post} />)}
+        </div>
+      ) : (
+        <div class="empty"><p><strong>No projects posted yet.</strong></p><p>Write-ups are on the way.</p></div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
