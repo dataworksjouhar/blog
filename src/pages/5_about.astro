@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const roles = [
+  {
+    co: 'Alshaya Group',
+    place: 'Kuwait',
+    years: '2022 to 2026',
+    desc: 'Senior Business Data Analyst. Owned sales and footfall data products across 5,600+ stores and drove enterprise AI adoption. CTO Award, 2024.',
+  },
+  {
+    co: "Lowe's Companies",
+    place: 'India',
+    years: '2019 to 2022',
+    desc: 'Built leadership Power BI dashboards and Python/VBA automation saving 3,000+ hours a year. Recognised with a $5,000 shares performance award.',
+  },
+  {
+    co: 'Tesco PLC',
+    place: 'India',
+    years: '2015 to 2019',
+    desc: 'Automation and data modelling across merchandising and stock control. CEO Award for Innovation, 2018.',
+  },
+  {
+    co: 'Decathlon',
+    place: 'India',
+    years: '2014 to 2015',
+    desc: 'Sales Manager to Department Manager in a year. Where my retail grounding started.',
+  },
+];
+---
+<BaseLayout title="About · Mohammed Jouhar" description="About Mohammed Jouhar, Senior Business Data Analyst, lifelong learner, and the story behind this blog.">
+  <section class="about">
+    <div class="wrap">
+      <div class="eyebrow">About</div>
+      <h1>I'm Mohammed Jouhar.</h1>
+      <p class="lede">
+        A Senior Business Data Analyst who enjoys using data and technology to
+        solve real business problems.
+      </p>
+
+      <p>
+        My day-to-day work involves data analytics, AI, Excel, SQL, Power BI, and
+        building solutions that make work simpler and more effective.
+      </p>
+      <p>
+        I'm also a lifelong learner. Whether it's learning a new technology,
+        reading a good book, or reflecting on lessons from work and life, I enjoy
+        documenting what I learn along the way.
+      </p>
+      <p>
+        This blog is my digital notebook, a place where I share ideas,
+        experiences, and practical lessons that I hope others will find useful.
+      </p>
+
+      <p>Here you'll find articles about:</p>
+      <ul>
+        <li>Notes from books, courses, and things I'm learning</li>
+        <li>Data Analytics and Business Intelligence</li>
+        <li>AI and Technology</li>
+        <li>Excel, SQL, Power BI, and Python</li>
+        <li>Career growth and lessons from work</li>
+        <li>Personal reflections from everyday life</li>
+      </ul>
+
+      <p>I'm writing to learn, build, and share, one post at a time.</p>
+
+      <h2 class="tl-title">Where I've worked</h2>
+      <div class="timeline">
+        {roles.map((r) => (
+          <div class="tl-item">
+            <div class="tl-head">
+              <span class="tl-co">{r.co}</span>
+              <span class="tl-yr">{r.place} &middot; {r.years}</span>
+            </div>
+            <p class="tl-desc">{r.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="links">
+        <a href="mailto:dataworks.jouhar@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/mohammed-jouhar-a631b587/" target="_blank" rel="noopener">LinkedIn &rarr;</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
