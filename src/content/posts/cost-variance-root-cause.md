@@ -8,7 +8,7 @@ tags: ["data-analytics", "sql", "power-bi", "business-learning"]
 featured: false
 ---
 
-When I joined the team at Alshaya, the main sales dashboard was reporting the
+When I joined the team at Alshaya Data team, the Single Transaction View sales Table was reporting the
 wrong margins for around 10 Oracle RMS brands. The sales were fine. The problem
 was the cost behind the margin, which was inaccurate, and it threw the reported
 margins off from finance by nearly **48%**. The gap had stood for almost two
@@ -17,7 +17,7 @@ with engineering to fix both. The variance dropped to **under 2%**.
 
 ## The problem
 
-The margins on the main sales dashboard did not match the official finance
+The margins on the main sales table did not match the official finance
 figures, off by close to 48% across about 10 brands. The sales numbers were
 correct. The cost feeding the margin was not, and wrong cost means wrong margin.
 When reporting is off by that much, people stop trusting it. Finance and category
@@ -26,6 +26,61 @@ on the dashboards were held back.
 
 The issue had existed for nearly two years. The team had tried to solve it more
 than once, but limited capacity meant it was never fully chased down.
+
+<figure style="margin:28px 0">
+<svg viewBox="0 0 760 300" role="img" aria-label="Line chart: margin variance between Power BI and finance falling from 48 percent to under 2 percent after the two fixes" style="max-width:100%;height:auto">
+  <style>
+    .v-axis{font-family:'JetBrains Mono',monospace;font-size:12px;fill:#8f8371}
+    .v-anno{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
+    .v-head{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;fill:#726657}
+    .v-line{
+      fill:none;stroke:url(#vTrend);stroke-width:3;
+      stroke-linecap:round;stroke-linejoin:round;
+      stroke-dasharray:760;stroke-dashoffset:760;
+      animation:vDraw 1.6s cubic-bezier(.65,.05,.36,1) .2s forwards;
+    }
+    @keyframes vDraw{to{stroke-dashoffset:0}}
+    @media (prefers-reduced-motion:reduce){
+      .v-line{animation:none;stroke-dashoffset:0}
+    }
+  </style>
+  <defs>
+    <linearGradient id="vTrend" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c8623b"/>
+      <stop offset="100%" stop-color="#3f7d54"/>
+    </linearGradient>
+    <linearGradient id="vArea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c8623b" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#3f7d54" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <text x="20" y="24" class="v-head">POWER BI VS FINANCE, MARGIN VARIANCE</text>
+
+  <line x1="66" y1="70" x2="740" y2="70" stroke="#e4d9c6"/>
+  <line x1="66" y1="132" x2="740" y2="132" stroke="#e4d9c6"/>
+  <line x1="66" y1="194" x2="740" y2="194" stroke="#e4d9c6"/>
+  <line x1="66" y1="256" x2="740" y2="256" stroke="#d8cbb6"/>
+
+  <text x="20" y="74" class="v-axis">48%</text>
+  <text x="20" y="136" class="v-axis">32%</text>
+  <text x="20" y="198" class="v-axis">16%</text>
+  <text x="34" y="260" class="v-axis">0%</text>
+
+  <path fill="url(#vArea)"
+        d="M78,70 L150,96 L222,84 L294,146 L366,157 L438,198 L510,217 L582,236 L730,249 L730,256 L78,256 Z"/>
+
+  <path class="v-line"
+        d="M78,70 L150,96 L222,84 L294,146 L366,157 L438,198 L510,217 L582,236 L730,249"/>
+
+  <circle cx="78" cy="70" r="5.5" fill="#c8623b"/>
+  <circle cx="730" cy="249" r="5.5" fill="#3f7d54"/>
+
+  <text x="94" y="60" class="v-anno" fill="#c8623b">48% variance</text>
+  <text x="714" y="278" class="v-anno" fill="#3f7d54" text-anchor="end">under 2%</text>
+</svg>
+<figcaption style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#726657;margin-top:12px">Two years of a 48% gap, closed to under 2% once the two root causes were fixed.</figcaption>
+</figure>
 
 ## How I approached it
 
