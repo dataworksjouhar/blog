@@ -24,6 +24,10 @@ The trap is that values only appear on the first row of each block. An order's t
 
 Load that straight into Power BI and sum the order total, and the answer is wrong. The total sits on one row, but the order spans several. This is exactly where my contact got stuck, and it is where most first attempts at an Odoo export get stuck.
 
+![The raw Odoo POS export. Session and money columns are filled only on the top row of each session, order values sit on the first row of each order, and the product lines cascade below with everything else left blank.](/images/qahwa-raw-export.png)
+
+Look at the left side of that export. The session columns and the cash figures appear once, on the opening row, then go blank. The order IDs appear, then go blank. The product names run down the sheet on their own. Every blank cell is a value that belongs to the row above it.
+
 ## How I built it
 
 The first thing I did was not open Power BI. I sat with the file and counted.
