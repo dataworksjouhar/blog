@@ -1,0 +1,46 @@
+[
+  {
+    "instructor_key": 2,
+    "instructor_id": "I02",
+    "instructor_name": "James Whitfield",
+    "specialty_level": "beginner",
+    "status": "active",
+    "hire_date": "2023-10-01",
+    "lesson_count": 4386,
+    "total_capacity": 26316,
+    "total_booked": 23997
+  },
+  {
+    "instructor_key": 4,
+    "instructor_id": "I04",
+    "instructor_name": "Yusuf Demir",
+    "specialty_level": "intermediate",
+    "status": "active",
+    "hire_date": "2024-03-01",
+    "lesson_count": 2924,
+    "total_capacity": 14620,
+    "total_booked": 10754
+  },
+  {
+    "instructor_key": 3,
+    "instructor_id": "I03",
+    "instructor_name": "Noura Al-Sabah",
+    "specialty_level": "advanced",
+    "status": "active",
+    "hire_date": "2024-01-15",
+    "lesson_count": 2193,
+    "total_capacity": 8772,
+    "total_booked": 4237
+  },
+  {
+    "instructor_key": 1,
+    "instructor_id": "I01",
+    "instructor_name": "Fatima Al-Rashid",
+    "specialty_level": "all_levels",
+    "status": "active",
+    "hire_date": "2023-09-01",
+    "lesson_count": 0,
+    "total_capacity": 0,
+    "total_booked": 0
+  }
+]

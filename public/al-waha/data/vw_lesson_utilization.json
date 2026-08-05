@@ -1,0 +1,41 @@
+[
+  {
+    "level": "advanced",
+    "instructor_key": 3,
+    "instructor_name": "Noura Al-Sabah",
+    "lesson_count": 2193,
+    "total_capacity": 8772,
+    "total_booked": 4237,
+    "total_attended": 3824,
+    "missing_attendance_count": 108,
+    "overbooked_count": 57,
+    "utilization_pct": 48.3,
+    "no_show_rate_pct": 9.7
+  },
+  {
+    "level": "beginner",
+    "instructor_key": 2,
+    "instructor_name": "James Whitfield",
+    "lesson_count": 4386,
+    "total_capacity": 26316,
+    "total_booked": 23997,
+    "total_attended": 20860,
+    "missing_attendance_count": 227,
+    "overbooked_count": 122,
+    "utilization_pct": 91.2,
+    "no_show_rate_pct": 13.1
+  },
+  {
+    "level": "intermediate",
+    "instructor_key": 4,
+    "instructor_name": "Yusuf Demir",
+    "lesson_count": 2924,
+    "total_capacity": 14620,
+    "total_booked": 10754,
+    "total_attended": 9673,
+    "missing_attendance_count": 129,
+    "overbooked_count": 98,
+    "utilization_pct": 73.6,
+    "no_show_rate_pct": 10.1
+  }
+]

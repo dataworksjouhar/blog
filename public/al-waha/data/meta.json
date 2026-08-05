@@ -1,0 +1,59 @@
+{
+  "client": {
+    "name": "Al Waha Destination Co.",
+    "site_name": "Al Waha Park",
+    "short_name": "waha",
+    "currency": "KWD",
+    "timezone": "Asia/Kuwait",
+    "weekend": [
+      "FRI",
+      "SAT"
+    ]
+  },
+  "branding": {
+    "primary_color": "#0F4C81",
+    "logo": "waha.svg"
+  },
+  "date_range": {
+    "start": "2024-07-01",
+    "end": "2026-07-01"
+  },
+  "metrics_enabled": [
+    "footfall_vs_ly_weather",
+    "footfall_to_sales_conversion",
+    "turnover_rent_owed_vs_collected",
+    "sales_per_sqm_by_category",
+    "online_vs_walkin_mix",
+    "website_conversion_by_channel",
+    "event_roi",
+    "membership_active_base_and_churn",
+    "revenue_summary_own_vs_rental",
+    "avg_transaction_value_by_venue",
+    "lesson_slot_utilization",
+    "stable_occupancy_and_boarding_revenue"
+  ],
+  "generated_at": "2026-08-04T18:10:53",
+  "row_counts": {
+    "vw_footfall_daily": 731,
+    "vw_footfall_sales_conversion": 2693,
+    "vw_tenant_turnover_rent": 225,
+    "vw_tenant_sales_per_sqm": 225,
+    "vw_ticket_channel_mix": 13,
+    "vw_web_channel_conversion": 5,
+    "vw_event_roi": 18,
+    "vw_membership_active_churn": 100,
+    "vw_revenue_summary": 25,
+    "vw_avg_transaction_value": 4,
+    "vw_lesson_utilization": 3,
+    "vw_stable_occupancy": 25,
+    "vw_tenant_compliance": 11,
+    "vw_tenant_site_metrics": 225,
+    "vw_footfall_gate_hour_monthly": 1624,
+    "vw_footfall_by_zone": 1462,
+    "vw_web_channel_conversion_monthly": 125,
+    "vw_lesson_utilization_monthly": 75,
+    "vw_instructor_coverage": 4,
+    "dq_summary": 27,
+    "site_plan": 10
+  }
+}

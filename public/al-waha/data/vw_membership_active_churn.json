@@ -1,0 +1,1002 @@
+[
+  {
+    "month_date_key": 20240701,
+    "month_start": "2024-07-01",
+    "contract_type": "equestrian_club",
+    "active_count": 155,
+    "new_count": 14,
+    "churned_count": 9,
+    "active_mrr_kwd": 6200.0,
+    "churn_rate_pct": null
+  },
+  {
+    "month_date_key": 20240801,
+    "month_start": "2024-08-01",
+    "contract_type": "equestrian_club",
+    "active_count": 154,
+    "new_count": 7,
+    "churned_count": 8,
+    "active_mrr_kwd": 6160.0,
+    "churn_rate_pct": 5.16
+  },
+  {
+    "month_date_key": 20240901,
+    "month_start": "2024-09-01",
+    "contract_type": "equestrian_club",
+    "active_count": 158,
+    "new_count": 9,
+    "churned_count": 5,
+    "active_mrr_kwd": 6320.0,
+    "churn_rate_pct": 3.25
+  },
+  {
+    "month_date_key": 20241001,
+    "month_start": "2024-10-01",
+    "contract_type": "equestrian_club",
+    "active_count": 158,
+    "new_count": 6,
+    "churned_count": 6,
+    "active_mrr_kwd": 6320.0,
+    "churn_rate_pct": 3.8
+  },
+  {
+    "month_date_key": 20241101,
+    "month_start": "2024-11-01",
+    "contract_type": "equestrian_club",
+    "active_count": 160,
+    "new_count": 7,
+    "churned_count": 5,
+    "active_mrr_kwd": 6400.0,
+    "churn_rate_pct": 3.16
+  },
+  {
+    "month_date_key": 20241201,
+    "month_start": "2024-12-01",
+    "contract_type": "equestrian_club",
+    "active_count": 162,
+    "new_count": 4,
+    "churned_count": 2,
+    "active_mrr_kwd": 6480.0,
+    "churn_rate_pct": 1.25
+  },
+  {
+    "month_date_key": 20250101,
+    "month_start": "2025-01-01",
+    "contract_type": "equestrian_club",
+    "active_count": 160,
+    "new_count": 9,
+    "churned_count": 11,
+    "active_mrr_kwd": 6400.0,
+    "churn_rate_pct": 6.79
+  },
+  {
+    "month_date_key": 20250201,
+    "month_start": "2025-02-01",
+    "contract_type": "equestrian_club",
+    "active_count": 163,
+    "new_count": 11,
+    "churned_count": 8,
+    "active_mrr_kwd": 6520.0,
+    "churn_rate_pct": 5.0
+  },
+  {
+    "month_date_key": 20250301,
+    "month_start": "2025-03-01",
+    "contract_type": "equestrian_club",
+    "active_count": 160,
+    "new_count": 4,
+    "churned_count": 7,
+    "active_mrr_kwd": 6400.0,
+    "churn_rate_pct": 4.29
+  },
+  {
+    "month_date_key": 20250401,
+    "month_start": "2025-04-01",
+    "contract_type": "equestrian_club",
+    "active_count": 156,
+    "new_count": 4,
+    "churned_count": 8,
+    "active_mrr_kwd": 6240.0,
+    "churn_rate_pct": 5.0
+  },
+  {
+    "month_date_key": 20250501,
+    "month_start": "2025-05-01",
+    "contract_type": "equestrian_club",
+    "active_count": 163,
+    "new_count": 12,
+    "churned_count": 5,
+    "active_mrr_kwd": 6520.0,
+    "churn_rate_pct": 3.21
+  },
+  {
+    "month_date_key": 20250601,
+    "month_start": "2025-06-01",
+    "contract_type": "equestrian_club",
+    "active_count": 160,
+    "new_count": 4,
+    "churned_count": 7,
+    "active_mrr_kwd": 6400.0,
+    "churn_rate_pct": 4.29
+  },
+  {
+    "month_date_key": 20250701,
+    "month_start": "2025-07-01",
+    "contract_type": "equestrian_club",
+    "active_count": 162,
+    "new_count": 6,
+    "churned_count": 4,
+    "active_mrr_kwd": 6480.0,
+    "churn_rate_pct": 2.5
+  },
+  {
+    "month_date_key": 20250801,
+    "month_start": "2025-08-01",
+    "contract_type": "equestrian_club",
+    "active_count": 164,
+    "new_count": 8,
+    "churned_count": 6,
+    "active_mrr_kwd": 6560.0,
+    "churn_rate_pct": 3.7
+  },
+  {
+    "month_date_key": 20250901,
+    "month_start": "2025-09-01",
+    "contract_type": "equestrian_club",
+    "active_count": 164,
+    "new_count": 6,
+    "churned_count": 6,
+    "active_mrr_kwd": 6560.0,
+    "churn_rate_pct": 3.66
+  },
+  {
+    "month_date_key": 20251001,
+    "month_start": "2025-10-01",
+    "contract_type": "equestrian_club",
+    "active_count": 165,
+    "new_count": 4,
+    "churned_count": 3,
+    "active_mrr_kwd": 6600.0,
+    "churn_rate_pct": 1.83
+  },
+  {
+    "month_date_key": 20251101,
+    "month_start": "2025-11-01",
+    "contract_type": "equestrian_club",
+    "active_count": 164,
+    "new_count": 7,
+    "churned_count": 8,
+    "active_mrr_kwd": 6560.0,
+    "churn_rate_pct": 4.85
+  },
+  {
+    "month_date_key": 20251201,
+    "month_start": "2025-12-01",
+    "contract_type": "equestrian_club",
+    "active_count": 163,
+    "new_count": 5,
+    "churned_count": 6,
+    "active_mrr_kwd": 6520.0,
+    "churn_rate_pct": 3.66
+  },
+  {
+    "month_date_key": 20260101,
+    "month_start": "2026-01-01",
+    "contract_type": "equestrian_club",
+    "active_count": 163,
+    "new_count": 5,
+    "churned_count": 5,
+    "active_mrr_kwd": 6520.0,
+    "churn_rate_pct": 3.07
+  },
+  {
+    "month_date_key": 20260201,
+    "month_start": "2026-02-01",
+    "contract_type": "equestrian_club",
+    "active_count": 164,
+    "new_count": 7,
+    "churned_count": 6,
+    "active_mrr_kwd": 6560.0,
+    "churn_rate_pct": 3.68
+  },
+  {
+    "month_date_key": 20260301,
+    "month_start": "2026-03-01",
+    "contract_type": "equestrian_club",
+    "active_count": 167,
+    "new_count": 7,
+    "churned_count": 4,
+    "active_mrr_kwd": 6680.0,
+    "churn_rate_pct": 2.44
+  },
+  {
+    "month_date_key": 20260401,
+    "month_start": "2026-04-01",
+    "contract_type": "equestrian_club",
+    "active_count": 168,
+    "new_count": 11,
+    "churned_count": 10,
+    "active_mrr_kwd": 6720.0,
+    "churn_rate_pct": 5.99
+  },
+  {
+    "month_date_key": 20260501,
+    "month_start": "2026-05-01",
+    "contract_type": "equestrian_club",
+    "active_count": 162,
+    "new_count": 4,
+    "churned_count": 10,
+    "active_mrr_kwd": 6480.0,
+    "churn_rate_pct": 5.95
+  },
+  {
+    "month_date_key": 20260601,
+    "month_start": "2026-06-01",
+    "contract_type": "equestrian_club",
+    "active_count": 162,
+    "new_count": 5,
+    "churned_count": 5,
+    "active_mrr_kwd": 6480.0,
+    "churn_rate_pct": 3.09
+  },
+  {
+    "month_date_key": 20260701,
+    "month_start": "2026-07-01",
+    "contract_type": "equestrian_club",
+    "active_count": 162,
+    "new_count": 7,
+    "churned_count": 7,
+    "active_mrr_kwd": 6480.0,
+    "churn_rate_pct": 4.32
+  },
+  {
+    "month_date_key": 20240701,
+    "month_start": "2024-07-01",
+    "contract_type": "gym_annual",
+    "active_count": 83,
+    "new_count": 4,
+    "churned_count": 1,
+    "active_mrr_kwd": 1660.0,
+    "churn_rate_pct": null
+  },
+  {
+    "month_date_key": 20240801,
+    "month_start": "2024-08-01",
+    "contract_type": "gym_annual",
+    "active_count": 84,
+    "new_count": 6,
+    "churned_count": 1,
+    "active_mrr_kwd": 1680.0,
+    "churn_rate_pct": 1.2
+  },
+  {
+    "month_date_key": 20240901,
+    "month_start": "2024-09-01",
+    "contract_type": "gym_annual",
+    "active_count": 83,
+    "new_count": 7,
+    "churned_count": 4,
+    "active_mrr_kwd": 1660.0,
+    "churn_rate_pct": 4.76
+  },
+  {
+    "month_date_key": 20241001,
+    "month_start": "2024-10-01",
+    "contract_type": "gym_annual",
+    "active_count": 90,
+    "new_count": 14,
+    "churned_count": 0,
+    "active_mrr_kwd": 1800.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20241101,
+    "month_start": "2024-11-01",
+    "contract_type": "gym_annual",
+    "active_count": 83,
+    "new_count": 4,
+    "churned_count": 2,
+    "active_mrr_kwd": 1660.0,
+    "churn_rate_pct": 2.22
+  },
+  {
+    "month_date_key": 20241201,
+    "month_start": "2024-12-01",
+    "contract_type": "gym_annual",
+    "active_count": 82,
+    "new_count": 5,
+    "churned_count": 2,
+    "active_mrr_kwd": 1640.0,
+    "churn_rate_pct": 2.41
+  },
+  {
+    "month_date_key": 20250101,
+    "month_start": "2025-01-01",
+    "contract_type": "gym_annual",
+    "active_count": 86,
+    "new_count": 9,
+    "churned_count": 0,
+    "active_mrr_kwd": 1720.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250201,
+    "month_start": "2025-02-01",
+    "contract_type": "gym_annual",
+    "active_count": 82,
+    "new_count": 7,
+    "churned_count": 2,
+    "active_mrr_kwd": 1640.0,
+    "churn_rate_pct": 2.33
+  },
+  {
+    "month_date_key": 20250301,
+    "month_start": "2025-03-01",
+    "contract_type": "gym_annual",
+    "active_count": 80,
+    "new_count": 6,
+    "churned_count": 3,
+    "active_mrr_kwd": 1600.0,
+    "churn_rate_pct": 3.66
+  },
+  {
+    "month_date_key": 20250401,
+    "month_start": "2025-04-01",
+    "contract_type": "gym_annual",
+    "active_count": 79,
+    "new_count": 4,
+    "churned_count": 0,
+    "active_mrr_kwd": 1580.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250501,
+    "month_start": "2025-05-01",
+    "contract_type": "gym_annual",
+    "active_count": 82,
+    "new_count": 7,
+    "churned_count": 1,
+    "active_mrr_kwd": 1640.0,
+    "churn_rate_pct": 1.27
+  },
+  {
+    "month_date_key": 20250601,
+    "month_start": "2025-06-01",
+    "contract_type": "gym_annual",
+    "active_count": 79,
+    "new_count": 3,
+    "churned_count": 2,
+    "active_mrr_kwd": 1580.0,
+    "churn_rate_pct": 2.44
+  },
+  {
+    "month_date_key": 20250701,
+    "month_start": "2025-07-01",
+    "contract_type": "gym_annual",
+    "active_count": 78,
+    "new_count": 4,
+    "churned_count": 2,
+    "active_mrr_kwd": 1560.0,
+    "churn_rate_pct": 2.53
+  },
+  {
+    "month_date_key": 20250801,
+    "month_start": "2025-08-01",
+    "contract_type": "gym_annual",
+    "active_count": 79,
+    "new_count": 6,
+    "churned_count": 1,
+    "active_mrr_kwd": 1580.0,
+    "churn_rate_pct": 1.28
+  },
+  {
+    "month_date_key": 20250901,
+    "month_start": "2025-09-01",
+    "contract_type": "gym_annual",
+    "active_count": 74,
+    "new_count": 4,
+    "churned_count": 6,
+    "active_mrr_kwd": 1480.0,
+    "churn_rate_pct": 7.59
+  },
+  {
+    "month_date_key": 20251001,
+    "month_start": "2025-10-01",
+    "contract_type": "gym_annual",
+    "active_count": 77,
+    "new_count": 10,
+    "churned_count": 1,
+    "active_mrr_kwd": 1540.0,
+    "churn_rate_pct": 1.35
+  },
+  {
+    "month_date_key": 20251101,
+    "month_start": "2025-11-01",
+    "contract_type": "gym_annual",
+    "active_count": 72,
+    "new_count": 4,
+    "churned_count": 1,
+    "active_mrr_kwd": 1440.0,
+    "churn_rate_pct": 1.3
+  },
+  {
+    "month_date_key": 20251201,
+    "month_start": "2025-12-01",
+    "contract_type": "gym_annual",
+    "active_count": 72,
+    "new_count": 4,
+    "churned_count": 1,
+    "active_mrr_kwd": 1440.0,
+    "churn_rate_pct": 1.39
+  },
+  {
+    "month_date_key": 20260101,
+    "month_start": "2026-01-01",
+    "contract_type": "gym_annual",
+    "active_count": 72,
+    "new_count": 8,
+    "churned_count": 3,
+    "active_mrr_kwd": 1440.0,
+    "churn_rate_pct": 4.17
+  },
+  {
+    "month_date_key": 20260201,
+    "month_start": "2026-02-01",
+    "contract_type": "gym_annual",
+    "active_count": 69,
+    "new_count": 5,
+    "churned_count": 1,
+    "active_mrr_kwd": 1380.0,
+    "churn_rate_pct": 1.39
+  },
+  {
+    "month_date_key": 20260301,
+    "month_start": "2026-03-01",
+    "contract_type": "gym_annual",
+    "active_count": 69,
+    "new_count": 6,
+    "churned_count": 1,
+    "active_mrr_kwd": 1380.0,
+    "churn_rate_pct": 1.45
+  },
+  {
+    "month_date_key": 20260401,
+    "month_start": "2026-04-01",
+    "contract_type": "gym_annual",
+    "active_count": 67,
+    "new_count": 5,
+    "churned_count": 1,
+    "active_mrr_kwd": 1340.0,
+    "churn_rate_pct": 1.45
+  },
+  {
+    "month_date_key": 20260501,
+    "month_start": "2026-05-01",
+    "contract_type": "gym_annual",
+    "active_count": 70,
+    "new_count": 8,
+    "churned_count": 1,
+    "active_mrr_kwd": 1400.0,
+    "churn_rate_pct": 1.49
+  },
+  {
+    "month_date_key": 20260601,
+    "month_start": "2026-06-01",
+    "contract_type": "gym_annual",
+    "active_count": 70,
+    "new_count": 3,
+    "churned_count": 0,
+    "active_mrr_kwd": 1400.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20260701,
+    "month_start": "2026-07-01",
+    "contract_type": "gym_annual",
+    "active_count": 67,
+    "new_count": 3,
+    "churned_count": 1,
+    "active_mrr_kwd": 1340.0,
+    "churn_rate_pct": 1.43
+  },
+  {
+    "month_date_key": 20240701,
+    "month_start": "2024-07-01",
+    "contract_type": "gym_monthly",
+    "active_count": 567,
+    "new_count": 67,
+    "churned_count": 50,
+    "active_mrr_kwd": 14175.0,
+    "churn_rate_pct": null
+  },
+  {
+    "month_date_key": 20240801,
+    "month_start": "2024-08-01",
+    "contract_type": "gym_monthly",
+    "active_count": 571,
+    "new_count": 48,
+    "churned_count": 44,
+    "active_mrr_kwd": 14275.0,
+    "churn_rate_pct": 7.76
+  },
+  {
+    "month_date_key": 20240901,
+    "month_start": "2024-09-01",
+    "contract_type": "gym_monthly",
+    "active_count": 592,
+    "new_count": 70,
+    "churned_count": 49,
+    "active_mrr_kwd": 14800.0,
+    "churn_rate_pct": 8.58
+  },
+  {
+    "month_date_key": 20241001,
+    "month_start": "2024-10-01",
+    "contract_type": "gym_monthly",
+    "active_count": 589,
+    "new_count": 55,
+    "churned_count": 58,
+    "active_mrr_kwd": 14725.0,
+    "churn_rate_pct": 9.8
+  },
+  {
+    "month_date_key": 20241101,
+    "month_start": "2024-11-01",
+    "contract_type": "gym_monthly",
+    "active_count": 587,
+    "new_count": 38,
+    "churned_count": 40,
+    "active_mrr_kwd": 14675.0,
+    "churn_rate_pct": 6.79
+  },
+  {
+    "month_date_key": 20241201,
+    "month_start": "2024-12-01",
+    "contract_type": "gym_monthly",
+    "active_count": 597,
+    "new_count": 43,
+    "churned_count": 33,
+    "active_mrr_kwd": 14925.0,
+    "churn_rate_pct": 5.62
+  },
+  {
+    "month_date_key": 20250101,
+    "month_start": "2025-01-01",
+    "contract_type": "gym_monthly",
+    "active_count": 634,
+    "new_count": 69,
+    "churned_count": 32,
+    "active_mrr_kwd": 15850.0,
+    "churn_rate_pct": 5.36
+  },
+  {
+    "month_date_key": 20250201,
+    "month_start": "2025-02-01",
+    "contract_type": "gym_monthly",
+    "active_count": 617,
+    "new_count": 41,
+    "churned_count": 58,
+    "active_mrr_kwd": 15425.0,
+    "churn_rate_pct": 9.15
+  },
+  {
+    "month_date_key": 20250301,
+    "month_start": "2025-03-01",
+    "contract_type": "gym_monthly",
+    "active_count": 622,
+    "new_count": 37,
+    "churned_count": 32,
+    "active_mrr_kwd": 15550.0,
+    "churn_rate_pct": 5.19
+  },
+  {
+    "month_date_key": 20250401,
+    "month_start": "2025-04-01",
+    "contract_type": "gym_monthly",
+    "active_count": 603,
+    "new_count": 39,
+    "churned_count": 58,
+    "active_mrr_kwd": 15075.0,
+    "churn_rate_pct": 9.32
+  },
+  {
+    "month_date_key": 20250501,
+    "month_start": "2025-05-01",
+    "contract_type": "gym_monthly",
+    "active_count": 591,
+    "new_count": 43,
+    "churned_count": 55,
+    "active_mrr_kwd": 14775.0,
+    "churn_rate_pct": 9.12
+  },
+  {
+    "month_date_key": 20250601,
+    "month_start": "2025-06-01",
+    "contract_type": "gym_monthly",
+    "active_count": 584,
+    "new_count": 37,
+    "churned_count": 44,
+    "active_mrr_kwd": 14600.0,
+    "churn_rate_pct": 7.45
+  },
+  {
+    "month_date_key": 20250701,
+    "month_start": "2025-07-01",
+    "contract_type": "gym_monthly",
+    "active_count": 591,
+    "new_count": 49,
+    "churned_count": 42,
+    "active_mrr_kwd": 14775.0,
+    "churn_rate_pct": 7.19
+  },
+  {
+    "month_date_key": 20250801,
+    "month_start": "2025-08-01",
+    "contract_type": "gym_monthly",
+    "active_count": 589,
+    "new_count": 41,
+    "churned_count": 43,
+    "active_mrr_kwd": 14725.0,
+    "churn_rate_pct": 7.28
+  },
+  {
+    "month_date_key": 20250901,
+    "month_start": "2025-09-01",
+    "contract_type": "gym_monthly",
+    "active_count": 574,
+    "new_count": 40,
+    "churned_count": 55,
+    "active_mrr_kwd": 14350.0,
+    "churn_rate_pct": 9.34
+  },
+  {
+    "month_date_key": 20251001,
+    "month_start": "2025-10-01",
+    "contract_type": "gym_monthly",
+    "active_count": 595,
+    "new_count": 64,
+    "churned_count": 43,
+    "active_mrr_kwd": 14875.0,
+    "churn_rate_pct": 7.49
+  },
+  {
+    "month_date_key": 20251101,
+    "month_start": "2025-11-01",
+    "contract_type": "gym_monthly",
+    "active_count": 606,
+    "new_count": 41,
+    "churned_count": 30,
+    "active_mrr_kwd": 15150.0,
+    "churn_rate_pct": 5.04
+  },
+  {
+    "month_date_key": 20251201,
+    "month_start": "2025-12-01",
+    "contract_type": "gym_monthly",
+    "active_count": 609,
+    "new_count": 48,
+    "churned_count": 45,
+    "active_mrr_kwd": 15225.0,
+    "churn_rate_pct": 7.43
+  },
+  {
+    "month_date_key": 20260101,
+    "month_start": "2026-01-01",
+    "contract_type": "gym_monthly",
+    "active_count": 638,
+    "new_count": 74,
+    "churned_count": 45,
+    "active_mrr_kwd": 15950.0,
+    "churn_rate_pct": 7.39
+  },
+  {
+    "month_date_key": 20260201,
+    "month_start": "2026-02-01",
+    "contract_type": "gym_monthly",
+    "active_count": 632,
+    "new_count": 53,
+    "churned_count": 59,
+    "active_mrr_kwd": 15800.0,
+    "churn_rate_pct": 9.25
+  },
+  {
+    "month_date_key": 20260301,
+    "month_start": "2026-03-01",
+    "contract_type": "gym_monthly",
+    "active_count": 627,
+    "new_count": 40,
+    "churned_count": 45,
+    "active_mrr_kwd": 15675.0,
+    "churn_rate_pct": 7.12
+  },
+  {
+    "month_date_key": 20260401,
+    "month_start": "2026-04-01",
+    "contract_type": "gym_monthly",
+    "active_count": 613,
+    "new_count": 38,
+    "churned_count": 52,
+    "active_mrr_kwd": 15325.0,
+    "churn_rate_pct": 8.29
+  },
+  {
+    "month_date_key": 20260501,
+    "month_start": "2026-05-01",
+    "contract_type": "gym_monthly",
+    "active_count": 608,
+    "new_count": 53,
+    "churned_count": 58,
+    "active_mrr_kwd": 15200.0,
+    "churn_rate_pct": 9.46
+  },
+  {
+    "month_date_key": 20260601,
+    "month_start": "2026-06-01",
+    "contract_type": "gym_monthly",
+    "active_count": 608,
+    "new_count": 42,
+    "churned_count": 42,
+    "active_mrr_kwd": 15200.0,
+    "churn_rate_pct": 6.91
+  },
+  {
+    "month_date_key": 20260701,
+    "month_start": "2026-07-01",
+    "contract_type": "gym_monthly",
+    "active_count": 605,
+    "new_count": 46,
+    "churned_count": 49,
+    "active_mrr_kwd": 15125.0,
+    "churn_rate_pct": 8.06
+  },
+  {
+    "month_date_key": 20240701,
+    "month_start": "2024-07-01",
+    "contract_type": "horse_boarding",
+    "active_count": 16,
+    "new_count": 0,
+    "churned_count": 1,
+    "active_mrr_kwd": 2880.0,
+    "churn_rate_pct": null
+  },
+  {
+    "month_date_key": 20240801,
+    "month_start": "2024-08-01",
+    "contract_type": "horse_boarding",
+    "active_count": 16,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 2880.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20240901,
+    "month_start": "2024-09-01",
+    "contract_type": "horse_boarding",
+    "active_count": 16,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 2880.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20241001,
+    "month_start": "2024-10-01",
+    "contract_type": "horse_boarding",
+    "active_count": 17,
+    "new_count": 1,
+    "churned_count": 0,
+    "active_mrr_kwd": 3060.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20241101,
+    "month_start": "2024-11-01",
+    "contract_type": "horse_boarding",
+    "active_count": 17,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3060.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20241201,
+    "month_start": "2024-12-01",
+    "contract_type": "horse_boarding",
+    "active_count": 18,
+    "new_count": 1,
+    "churned_count": 0,
+    "active_mrr_kwd": 3240.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250101,
+    "month_start": "2025-01-01",
+    "contract_type": "horse_boarding",
+    "active_count": 18,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3240.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250201,
+    "month_start": "2025-02-01",
+    "contract_type": "horse_boarding",
+    "active_count": 17,
+    "new_count": 0,
+    "churned_count": 1,
+    "active_mrr_kwd": 3060.0,
+    "churn_rate_pct": 5.56
+  },
+  {
+    "month_date_key": 20250301,
+    "month_start": "2025-03-01",
+    "contract_type": "horse_boarding",
+    "active_count": 18,
+    "new_count": 1,
+    "churned_count": 0,
+    "active_mrr_kwd": 3240.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250401,
+    "month_start": "2025-04-01",
+    "contract_type": "horse_boarding",
+    "active_count": 18,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3240.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250501,
+    "month_start": "2025-05-01",
+    "contract_type": "horse_boarding",
+    "active_count": 17,
+    "new_count": 0,
+    "churned_count": 1,
+    "active_mrr_kwd": 3060.0,
+    "churn_rate_pct": 5.56
+  },
+  {
+    "month_date_key": 20250601,
+    "month_start": "2025-06-01",
+    "contract_type": "horse_boarding",
+    "active_count": 17,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3060.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250701,
+    "month_start": "2025-07-01",
+    "contract_type": "horse_boarding",
+    "active_count": 17,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3060.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250801,
+    "month_start": "2025-08-01",
+    "contract_type": "horse_boarding",
+    "active_count": 19,
+    "new_count": 2,
+    "churned_count": 0,
+    "active_mrr_kwd": 3420.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20250901,
+    "month_start": "2025-09-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 1,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20251001,
+    "month_start": "2025-10-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20251101,
+    "month_start": "2025-11-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20251201,
+    "month_start": "2025-12-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20260101,
+    "month_start": "2026-01-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20260201,
+    "month_start": "2026-02-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20260301,
+    "month_start": "2026-03-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20260401,
+    "month_start": "2026-04-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20260501,
+    "month_start": "2026-05-01",
+    "contract_type": "horse_boarding",
+    "active_count": 20,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3600.0,
+    "churn_rate_pct": 0.0
+  },
+  {
+    "month_date_key": 20260601,
+    "month_start": "2026-06-01",
+    "contract_type": "horse_boarding",
+    "active_count": 19,
+    "new_count": 0,
+    "churned_count": 1,
+    "active_mrr_kwd": 3420.0,
+    "churn_rate_pct": 5.0
+  },
+  {
+    "month_date_key": 20260701,
+    "month_start": "2026-07-01",
+    "contract_type": "horse_boarding",
+    "active_count": 19,
+    "new_count": 0,
+    "churned_count": 0,
+    "active_mrr_kwd": 3420.0,
+    "churn_rate_pct": 0.0
+  }
+]

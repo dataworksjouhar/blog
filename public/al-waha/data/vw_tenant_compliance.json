@@ -1,0 +1,123 @@
+[
+  {
+    "tenant_key": 7,
+    "tenant_id": "T07",
+    "tenant_name": "Home & Hearth",
+    "category": "Retail - Home & Lifestyle",
+    "submission_count": 24,
+    "avg_days_late": 26.833333333333332,
+    "max_days_late": 50,
+    "restated_count": 2,
+    "restated_pct": 8.3
+  },
+  {
+    "tenant_key": 2,
+    "tenant_id": "T02",
+    "tenant_name": "Bunn Coffee Co.",
+    "category": "F&B - Cafe",
+    "submission_count": 24,
+    "avg_days_late": 24.625,
+    "max_days_late": 54,
+    "restated_count": 3,
+    "restated_pct": 12.5
+  },
+  {
+    "tenant_key": 6,
+    "tenant_id": "T06",
+    "tenant_name": "Little Explorers Toys",
+    "category": "Retail - Specialty",
+    "submission_count": 24,
+    "avg_days_late": 24.583333333333332,
+    "max_days_late": 52,
+    "restated_count": 5,
+    "restated_pct": 20.8
+  },
+  {
+    "tenant_key": 3,
+    "tenant_id": "T03",
+    "tenant_name": "Wafi Sweets",
+    "category": "F&B - Quick Service",
+    "submission_count": 24,
+    "avg_days_late": 24.0,
+    "max_days_late": 51,
+    "restated_count": 2,
+    "restated_pct": 8.3
+  },
+  {
+    "tenant_key": 9,
+    "tenant_id": "T09",
+    "tenant_name": "Kuwait Sports Gear",
+    "category": "Retail - Specialty",
+    "submission_count": 11,
+    "avg_days_late": 23.818181818181817,
+    "max_days_late": 39,
+    "restated_count": 0,
+    "restated_pct": 0.0
+  },
+  {
+    "tenant_key": 5,
+    "tenant_id": "T05",
+    "tenant_name": "Zahra Fashion",
+    "category": "Retail - Fashion",
+    "submission_count": 24,
+    "avg_days_late": 23.416666666666668,
+    "max_days_late": 52,
+    "restated_count": 3,
+    "restated_pct": 12.5
+  },
+  {
+    "tenant_key": 4,
+    "tenant_id": "T04",
+    "tenant_name": "Al Reef Bakery",
+    "category": "F&B - Bakery",
+    "submission_count": 9,
+    "avg_days_late": 23.22222222222222,
+    "max_days_late": 36,
+    "restated_count": 0,
+    "restated_pct": 0.0
+  },
+  {
+    "tenant_key": 10,
+    "tenant_id": "T09",
+    "tenant_name": "Kuwait Sports Gear",
+    "category": "Retail - Fashion",
+    "submission_count": 13,
+    "avg_days_late": 22.923076923076923,
+    "max_days_late": 37,
+    "restated_count": 0,
+    "restated_pct": 0.0
+  },
+  {
+    "tenant_key": 1,
+    "tenant_id": "T01",
+    "tenant_name": "Sahara Grill",
+    "category": "F&B - Casual Dining",
+    "submission_count": 24,
+    "avg_days_late": 21.583333333333332,
+    "max_days_late": 53,
+    "restated_count": 3,
+    "restated_pct": 12.5
+  },
+  {
+    "tenant_key": 11,
+    "tenant_id": "T10",
+    "tenant_name": "TechFix Mobile Care",
+    "category": "Services - Repair",
+    "submission_count": 24,
+    "avg_days_late": 20.375,
+    "max_days_late": 53,
+    "restated_count": 1,
+    "restated_pct": 4.2
+  },
+  {
+    "tenant_key": 8,
+    "tenant_id": "T08",
+    "tenant_name": "Desert Rose Perfumes",
+    "category": "Retail - Beauty & Fragrance",
+    "submission_count": 24,
+    "avg_days_late": 19.125,
+    "max_days_late": 40,
+    "restated_count": 1,
+    "restated_pct": 4.2
+  }
+]

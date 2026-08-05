@@ -1,0 +1,52 @@
+[
+  {
+    "channel_key": 1.0,
+    "channel_name": "direct",
+    "sessions": 126899.0,
+    "engaged_sessions": 78593.0,
+    "users": 112197.0,
+    "booking_count": 29781,
+    "booking_amount_kwd": 400294.0,
+    "conversion_rate_pct": 23.47
+  },
+  {
+    "channel_key": 2.0,
+    "channel_name": "organic",
+    "sessions": 222032.0,
+    "engaged_sessions": 137871.0,
+    "users": 196147.0,
+    "booking_count": 38277,
+    "booking_amount_kwd": 517352.5,
+    "conversion_rate_pct": 17.24
+  },
+  {
+    "channel_key": 3.0,
+    "channel_name": "paid_social",
+    "sessions": 190321.0,
+    "engaged_sessions": 117874.0,
+    "users": 168596.0,
+    "booking_count": 19924,
+    "booking_amount_kwd": 264344.0,
+    "conversion_rate_pct": 10.47
+  },
+  {
+    "channel_key": 4.0,
+    "channel_name": "referral",
+    "sessions": 95155.0,
+    "engaged_sessions": 58957.0,
+    "users": 84170.0,
+    "booking_count": 13445,
+    "booking_amount_kwd": 180535.5,
+    "conversion_rate_pct": 14.13
+  },
+  {
+    "channel_key": null,
+    "channel_name": "unknown (attribution loss)",
+    "sessions": null,
+    "engaged_sessions": null,
+    "users": null,
+    "booking_count": 5417,
+    "booking_amount_kwd": 73323.0,
+    "conversion_rate_pct": null
+  }
+]

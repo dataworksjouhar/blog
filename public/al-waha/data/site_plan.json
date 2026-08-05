@@ -1,0 +1,275 @@
+{
+  "viewbox": [
+    0,
+    0,
+    1200,
+    660
+  ],
+  "note": "Stylised schematic of Al Waha Park. Unit areas are true to dim_tenant.unit_sqm; positions are illustrative.",
+  "units": [
+    {
+      "unit_no": "U-201",
+      "terrace_id": "retail-terrace",
+      "terrace_label": "Retail",
+      "orientation": "vertical",
+      "tenant_id": "T05",
+      "tenant_name": "Zahra Fashion",
+      "category": "Retail - Fashion",
+      "status": "active",
+      "unit_sqm": 150.0,
+      "x": 55,
+      "y": 110,
+      "width": 60,
+      "height": 75.0
+    },
+    {
+      "unit_no": "U-205",
+      "terrace_id": "retail-terrace",
+      "terrace_label": "Retail",
+      "orientation": "vertical",
+      "tenant_id": "T06",
+      "tenant_name": "Little Explorers Toys",
+      "category": "Retail - Specialty",
+      "status": "active",
+      "unit_sqm": 110.0,
+      "x": 55,
+      "y": 185.0,
+      "width": 60,
+      "height": 55.0
+    },
+    {
+      "unit_no": "U-210",
+      "terrace_id": "retail-terrace",
+      "terrace_label": "Retail",
+      "orientation": "vertical",
+      "tenant_id": "T07",
+      "tenant_name": "Home & Hearth",
+      "category": "Retail - Home & Lifestyle",
+      "status": "active",
+      "unit_sqm": 180.0,
+      "x": 55,
+      "y": 240.0,
+      "width": 60,
+      "height": 90.0
+    },
+    {
+      "unit_no": "U-215",
+      "terrace_id": "retail-terrace",
+      "terrace_label": "Retail",
+      "orientation": "vertical",
+      "tenant_id": "T08",
+      "tenant_name": "Desert Rose Perfumes",
+      "category": "Retail - Beauty & Fragrance",
+      "status": "active",
+      "unit_sqm": 90.0,
+      "x": 55,
+      "y": 330.0,
+      "width": 60,
+      "height": 45.0
+    },
+    {
+      "unit_no": "U-220",
+      "terrace_id": "retail-terrace",
+      "terrace_label": "Retail",
+      "orientation": "vertical",
+      "tenant_id": "T09",
+      "tenant_name": "Kuwait Sports Gear",
+      "category": "Retail - Fashion",
+      "status": "active",
+      "unit_sqm": 130.0,
+      "x": 55,
+      "y": 375.0,
+      "width": 60,
+      "height": 65.0
+    },
+    {
+      "unit_no": "U-101",
+      "terrace_id": "fb-terrace",
+      "terrace_label": "F&B",
+      "orientation": "vertical",
+      "tenant_id": "T01",
+      "tenant_name": "Sahara Grill",
+      "category": "F&B - Casual Dining",
+      "status": "active",
+      "unit_sqm": 220.0,
+      "x": 165,
+      "y": 110,
+      "width": 60,
+      "height": 110.0
+    },
+    {
+      "unit_no": "U-105",
+      "terrace_id": "fb-terrace",
+      "terrace_label": "F&B",
+      "orientation": "vertical",
+      "tenant_id": "T02",
+      "tenant_name": "Bunn Coffee Co.",
+      "category": "F&B - Cafe",
+      "status": "active",
+      "unit_sqm": 95.0,
+      "x": 165,
+      "y": 220.0,
+      "width": 60,
+      "height": 47.5
+    },
+    {
+      "unit_no": "U-108",
+      "terrace_id": "fb-terrace",
+      "terrace_label": "F&B",
+      "orientation": "vertical",
+      "tenant_id": "T03",
+      "tenant_name": "Wafi Sweets",
+      "category": "F&B - Quick Service",
+      "status": "active",
+      "unit_sqm": 60.0,
+      "x": 165,
+      "y": 267.5,
+      "width": 60,
+      "height": 30.0
+    },
+    {
+      "unit_no": "U-112",
+      "terrace_id": "fb-terrace",
+      "terrace_label": "F&B",
+      "orientation": "vertical",
+      "tenant_id": "T04",
+      "tenant_name": "Al Reef Bakery",
+      "category": "F&B - Bakery",
+      "status": "closed",
+      "unit_sqm": 75.0,
+      "x": 165,
+      "y": 297.5,
+      "width": 60,
+      "height": 37.5
+    },
+    {
+      "unit_no": "U-118",
+      "terrace_id": "fb-terrace",
+      "terrace_label": "F&B",
+      "orientation": "vertical",
+      "tenant_id": "T10",
+      "tenant_name": "TechFix Mobile Care",
+      "category": "Services - Repair",
+      "status": "active",
+      "unit_sqm": 45.0,
+      "x": 165,
+      "y": 335.0,
+      "width": 60,
+      "height": 22.5
+    }
+  ],
+  "venues": [
+    {
+      "venue_id": "V02",
+      "label": "The Farm",
+      "rect": [
+        55,
+        470,
+        170,
+        140
+      ],
+      "venue_name": "The Farm",
+      "venue_type": "petting_zoo"
+    },
+    {
+      "venue_id": "V03",
+      "label": "Pulse Gym",
+      "rect": [
+        430,
+        90,
+        230,
+        130
+      ],
+      "venue_name": "Pulse Gym",
+      "venue_type": "fitness"
+    },
+    {
+      "venue_id": "V04",
+      "label": "Equestrian Centre",
+      "rect": [
+        880,
+        90,
+        250,
+        230
+      ],
+      "venue_name": "Al Waha Equestrian Centre",
+      "venue_type": "equestrian"
+    },
+    {
+      "venue_id": "V01",
+      "label": "The Playground",
+      "rect": [
+        820,
+        420,
+        310,
+        190
+      ],
+      "venue_name": "The Playground",
+      "venue_type": "family_entertainment"
+    }
+  ],
+  "gates": [
+    {
+      "gate_id": "G01",
+      "at": [
+        75,
+        60
+      ],
+      "label_side": "above",
+      "gate_name": "Main Gate",
+      "description": "Primary pedestrian entrance from car park"
+    },
+    {
+      "gate_id": "G02",
+      "at": [
+        300,
+        60
+      ],
+      "label_side": "above",
+      "gate_name": "North Gate",
+      "description": "Secondary entrance near Playground and Farm"
+    },
+    {
+      "gate_id": "G03",
+      "at": [
+        1145,
+        60
+      ],
+      "label_side": "below",
+      "gate_name": "Equestrian Gate",
+      "description": "Dedicated entrance for equestrian centre"
+    },
+    {
+      "gate_id": "G04",
+      "at": [
+        1145,
+        300
+      ],
+      "label_side": "below",
+      "gate_name": "East Gate",
+      "description": "Entrance near F&B tenant cluster"
+    }
+  ],
+  "promenade": [
+    [
+      250,
+      90
+    ],
+    [
+      250,
+      480
+    ],
+    [
+      430,
+      615
+    ],
+    [
+      830,
+      618
+    ],
+    [
+      1120,
+      605
+    ]
+  ]
+}

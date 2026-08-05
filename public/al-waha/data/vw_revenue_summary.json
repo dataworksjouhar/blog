@@ -1,0 +1,202 @@
+[
+  {
+    "month_date_key": 20240701,
+    "month_start": "2024-07-01",
+    "own_venue_revenue_kwd": 18892.5,
+    "rental_revenue_kwd": 10950.0,
+    "membership_mrr_kwd": 24915.0,
+    "total_revenue_kwd": 54757.5
+  },
+  {
+    "month_date_key": 20240801,
+    "month_start": "2024-08-01",
+    "own_venue_revenue_kwd": 23038.5,
+    "rental_revenue_kwd": 10950.0,
+    "membership_mrr_kwd": 24995.0,
+    "total_revenue_kwd": 58983.5
+  },
+  {
+    "month_date_key": 20240901,
+    "month_start": "2024-09-01",
+    "own_venue_revenue_kwd": 34819.0,
+    "rental_revenue_kwd": 12161.04772,
+    "membership_mrr_kwd": 25660.0,
+    "total_revenue_kwd": 72640.04772
+  },
+  {
+    "month_date_key": 20241001,
+    "month_start": "2024-10-01",
+    "own_venue_revenue_kwd": 73427.5,
+    "rental_revenue_kwd": 16427.37855,
+    "membership_mrr_kwd": 25905.0,
+    "total_revenue_kwd": 115759.87855
+  },
+  {
+    "month_date_key": 20241101,
+    "month_start": "2024-11-01",
+    "own_venue_revenue_kwd": 80996.5,
+    "rental_revenue_kwd": 16120.63207,
+    "membership_mrr_kwd": 25795.0,
+    "total_revenue_kwd": 122912.13207
+  },
+  {
+    "month_date_key": 20241201,
+    "month_start": "2024-12-01",
+    "own_venue_revenue_kwd": 81644.5,
+    "rental_revenue_kwd": 16097.83829,
+    "membership_mrr_kwd": 26285.0,
+    "total_revenue_kwd": 124027.33829
+  },
+  {
+    "month_date_key": 20250101,
+    "month_start": "2025-01-01",
+    "own_venue_revenue_kwd": 80445.5,
+    "rental_revenue_kwd": 15819.57546,
+    "membership_mrr_kwd": 27210.0,
+    "total_revenue_kwd": 123475.07546
+  },
+  {
+    "month_date_key": 20250201,
+    "month_start": "2025-02-01",
+    "own_venue_revenue_kwd": 73719.0,
+    "rental_revenue_kwd": 15558.96045,
+    "membership_mrr_kwd": 26645.0,
+    "total_revenue_kwd": 115922.96045
+  },
+  {
+    "month_date_key": 20250301,
+    "month_start": "2025-03-01",
+    "own_venue_revenue_kwd": 76157.5,
+    "rental_revenue_kwd": 15584.12272,
+    "membership_mrr_kwd": 26790.0,
+    "total_revenue_kwd": 118531.62272
+  },
+  {
+    "month_date_key": 20250401,
+    "month_start": "2025-04-01",
+    "own_venue_revenue_kwd": 52537.0,
+    "rental_revenue_kwd": 10355.81087,
+    "membership_mrr_kwd": 26135.0,
+    "total_revenue_kwd": 89027.81087
+  },
+  {
+    "month_date_key": 20250501,
+    "month_start": "2025-05-01",
+    "own_venue_revenue_kwd": 32760.0,
+    "rental_revenue_kwd": 10300.0,
+    "membership_mrr_kwd": 25995.0,
+    "total_revenue_kwd": 69055.0
+  },
+  {
+    "month_date_key": 20250601,
+    "month_start": "2025-06-01",
+    "own_venue_revenue_kwd": 21553.0,
+    "rental_revenue_kwd": 10300.0,
+    "membership_mrr_kwd": 25640.0,
+    "total_revenue_kwd": 57493.0
+  },
+  {
+    "month_date_key": 20250701,
+    "month_start": "2025-07-01",
+    "own_venue_revenue_kwd": 19465.5,
+    "rental_revenue_kwd": 10300.0,
+    "membership_mrr_kwd": 25875.0,
+    "total_revenue_kwd": 55640.5
+  },
+  {
+    "month_date_key": 20250801,
+    "month_start": "2025-08-01",
+    "own_venue_revenue_kwd": 21641.5,
+    "rental_revenue_kwd": 10300.0,
+    "membership_mrr_kwd": 26285.0,
+    "total_revenue_kwd": 58226.5
+  },
+  {
+    "month_date_key": 20250901,
+    "month_start": "2025-09-01",
+    "own_venue_revenue_kwd": 36536.5,
+    "rental_revenue_kwd": 11397.28807,
+    "membership_mrr_kwd": 25990.0,
+    "total_revenue_kwd": 73923.78807
+  },
+  {
+    "month_date_key": 20251001,
+    "month_start": "2025-10-01",
+    "own_venue_revenue_kwd": 75350.5,
+    "rental_revenue_kwd": 15202.98744,
+    "membership_mrr_kwd": 26615.0,
+    "total_revenue_kwd": 117168.48744
+  },
+  {
+    "month_date_key": 20251101,
+    "month_start": "2025-11-01",
+    "own_venue_revenue_kwd": 79936.0,
+    "rental_revenue_kwd": 14579.79729,
+    "membership_mrr_kwd": 26750.0,
+    "total_revenue_kwd": 121265.79729
+  },
+  {
+    "month_date_key": 20251201,
+    "month_start": "2025-12-01",
+    "own_venue_revenue_kwd": 83560.5,
+    "rental_revenue_kwd": 14692.98585,
+    "membership_mrr_kwd": 26785.0,
+    "total_revenue_kwd": 125038.48585
+  },
+  {
+    "month_date_key": 20260101,
+    "month_start": "2026-01-01",
+    "own_venue_revenue_kwd": 84131.5,
+    "rental_revenue_kwd": 14495.73442,
+    "membership_mrr_kwd": 27510.0,
+    "total_revenue_kwd": 126137.23442
+  },
+  {
+    "month_date_key": 20260201,
+    "month_start": "2026-02-01",
+    "own_venue_revenue_kwd": 73713.0,
+    "rental_revenue_kwd": 14209.98882,
+    "membership_mrr_kwd": 27340.0,
+    "total_revenue_kwd": 115262.98882
+  },
+  {
+    "month_date_key": 20260301,
+    "month_start": "2026-03-01",
+    "own_venue_revenue_kwd": 74544.5,
+    "rental_revenue_kwd": 14830.24237,
+    "membership_mrr_kwd": 27335.0,
+    "total_revenue_kwd": 116709.74237
+  },
+  {
+    "month_date_key": 20260401,
+    "month_start": "2026-04-01",
+    "own_venue_revenue_kwd": 50623.5,
+    "rental_revenue_kwd": 10411.11767,
+    "membership_mrr_kwd": 26985.0,
+    "total_revenue_kwd": 88019.61767
+  },
+  {
+    "month_date_key": 20260501,
+    "month_start": "2026-05-01",
+    "own_venue_revenue_kwd": 33484.5,
+    "rental_revenue_kwd": 10300.0,
+    "membership_mrr_kwd": 26680.0,
+    "total_revenue_kwd": 70464.5
+  },
+  {
+    "month_date_key": 20260601,
+    "month_start": "2026-06-01",
+    "own_venue_revenue_kwd": 22861.0,
+    "rental_revenue_kwd": 10300.0,
+    "membership_mrr_kwd": 26500.0,
+    "total_revenue_kwd": 59661.0
+  },
+  {
+    "month_date_key": 20260701,
+    "month_start": "2026-07-01",
+    "own_venue_revenue_kwd": 530.0,
+    "rental_revenue_kwd": 0.0,
+    "membership_mrr_kwd": 26365.0,
+    "total_revenue_kwd": 26895.0
+  }
+]

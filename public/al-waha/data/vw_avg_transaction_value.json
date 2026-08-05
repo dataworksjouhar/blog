@@ -1,0 +1,42 @@
+[
+  {
+    "venue_key": 4,
+    "venue_id": "V04",
+    "venue_name": "Al Waha Equestrian Centre",
+    "venue_type": "equestrian",
+    "sale_invoice_count": 854,
+    "refund_invoice_count": 17,
+    "avg_transaction_value_kwd": 71.10070257611241,
+    "net_revenue_kwd": 59550.0
+  },
+  {
+    "venue_key": 3,
+    "venue_id": "V03",
+    "venue_name": "Pulse Gym",
+    "venue_type": "fitness",
+    "sale_invoice_count": 10964,
+    "refund_invoice_count": 212,
+    "avg_transaction_value_kwd": 5.0,
+    "net_revenue_kwd": 53760.0
+  },
+  {
+    "venue_key": 2,
+    "venue_id": "V02",
+    "venue_name": "The Farm",
+    "venue_type": "petting_zoo",
+    "sale_invoice_count": 86564,
+    "refund_invoice_count": 2284,
+    "avg_transaction_value_kwd": 3.894471142738321,
+    "net_revenue_kwd": 330586.0
+  },
+  {
+    "venue_key": 1,
+    "venue_id": "V01",
+    "venue_name": "The Playground",
+    "venue_type": "family_entertainment",
+    "sale_invoice_count": 173144,
+    "refund_invoice_count": 3492,
+    "avg_transaction_value_kwd": 4.930624220302176,
+    "net_revenue_kwd": 836428.0
+  }
+]

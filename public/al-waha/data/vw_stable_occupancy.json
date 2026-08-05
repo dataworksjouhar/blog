@@ -1,0 +1,202 @@
+[
+  {
+    "month_date_key": 20240701,
+    "month_start": "2024-07-01",
+    "occupied_boxes": 16,
+    "total_boxes": 20,
+    "occupancy_pct": 80.0,
+    "boarding_revenue_kwd": 2880.0
+  },
+  {
+    "month_date_key": 20240801,
+    "month_start": "2024-08-01",
+    "occupied_boxes": 16,
+    "total_boxes": 20,
+    "occupancy_pct": 80.0,
+    "boarding_revenue_kwd": 2880.0
+  },
+  {
+    "month_date_key": 20240901,
+    "month_start": "2024-09-01",
+    "occupied_boxes": 16,
+    "total_boxes": 20,
+    "occupancy_pct": 80.0,
+    "boarding_revenue_kwd": 2880.0
+  },
+  {
+    "month_date_key": 20241001,
+    "month_start": "2024-10-01",
+    "occupied_boxes": 17,
+    "total_boxes": 20,
+    "occupancy_pct": 85.0,
+    "boarding_revenue_kwd": 3060.0
+  },
+  {
+    "month_date_key": 20241101,
+    "month_start": "2024-11-01",
+    "occupied_boxes": 17,
+    "total_boxes": 20,
+    "occupancy_pct": 85.0,
+    "boarding_revenue_kwd": 3060.0
+  },
+  {
+    "month_date_key": 20241201,
+    "month_start": "2024-12-01",
+    "occupied_boxes": 18,
+    "total_boxes": 20,
+    "occupancy_pct": 90.0,
+    "boarding_revenue_kwd": 3240.0
+  },
+  {
+    "month_date_key": 20250101,
+    "month_start": "2025-01-01",
+    "occupied_boxes": 18,
+    "total_boxes": 20,
+    "occupancy_pct": 90.0,
+    "boarding_revenue_kwd": 3240.0
+  },
+  {
+    "month_date_key": 20250201,
+    "month_start": "2025-02-01",
+    "occupied_boxes": 17,
+    "total_boxes": 20,
+    "occupancy_pct": 85.0,
+    "boarding_revenue_kwd": 3060.0
+  },
+  {
+    "month_date_key": 20250301,
+    "month_start": "2025-03-01",
+    "occupied_boxes": 18,
+    "total_boxes": 20,
+    "occupancy_pct": 90.0,
+    "boarding_revenue_kwd": 3240.0
+  },
+  {
+    "month_date_key": 20250401,
+    "month_start": "2025-04-01",
+    "occupied_boxes": 18,
+    "total_boxes": 20,
+    "occupancy_pct": 90.0,
+    "boarding_revenue_kwd": 3240.0
+  },
+  {
+    "month_date_key": 20250501,
+    "month_start": "2025-05-01",
+    "occupied_boxes": 17,
+    "total_boxes": 20,
+    "occupancy_pct": 85.0,
+    "boarding_revenue_kwd": 3060.0
+  },
+  {
+    "month_date_key": 20250601,
+    "month_start": "2025-06-01",
+    "occupied_boxes": 17,
+    "total_boxes": 20,
+    "occupancy_pct": 85.0,
+    "boarding_revenue_kwd": 3060.0
+  },
+  {
+    "month_date_key": 20250701,
+    "month_start": "2025-07-01",
+    "occupied_boxes": 17,
+    "total_boxes": 20,
+    "occupancy_pct": 85.0,
+    "boarding_revenue_kwd": 3060.0
+  },
+  {
+    "month_date_key": 20250801,
+    "month_start": "2025-08-01",
+    "occupied_boxes": 19,
+    "total_boxes": 20,
+    "occupancy_pct": 95.0,
+    "boarding_revenue_kwd": 3420.0
+  },
+  {
+    "month_date_key": 20250901,
+    "month_start": "2025-09-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20251001,
+    "month_start": "2025-10-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20251101,
+    "month_start": "2025-11-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20251201,
+    "month_start": "2025-12-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20260101,
+    "month_start": "2026-01-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20260201,
+    "month_start": "2026-02-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20260301,
+    "month_start": "2026-03-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20260401,
+    "month_start": "2026-04-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20260501,
+    "month_start": "2026-05-01",
+    "occupied_boxes": 20,
+    "total_boxes": 20,
+    "occupancy_pct": 100.0,
+    "boarding_revenue_kwd": 3600.0
+  },
+  {
+    "month_date_key": 20260601,
+    "month_start": "2026-06-01",
+    "occupied_boxes": 19,
+    "total_boxes": 20,
+    "occupancy_pct": 95.0,
+    "boarding_revenue_kwd": 3420.0
+  },
+  {
+    "month_date_key": 20260701,
+    "month_start": "2026-07-01",
+    "occupied_boxes": 19,
+    "total_boxes": 20,
+    "occupancy_pct": 95.0,
+    "boarding_revenue_kwd": 3420.0
+  }
+]
