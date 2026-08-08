@@ -14,12 +14,12 @@ In my [last post](/posts/footfall-model) I described owning the business logic o
 
 The honest way to answer was to build one, end to end, alone. Seven source systems, two years of deliberately broken data, a Python pipeline landing it raw and modelling it into a star schema in Postgres, and a React dashboard on top. The whole thing runs from two commands.
 
-[**Open the live dashboard**](https://mohammedjouhar.com/al-waha/) (interactive, no login) &middot; [**Code on GitHub**](https://github.com/dataworksjouhar/Waha-analytics) &middot; [**Video walkthrough**](https://www.youtube.com/watch?v=VBKYDDnGoa4)
+[**Open the live dashboard**](https://mohammedjouhar.com/al-waha/) (interactive, no login) &middot; [**Code on GitHub**](https://github.com/dataworksjouhar/Waha-analytics) &middot; [**Video walkthrough**](https://www.youtube.com/watch?v=9J1KSkLrsPQ)
 
 If you would rather watch than read, this is the whole project in about four minutes: the dashboard, the source files, the pipeline, and the database behind it.
 
 <div style="position:relative;padding-bottom:56.25%;height:0;margin:26px 0;border-radius:8px;overflow:hidden;">
-  <iframe src="https://www.youtube.com/embed/VBKYDDnGoa4" title="Al Waha analytics platform walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+  <iframe src="https://www.youtube.com/embed/9J1KSkLrsPQ" title="Al Waha analytics platform walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
 </div>
 
 Here is the shape of the whole thing before I go into any of it. The top half is the pattern most modern analytics platforms follow. The bottom half is what I actually built.
@@ -171,7 +171,7 @@ Six sections: footfall and venue sales, leasing and tenants, an interactive site
 
 **The data quality page does not open with a wall of green.** It opens with what went wrong: 14 source problems, 12,397 flagged records, each with what happened and what the pipeline did about it. The 27 passing checks come second, on purpose, because a page that leads with green ticks invites exactly the wrong conclusion. The checks pass because the mess was handled, not because the data was clean. A tenant under-reporting every single month passes every check on that page. There is also a card listing what the dashboard cannot tell you, which I think every dashboard should have and almost none do.
 
-[**Open the live dashboard**](https://mohammedjouhar.com/al-waha/) &middot; [**Watch the walkthrough**](https://www.youtube.com/watch?v=VBKYDDnGoa4)
+[**Open the live dashboard**](https://mohammedjouhar.com/al-waha/) &middot; [**Watch the walkthrough**](https://www.youtube.com/watch?v=9J1KSkLrsPQ)
 
 ## What the build taught me
 
