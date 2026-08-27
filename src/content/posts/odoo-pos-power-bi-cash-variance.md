@@ -1,6 +1,8 @@
 ---
 title: "From one flat Odoo export to a POS dashboard that catches cash errors"
 description: "A hierarchical Odoo POS export, nearly 30,000 rows deep, rebuilt into a four-table star schema and two dashboards. Including the measure that catches a cashier whose errors cancel out."
+impact: "~30K row flat export rebuilt into a 4-table star schema"
+tools: ["Power BI", "DAX", "Star schema"]
 date: 2026-07-14
 category: "projects"
 level: "advanced"
