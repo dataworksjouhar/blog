@@ -1,6 +1,8 @@
 ---
 title: "HealthReach International: a dual-audience healthcare dashboard in Power BI"
 description: "A portfolio Power BI project on fully synthetic data. One model that answers both clinical and donor questions across a 31-country humanitarian health program."
+impact: "Galaxy schema over ~500K synthetic rows, ~45 DAX measures, 3 audience pages"
+tools: ["Power BI", "DAX", "Python", "Data modelling"]
 date: 2026-06-27
 category: "projects"
 level: "advanced"
