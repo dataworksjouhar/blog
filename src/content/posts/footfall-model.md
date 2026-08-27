@@ -1,6 +1,8 @@
 ---
 title: "One footfall number for 70+ brands, when every source counted something different"
 description: "Door sensors, AI cameras, restaurant POS guest counts and web sessions, across the Middle East, Turkey and Central Europe. I owned the business logic that made them one trusted number."
+impact: "One trusted footfall number across 70+ brands and 3 regions"
+tools: ["SQL", "Power BI", "KPI definition", "Data modelling"]
 date: 2026-08-03
 category: "projects"
 level: "advanced"
