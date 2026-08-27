@@ -1,6 +1,11 @@
 ---
 title: "Building the whole stack: seven messy sources to a live dashboard"
 description: "After owning the business logic of an enterprise footfall model, I built an entire analytics platform myself: synthetic data, medallion pipeline, star schema, and a React dashboard. With AI as the pair-builder and my judgement as the safety net."
+impact: "Seven source systems into one live dashboard, built end to end"
+tools: ["Python", "PostgreSQL", "Star schema", "React"]
+demo: "https://mohammedjouhar.com/al-waha/"
+repo: "https://github.com/dataworksjouhar/Waha-analytics"
+video: "https://www.youtube.com/watch?v=9J1KSkLrsPQ"
 date: 2026-08-05
 category: "projects"
 level: "advanced"
