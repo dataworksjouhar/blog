@@ -7,27 +7,47 @@ const posts = (await getCollection('posts')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 const recent = posts.slice(0, 6);
+
+const proof = [
+  '12+ years in retail and enterprise analytics',
+  "Alshaya · Lowe's · Tesco · Decathlon",
+  '5,600+ stores supported',
+  'CEO and CTO award recognised',
+  'Power BI · SQL · Python · AI agents',
+];
 ---
-<BaseLayout title="Mohammed Jouhar · Notes on data, AI, and learning">
+<BaseLayout title="Mohammed Jouhar · Senior Business Data Analyst">
   <section class="hero">
     <canvas class="hero-canvas" id="constellation" aria-hidden="true"></canvas>
     <div class="wrap">
-      <div class="eyebrow">A digital notebook</div>
-      <h1>Notes on data, AI,<br />and the things <em>I'm learning</em>.</h1>
+      <div class="eyebrow">Senior Business Data Analyst</div>
+      <h1>Turning messy data into reporting people <em>trust</em>.</h1>
       <p class="tagline">
-        Where I share my learning notes, the projects I build, and the occasional
-        lesson from work and life.
+        I'm Mohammed Jouhar. For 12+ years I've turned ambiguous requirements into
+        reporting, automation, and AI that businesses actually rely on. This is
+        where I write about the work.
       </p>
-      <p class="cred"><b>Mohammed Jouhar</b> · Senior Business Data Analyst · 12+ years in retail analytics</p>
-      <p class="cred" style="margin-top:5px;color:var(--ink-faint)">Previously at Tesco · Lowe's · Alshaya</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/projects">View my work</a>
+        <a class="btn btn-ghost" href="mailto:dataworks.jouhar@gmail.com?subject=CV%20request&body=Hi%20Mohammed%2C%0A%0AI%27d%20like%20to%20request%20a%20copy%20of%20your%20CV.%0A%0A">Request my CV</a>
+        <a class="btn btn-ghost" href="/recommendations">Recommendations</a>
+      </div>
     </div>
   </section>
+
+  <div class="cred-strip">
+    <div class="wrap">
+      <ul>
+        {proof.map((p) => <li>{p}</li>)}
+      </ul>
+    </div>
+  </div>
 
   <section class="section">
     <div class="wrap">
       <div class="section-head reveal">
         <h2>Latest posts</h2>
-        <span class="meta">most recent first</span>
+        <span class="meta">notes, projects and reflections</span>
       </div>
       {recent.length > 0 ? (
         <div class="card-grid">
@@ -39,6 +59,53 @@ const recent = posts.slice(0, 6);
           <p>The first posts are on their way.</p>
         </div>
       )}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>What people say</h2>
+        <a class="meta" href="/recommendations">read all</a>
+      </div>
+      <div class="quote-grid">
+        <figure class="quote-card reveal">
+          <blockquote class="quote-body">
+            He played a key role in developing several AI agents and solutions
+            that strengthened the governance and management of our AI ecosystem.
+          </blockquote>
+          <figcaption class="quote-author">
+            <span class="qa-name">Amine Mansour</span>
+            <span class="qa-role">Managing Director &amp; Head of Data &amp; AI, Itecor</span>
+          </figcaption>
+        </figure>
+        <figure class="quote-card reveal">
+          <blockquote class="quote-body">
+            Under his guidance, we developed a JIRA agent that reduced ticket
+            analysis time by over 90% for Product Managers.
+          </blockquote>
+          <figcaption class="quote-author">
+            <span class="qa-name">Sambhav Jain</span>
+            <span class="qa-role">AI Intern, Alshaya Group</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-block reveal">
+        <h2>Looking for someone who can do this work?</h2>
+        <p>
+          I'm open to senior data, BI, and AI roles. Happy to talk through any of
+          these projects in detail, and I'll gladly send my CV on request.
+        </p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="mailto:dataworks.jouhar@gmail.com">Email me</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/mohammed-jouhar-a631b587/" target="_blank" rel="noopener">Connect on LinkedIn</a>
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -106,18 +173,14 @@ const recent = posts.slice(0, 6);
     function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
 
     size();
-    if (reduce) {
-      draw(); stop();
-    } else {
+    if (reduce) { draw(); stop(); }
+    else {
       start();
       document.addEventListener('visibilitychange', () =>
         document.hidden ? stop() : start()
       );
     }
     let t;
-    window.addEventListener('resize', () => {
-      clearTimeout(t);
-      t = setTimeout(size, 200);
-    });
+    window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(size, 200); });
   })();
 </script>
