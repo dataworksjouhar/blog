@@ -10,26 +10,128 @@ interface Props {
       tags: string[];
       featured: boolean;
       external?: string;
+      impact?: string;
+      tools: string[];
+      demo?: string;
+      repo?: string;
+      video?: string;
+      thumbnail?: string;
     };
   };
 }
 const { post } = Astro.props;
-const { title, description, date, level, featured, external } = post.data;
+const {
+  title, description, date, level, featured, external,
+  impact, tools, demo, repo, video, thumbnail,
+} = post.data;
+
 const href = external ?? `/posts/${post.id}`;
 const fmtDate = date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
 const isExternal = Boolean(external);
+const extraLinks = [
+  { href: demo, label: 'Live demo' },
+  { href: repo, label: 'GitHub' },
+  { href: video, label: 'Walkthrough' },
+].filter((l) => Boolean(l.href));
 ---
 <article class="post-card reveal">
+  {thumbnail && (
+    <a class="card-thumb" href={href} aria-hidden="true" tabindex="-1">
+      <img src={thumbnail} alt="" loading="lazy" />
+    </a>
+  )}
+
   <div class="badges">
     {featured && <span class="badge featured">Featured</span>}
     {level && <span class={`badge level-${level}`}>{level}</span>}
   </div>
+
   <a class="card-link" href={href}>
     <h3>{title}</h3>
   </a>
+
+  {impact && <p class="card-impact">{impact}</p>}
+
   <p class="excerpt">{description}</p>
+
+  {tools.length > 0 && (
+    <ul class="card-tools">
+      {tools.map((t) => <li>{t}</li>)}
+    </ul>
+  )}
+
+  {extraLinks.length > 0 && (
+    <div class="card-links">
+      {extraLinks.map((l) => (
+        <a href={l.href} target="_blank" rel="noopener">{l.label}</a>
+      ))}
+    </div>
+  )}
+
   <div class="card-meta">
     <span>{fmtDate}</span>
     {isExternal && <span>· full guide</span>}
   </div>
 </article>
+
+<style>
+  .card-thumb{
+    display:block;
+    margin:-28px -28px 4px;
+    border-radius:18px 18px 0 0;
+    overflow:hidden;
+    line-height:0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .card-thumb img{
+    width:100%;
+    height:170px;
+    object-fit:cover;
+    display:block;
+    transition:transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .post-card:hover .card-thumb img{transform:scale(1.03)}
+
+  .card-impact{
+    font-family:var(--body);
+    font-weight:700;
+    font-size:15px;
+    line-height:1.5;
+    color:var(--azure-deep);
+    background:var(--azure-light);
+    border-radius:10px;
+    padding:9px 13px;
+    margin:0;
+  }
+
+  .card-tools{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .card-tools li{
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:.05em;
+    color:var(--ink-faint);
+    border:1px solid var(--line-soft);
+    background:rgba(244,236,224,.55);
+    border-radius:6px;
+    padding:4px 9px;
+  }
+
+  .card-links{display:flex;flex-wrap:wrap;gap:14px}
+  .card-links a{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:13px;
+    color:var(--azure-deep);
+    text-decoration:none;
+    border-bottom:1px solid var(--line);
+    padding-bottom:1px;
+  }
+  .card-links a:hover{border-color:var(--azure)}
+</style>
