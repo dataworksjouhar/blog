@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const recs = [
+  {
+    name: 'Amine Mansour',
+    role: 'Managing Director & Head of Data & AI, Itecor',
+    rel: 'Managed Mohammed directly at Alshaya',
+    quote:
+      'He played a key role in developing several AI agents and solutions that strengthened the governance and management of our AI ecosystem. His curiosity, dedication, and ability to turn ideas into practical solutions make him a valuable asset to any team.',
+  },
+  {
+    name: 'Gwendolyn Silveira',
+    role: "Director, Lowe's India",
+    rel: 'Managed Mohammed directly for three years',
+    quote:
+      "One of Jouhar's standout strength is his ability to dive deep into data and identify trends that directly impact business performance. Whether it was designing dashboards, optimizing reporting processes, or presenting insights to stakeholders, Jouhar always approached tasks with precision, creativity, and a clear understanding of business goals.",
+  },
+  {
+    name: 'Omar Ehrari',
+    role: 'Strategist and Entrepreneur',
+    rel: "Managed Mohammed directly at Lowe's",
+    quote:
+      'He played a key role in building interactive Power BI dashboards that helped our leadership monitor performance and make more informed decisions. What stood out most was his ability to convert raw data into actionable insights, and his dedication to upskilling others.',
+  },
+  {
+    name: 'Sambhav Jain',
+    role: 'AI Intern, Alshaya Group',
+    rel: 'Reported to Mohammed',
+    quote:
+      'Under his guidance, we developed a JIRA agent that reduced ticket analysis time by over 90% for Product Managers. What makes Jouhar an exceptional leader is his rare blend of relentless curiosity and business acumen. He encouraged uninhibited brainstorming yet skillfully used his extensive experience to prune ideas so we focused only on the most impactful solutions.',
+  },
+  {
+    name: 'Venkataramana Pai B',
+    role: 'Business Operations Manager, Myntra',
+    rel: "Worked with Mohammed at Lowe's India",
+    quote:
+      'Jouhar is always a go to person and a powerhouse of talent. He mentored me at Lowes India, his approach towards problem solving was strategic as he comes from a strong data analytics background.',
+  },
+  {
+    name: 'Melvin Joseph',
+    role: 'Senior Manager, Digital Commerce',
+    rel: "Managed Mohammed directly at Lowe's",
+    quote:
+      'He is very strong with his technical skills and hits the ball out of the park each time an opportunity is given to him. He is always hungry to learn more and has always contributed to the betterment of the team and the organisation.',
+  },
+];
+---
+<BaseLayout
+  title="Recommendations · Mohammed Jouhar"
+  description="What managers, peers and team members have said about working with Mohammed Jouhar."
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Recommendations</div>
+      <div class="section-head">
+        <h2>What people I've worked with say</h2>
+      </div>
+      <p class="page-intro">
+        Recommendations from LinkedIn, written by managers, colleagues, and people
+        who reported to me across Alshaya and Lowe's.
+      </p>
+
+      <div class="quote-list">
+        {recs.map((r) => (
+          <figure class="quote-card reveal">
+            <blockquote class="quote-body">{r.quote}</blockquote>
+            <figcaption class="quote-author">
+              <span class="qa-name">{r.name}</span>
+              <span class="qa-role">{r.role}</span>
+              <span class="qa-rel">{r.rel}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      <div class="cta-block reveal">
+        <p>
+          You can read these in full, along with my full career history, on
+          LinkedIn.
+        </p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="https://www.linkedin.com/in/mohammed-jouhar-a631b587/" target="_blank" rel="noopener">View on LinkedIn</a>
+          <a class="btn btn-ghost" href="mailto:dataworks.jouhar@gmail.com">Email me</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
