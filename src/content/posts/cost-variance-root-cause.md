@@ -1,6 +1,8 @@
 ---
 title: "Cutting a two-year cost variance from 48% to under 2%"
 description: "A root cause analysis across a Medallion data platform. How I traced a long-standing cost gap to two hidden causes and worked with engineering to fix both."
+impact: "Margin variance cut from 48% to under 2% after two years unsolved"
+tools: ["SQL", "Power BI", "Azure Databricks", "Medallion architecture"]
 date: 2025-06-14
 category: "projects"
 level: "advanced"
