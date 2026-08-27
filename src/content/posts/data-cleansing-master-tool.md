@@ -1,6 +1,8 @@
 ---
 title: "The Data Cleansing Master Tool: 2.5 days of work, done in under 3 minutes"
 description: "An in-house Excel, VBA and Power BI tool that automated 400+ data quality rules, replaced a six-figure platform, saved 109,406 KWD, and earned a CTO award."
+impact: "2.5 days of work down to under 3 minutes. 109,406 KWD saved. CTO Award."
+tools: ["Excel", "VBA", "Power BI", "400+ rules"]
 date: 2024-12-09
 category: "projects"
 level: "intermediate"
