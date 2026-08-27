@@ -1,0 +1,79 @@
+/* ===========================================================
+   PORTFOLIO UPGRADE ADDITIONS
+   Paste this block at the very END of src/styles/global.css.
+   Do not delete anything above it.
+   =========================================================== */
+
+/* buttons */
+.hero-actions,.cta-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{
+  display:inline-block;font-family:var(--body);font-weight:600;font-size:14.5px;
+  padding:12px 24px;border-radius:40px;transition:.22s;border:1px solid transparent;
+  text-decoration:none;line-height:1.2;
+}
+.btn:hover{text-decoration:none;transform:translateY(-2px)}
+.btn-primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-primary:hover{background:var(--azure-deep);border-color:var(--azure-deep);color:#fff}
+.btn-ghost{background:transparent;color:var(--azure-deep);border-color:var(--line)}
+.btn-ghost:hover{background:var(--azure-light);border-color:var(--azure)}
+
+/* credibility strip */
+.cred-strip{
+  border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+  background:rgba(250,246,238,.6);position:relative;z-index:1;
+}
+.cred-strip ul{
+  display:flex;flex-wrap:wrap;gap:10px 30px;list-style:none;margin:0;
+  padding:18px 0;align-items:center;justify-content:flex-start;
+}
+.cred-strip li{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-faint);display:flex;align-items:center;gap:12px;
+}
+.cred-strip li:not(:last-child)::after{
+  content:"";width:4px;height:4px;border-radius:50%;background:var(--terra);opacity:.5;
+}
+
+/* quote cards */
+.quote-grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.quote-list{display:grid;gap:22px;margin-bottom:14px}
+.quote-card{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:30px 30px 26px;margin:0;position:relative;
+  box-shadow:0 16px 34px -30px var(--shadow);transition:.25s;
+}
+.quote-card:hover{border-color:var(--azure)}
+.quote-card::before{
+  content:"\201C";position:absolute;top:6px;right:22px;font-family:var(--display);
+  font-size:60px;line-height:1;color:var(--terra);opacity:.18;
+}
+.quote-body{
+  font-family:var(--display);font-size:17.5px;line-height:1.58;color:var(--ink);
+  margin:0 0 18px;border:none;padding:0;font-style:normal;background:none;
+}
+.quote-author{display:flex;flex-direction:column;gap:2px}
+.qa-name{font-family:var(--body);font-weight:700;font-size:14.5px;color:var(--ink)}
+.qa-role{font-size:13.5px;color:var(--ink-soft)}
+.qa-rel{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-faint);margin-top:3px}
+
+/* closing call to action */
+.cta-block{
+  background:var(--ink);color:var(--paper);border-radius:22px;
+  padding:clamp(30px,5vw,52px);text-align:left;
+}
+.cta-block h2{color:var(--paper);font-size:clamp(24px,3.4vw,34px);margin-bottom:12px}
+.cta-block p{color:rgba(244,236,224,.78);max-width:52ch;margin:0}
+.cta-block .btn-primary{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.cta-block .btn-primary:hover{background:#d4a63f;border-color:#d4a63f;color:var(--ink)}
+.cta-block .btn-ghost{color:var(--paper);border-color:rgba(244,236,224,.3)}
+.cta-block .btn-ghost:hover{background:rgba(244,236,224,.1);border-color:rgba(244,236,224,.55)}
+
+/* section head link */
+.section-head a.meta{text-decoration:none;border-bottom:1px solid var(--line)}
+.section-head a.meta:hover{color:var(--azure-deep);border-color:var(--azure)}
+
+@media(max-width:600px){
+  .cred-strip ul{gap:8px 18px;padding:14px 0}
+  .cred-strip li{font-size:10.5px;gap:8px}
+  .btn{padding:11px 20px;font-size:14px}
+}
