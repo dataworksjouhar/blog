@@ -23,7 +23,7 @@ featured: true
   ></iframe>
 </div>
 
-*A six minute walkthrough: the machine goes offline, then answers in
+*A seven minute walkthrough: the machine goes offline, then answers in
 English and Arabic, refuses a question it cannot answer, and learns a new
 document on camera.*
 
