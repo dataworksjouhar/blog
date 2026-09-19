@@ -23,7 +23,7 @@ featured: true
   ></iframe>
 </div>
 
-*A four minute walkthrough: the machine goes offline, then answers in
+*A six minute walkthrough: the machine goes offline, then answers in
 English and Arabic, refuses a question it cannot answer, and learns a new
 document on camera.*
 
@@ -71,6 +71,36 @@ ask something, the system pulls the handful of pieces closest in meaning,
 and the model answers using only those, with the source shown beside the
 answer.
 
+### What it runs on
+
+For anyone who wants to picture the machine rather than take my word for
+it.
+
+| Component | What I used |
+| --- | --- |
+| Answering model | Qwen3 1.7B, served locally through Ollama |
+| Embedding model | A multilingual model producing 768 numbers per piece, chosen because it handles Arabic as well as English |
+| Database | LanceDB, a local file on disk, no server process |
+| Text extraction | poppler, after the Arabic problem described below |
+| Backend | Python with FastAPI |
+| Interface | A small React page |
+| Machine | Intel i3, two cores, 8 GB of memory, no graphics card |
+| Pieces retrieved per question | Three |
+
+Response times on that machine, from the figures printed under each
+answer: finding the sources takes a few seconds, and the first word of
+the answer appears somewhere between 20 and 60 seconds later, depending
+on how much memory is free at the time.
+
+That spread is worth being honest about. It is a laptop running a
+language model, a web server and a browser inside 8 GB, so the numbers
+move. On a machine with a graphics card the same answers arrive in
+seconds. The hardware changes the speed, not the answer.
+
+This is also why the sources appear on screen before the answer does.
+Retrieval finishes early, so the excerpts are there to read while the
+model is still writing.
+
 ## Not everyone should see everything
 
 In most organisations the interesting question is not whether an
@@ -81,9 +111,10 @@ shared space everyone can see. A member of staff sees only the
 departments they belong to.
 
 The demonstration is short and it is the part that matters most to a
-bank. One employee asks about a staff leave policy and gets an answer.
-Another employee asks the identical question and gets nothing. Same
-system, same question, same document sitting on the same server.
+bank. One employee asks for the staff salary bands and gets them, with
+the source policy shown beside the answer. Another employee asks the
+identical question and gets a not-found response. Same system, same
+question, same document sitting on the same server.
 
 Two details make that real rather than cosmetic.
 
