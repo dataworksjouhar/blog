@@ -10,7 +10,9 @@ interface Props {
 }
 const { title, description = "Notes on data, AI, and the things I'm learning, by Mohammed Jouhar.", image } = Astro.props;
 const pageUrl = new URL(Astro.url.pathname, Astro.site);
-const imageUrl = image ? new URL(image, Astro.site).href : undefined;
+// Posts pass their own thumbnail. Every other page uses the default preview image.
+const imageUrl = new URL(image ?? '/images/og-default.jpg', Astro.site).href;
+const imageHeight = image ? '675' : '630';
 ---
 <!doctype html>
 <html lang="en">
@@ -25,10 +27,10 @@ const imageUrl = image ? new URL(image, Astro.site).href : undefined;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={pageUrl.href} />
-    {imageUrl && <meta property="og:image" content={imageUrl} />}
-    {imageUrl && <meta property="og:image:width" content="1200" />}
-    {imageUrl && <meta property="og:image:height" content="675" />}
-    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content={imageHeight} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
