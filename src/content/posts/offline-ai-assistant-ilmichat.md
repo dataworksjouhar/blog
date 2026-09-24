@@ -1,6 +1,7 @@
 ---
 title: "An offline AI that answers from your own documents"
 description: "I built a document assistant that runs on a laptop with no internet, answers in English and Arabic, and shows the exact line it used. Here is how, and the one problem that took the longest."
+impact: "Offline AI for confidential documents: answers in English and Arabic, with the source behind every answer"
 date: 2026-09-13
 category: "projects"
 level: "intermediate"
