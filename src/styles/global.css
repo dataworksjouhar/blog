@@ -292,4 +292,5 @@ h1,h2,h3,h4{font-family:var(--display);line-height:1.06;letter-spacing:-.015em;f
   border-bottom:1px solid var(--line);
 }
 .prose tbody tr:last-child td{border-bottom:none}
-.prose td:first-child{font-weight:600;white-space:nowrap}
+.prose td:first-child{font-weight:600}
+.prose td:last-child{font-family:var(--mono);font-size:.86em;color:var(--azure-deep)}
