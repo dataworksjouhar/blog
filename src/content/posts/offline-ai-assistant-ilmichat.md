@@ -4,6 +4,7 @@ description: "I built a document assistant that runs on a laptop with no interne
 date: 2026-09-13
 category: "projects"
 level: "intermediate"
+tools: ["AI", "RAG", "ollama", "local-llm", "lancedb"]
 tags: ["ai", "data-quality"]
 featured: true
 priority: 2
