@@ -6,8 +6,11 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  image?: string;
 }
-const { title, description = "Notes on data, AI, and the things I'm learning, by Mohammed Jouhar." } = Astro.props;
+const { title, description = "Notes on data, AI, and the things I'm learning, by Mohammed Jouhar.", image } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = image ? new URL(image, Astro.site).href : undefined;
 ---
 <!doctype html>
 <html lang="en">
@@ -16,6 +19,16 @@ const { title, description = "Notes on data, AI, and the things I'm learning, by
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl.href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mohammed Jouhar" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl.href} />
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    {imageUrl && <meta property="og:image:width" content="1200" />}
+    {imageUrl && <meta property="og:image:height" content="675" />}
+    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -1,4 +1,6 @@
 ---
+import { thumbFor } from '../lib/thumb';
+
 interface Props {
   post: {
     id: string;
@@ -16,14 +18,17 @@ interface Props {
       repo?: string;
       video?: string;
       thumbnail?: string;
+      priority?: number;
     };
   };
 }
 const { post } = Astro.props;
 const {
   title, description, date, level, featured, external,
-  impact, tools, demo, repo, video, thumbnail,
+  impact, tools, demo, repo, video, thumbnail, priority,
 } = post.data;
+const isFeatured = typeof priority === 'number';
+const thumb = thumbFor(post.id, thumbnail);
 
 const href = external ?? `/posts/${post.id}`;
 const fmtDate = date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -35,14 +40,14 @@ const extraLinks = [
 ].filter((l) => Boolean(l.href));
 ---
 <article class="post-card reveal">
-  {thumbnail && (
+  {thumb && (
     <a class="card-thumb" href={href} aria-hidden="true" tabindex="-1">
-      <img src={thumbnail} alt="" loading="lazy" />
+      <img src={thumb} alt="" loading="lazy" width="1200" height="675" />
     </a>
   )}
 
   <div class="badges">
-    {featured && <span class="badge featured">Featured</span>}
+    {isFeatured && <span class="badge featured">Featured</span>}
     {level && <span class={`badge level-${level}`}>{level}</span>}
   </div>
 
@@ -85,7 +90,8 @@ const extraLinks = [
   }
   .card-thumb img{
     width:100%;
-    height:170px;
+    height:auto;
+    aspect-ratio:16 / 9;
     object-fit:cover;
     display:block;
     transition:transform .4s cubic-bezier(.2,.7,.2,1);

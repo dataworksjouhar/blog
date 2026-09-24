@@ -24,6 +24,8 @@ const posts = defineCollection({
     video: z.string().optional(),
     // optional image path, e.g. "/images/thumb-x.png" (safe to leave out)
     thumbnail: z.string().optional(),
+    // optional order for 'Selected work' (1 shows first). Leave out for normal posts.
+    priority: z.number().int().positive().optional(),
   }),
 });
 

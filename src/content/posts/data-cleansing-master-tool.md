@@ -8,6 +8,7 @@ category: "projects"
 level: "intermediate"
 tags: ["vba", "excel", "power-bi", "data-quality", "automation"]
 featured: true
+priority: 5
 ---
 
 At Alshaya, cleansing a single dataset by hand took about **2.5 days**. I built

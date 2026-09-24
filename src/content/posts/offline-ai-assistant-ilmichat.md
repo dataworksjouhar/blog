@@ -6,6 +6,7 @@ category: "projects"
 level: "intermediate"
 tags: ["ai", "data-quality"]
 featured: true
+priority: 2
 ---
 
 > The documents in this demo are fictional and were created for

@@ -5,7 +5,12 @@ import PostCard from '../../components/PostCard.astro';
 
 const posts = (await getCollection('posts'))
   .filter((p) => p.data.category === 'projects')
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  .sort((a, b) => {
+    const pa = a.data.priority ?? Infinity;
+    const pb = b.data.priority ?? Infinity;
+    if (pa !== pb) return pa - pb;
+    return b.data.date.valueOf() - a.data.date.valueOf();
+  });
 ---
 <BaseLayout title="Projects · Mohammed Jouhar" description="Projects I'm building: Power BI dashboards, Python automation, analytics and more. Documented as I go.">
   <section class="section">

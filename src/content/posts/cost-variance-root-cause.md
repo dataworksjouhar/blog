@@ -8,6 +8,7 @@ category: "projects"
 level: "advanced"
 tags: ["data-analytics", "sql", "power-bi", "business-learning"]
 featured: false
+priority: 4
 ---
 
 When I joined the team at Alshaya Data team, the Single Transaction View sales Table was reporting the

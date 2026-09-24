@@ -8,6 +8,7 @@ category: "projects"
 level: "advanced"
 tags: ["power-bi", "dax", "data-modelling", "healthcare", "dashboard"]
 featured: true
+priority: 3
 ---
 
 > **A note on the data.** *HealthReach International* is a **fictional**
