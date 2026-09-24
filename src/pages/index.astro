@@ -24,6 +24,27 @@ const proof = [
   'CEO and CTO award recognised',
   'Power BI · SQL · Python · AI agents',
 ];
+// Homepage quotes: one per track (AI, BI, data), all from people who managed Mohammed
+const homeQuotes = [
+  {
+    name: 'Amine Mansour',
+    role: 'Managing Director & Head of Data & AI, Itecor',
+    rel: 'Managed Mohammed directly at Alshaya',
+    quote: 'He played a key role in developing several AI agents and solutions that strengthened the governance and management of our AI ecosystem.',
+  },
+  {
+    name: 'Omar Ehrari',
+    role: 'Strategist and Entrepreneur',
+    rel: "Managed Mohammed directly at Lowe's",
+    quote: 'He played a key role in building interactive Power BI dashboards that helped our leadership monitor performance and make more informed decisions.',
+  },
+  {
+    name: 'Gwendolyn Silveira',
+    role: "Director, Lowe's India",
+    rel: 'Managed Mohammed directly for three years',
+    quote: 'Jouhar is a highly skilled professional in data and business analytics, consistently demonstrating a keen analytical mind and the ability to translate complex data into actionable insights.',
+  },
+];
 ---
 <BaseLayout title="Mohammed Jouhar · Senior Business Data Analyst">
   <section class="hero">
@@ -88,26 +109,16 @@ const proof = [
         <a class="meta" href="/recommendations">read all</a>
       </div>
       <div class="quote-grid">
-        <figure class="quote-card reveal">
-          <blockquote class="quote-body">
-            He played a key role in developing several AI agents and solutions
-            that strengthened the governance and management of our AI ecosystem.
-          </blockquote>
-          <figcaption class="quote-author">
-            <span class="qa-name">Amine Mansour</span>
-            <span class="qa-role">Managing Director &amp; Head of Data &amp; AI, Itecor</span>
-          </figcaption>
-        </figure>
-        <figure class="quote-card reveal">
-          <blockquote class="quote-body">
-            Under his guidance, we developed a JIRA agent that reduced ticket
-            analysis time by over 90% for Product Managers.
-          </blockquote>
-          <figcaption class="quote-author">
-            <span class="qa-name">Sambhav Jain</span>
-            <span class="qa-role">AI Intern, Alshaya Group</span>
-          </figcaption>
-        </figure>
+        {homeQuotes.map((q) => (
+          <figure class="quote-card reveal">
+            <blockquote class="quote-body">{q.quote}</blockquote>
+            <figcaption class="quote-author">
+              <span class="qa-name">{q.name}</span>
+              <span class="qa-role">{q.role}</span>
+              <span class="qa-rel">{q.rel}</span>
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </div>
   </section>
