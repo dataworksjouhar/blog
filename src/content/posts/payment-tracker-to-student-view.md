@@ -6,6 +6,9 @@ category: "projects"
 level: "beginner"
 tags: ["business-analysis", "ai", "automation", "data-analytics"]
 tools: ["Requirements", "Excel", "Supabase", "Codex", "Claude Code"]
+impact: "Built to replace a daily 15 to 60 minute payment check for 4 coaches and 300+ students"
+video: "https://www.youtube.com/watch?v=YrMEYNAQRgs"
+priority: 1
 ---
 
 A jiu-jitsu coach asked me for an easier way to check which students had paid. By the time we'd finished talking, the real need was much bigger: one place where all four coaches could see everything about every student. This is how a daily payment chore turned into an app, and why the most useful part of the work happened before any code was written.
