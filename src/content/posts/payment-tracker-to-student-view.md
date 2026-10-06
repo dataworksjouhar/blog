@@ -5,7 +5,7 @@ date: 2026-10-05
 category: "projects"
 level: "beginner"
 tags: ["business-analysis", "ai", "automation", "data-analytics"]
-tools: ["Requirements", "Excel", "Supabase", "Codex", "Claude Code"]
+tools: ["Requirements", "Excel", "Postgresql ", "Codex", "Claude Code"]
 impact: "Built to replace a daily 15 to 60 minute payment check for 4 coaches and 300+ students"
 video: "https://www.youtube.com/watch?v=YrMEYNAQRgs"
 priority: 1
@@ -51,7 +51,7 @@ So instead of stopping at Excel, I built one application where the coaches log i
 <div style="position:relative;padding-bottom:56.25%;height:0;margin:26px 0;border-radius:12px;overflow:hidden;">
 <iframe src="https://www.youtube.com/embed/YrMEYNAQRgs" title="Academy student app walkthrough" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
 </div>
-<p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#726657;text-align:center;margin-top:-14px">60-second walkthrough. All student details shown are sample data.</p>
+<p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#726657;text-align:center;margin-top:-14px">short walkthrough. All student details shown are sample data.</p>
 
 A coach who wants to mark a payment by hand can still do that. If they'd rather export the payment report and import it, that works too, and later the payment platform can be connected directly so payments update on their own. Beyond payments, each student has a history covering their batch, coach, breaks, status and fee. Belt progression, competitions and reminders can come later, once the basics are being used every day.
 
