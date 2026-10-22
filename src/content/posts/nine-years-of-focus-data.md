@@ -6,10 +6,9 @@ tools: ["Claude", "ChatGPT", "d3.js"]
 demo: "https://mohammedjouhar.com/forest/"
 date: 2026-10-22
 category: "projects"
-level: "intermediate"
+level: "beginner"
 tags: ["ai", "python", "learning", "data-quality", "claude"]
 featured: false
-thumbnail: "/images/forest-calendar.jpg"
 ---
 
 I didn't realize I'd been studying Python, on and off, for nine years until I saw it on a dashboard.
