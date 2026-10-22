@@ -16,7 +16,7 @@ I didn't realize I'd been studying Python, on and off, for nine years until I sa
 
 The data came from Forest, a focus app I've used since 2017, and the dashboard was built by Claude from my export. I expected a quick experiment with a new AI feature, but what I got back was a fairly honest picture of how I've learned over the last nine years, including the years I didn't.
 
-[**Open the live dashboard**](https://mohammedjouhar.com/forest/) (interactive, no login)
+[**Open the live dashboard**](/forest/) (interactive, no login)
 
 <!-- VIDEO: replace VIDEO_ID with the YouTube id once the explainer video is uploaded, then remove this comment's markers.
 <div style="position:relative;padding-bottom:100%;height:0;margin:26px 0;border-radius:8px;overflow:hidden;">
@@ -38,7 +38,7 @@ Nine years later that adds up to 2,563 sessions, and 79.5% of them ended with th
 
 **2019 and 2020: the certification years.** In 2019 I was doing a data analytics certification, and the sessions here are the practice I did outside the classes. That year has my longest streak, 25 days in a row from July into August, and September 2019 is still my busiest month, with 186 sessions. Then 2020 went even further and became my busiest year, with 619 sessions.
 
-**The quiet years.** After that I moved to a new country, and my work changed with it. It became more about data migration, business analysis, and working with people, and less about writing code. I built VBA automations here and there, and for the last couple of years we mostly worked in SQL. Python dropped away almost completely, and in 2023 I logged only 23 sessions in the whole year.
+**The quiet years.** After that I moved to Kuwait, and my work changed with it. It became more about data migration, business analysis, and working with people, and less about writing code. I built VBA automations here and there, and for the last couple of years we mostly worked in SQL. Python dropped away almost completely, and in 2023 I logged only 23 sessions in the whole year.
 
 **2026: back to it.** This year I'm back to 382 sessions so far, and the reason is AI. A lot of what AI builds runs on Python behind the scenes, so if AI is writing the code, I at least need to understand how it works well enough to check it.
 
@@ -66,4 +66,4 @@ The last surprise came after I shared it on LinkedIn. Several people told me the
 
 ## Still learning
 
-Nine years in, I'm still learning Python, and it's still a continuous process. What has changed is the reason. AI can write the code now, so I need to understand it well enough to check what it writes.
+Nine years in, I'm still learning Python, and it's still a continuous process. What has changed is the reason. AI can write the code now, so I want my foundation strong enough to check and understand what it writes.
