@@ -17,11 +17,12 @@ The data came from Forest, a focus app I've used since 2017, and the dashboard w
 
 [**Open the live dashboard**](/forest/) (interactive, no login)
 
-<!-- VIDEO: replace VIDEO_ID with the YouTube id once the explainer video is uploaded, then remove this comment's markers.
-<div style="position:relative;padding-bottom:100%;height:0;margin:26px 0;border-radius:8px;overflow:hidden;">
-  <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Forest focus sessions explainer video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
-</div>
--->
+This is the short animated explainer Claude made from the same data (44 seconds, no sound).
+
+<video controls muted playsinline preload="metadata" poster="/images/forest-video-poster.jpg" style="display:block;width:100%;max-width:560px;margin:26px auto;border-radius:8px;">
+  <source src="/videos/how-i-study.mp4" type="video/mp4">
+  Your browser can't play this video. <a href="/videos/how-i-study.mp4">Download it here</a>.
+</video>
 
 ## Why I started using Forest
 
