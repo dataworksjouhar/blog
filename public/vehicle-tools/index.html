@@ -23,15 +23,18 @@ h1{font-size:26px;margin:0;letter-spacing:-.01em}
 main{padding:28px 0 48px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .tool{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
-.tool:hover{border-color:var(--accent);transform:translateY(-1px)}
+.tool:hover{border-color:var(--accent)}
 .num{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
 .tool h2{font-size:18px;margin:6px 0 8px}
 .tool p{margin:0 0 14px;color:var(--ink-2);font-size:14px}
 .tool ul{margin:0 0 18px;padding-left:18px;color:var(--ink-2);font-size:14px}
 .tool ul li{margin:3px 0}
-.open{margin-top:auto;display:inline-flex;align-self:flex-start;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#fff;background:var(--accent);padding:9px 16px;border-radius:6px}
+.actions{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.open{display:inline-flex;text-decoration:none;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#fff;background:var(--accent);padding:9px 16px;border-radius:6px}
 :root[data-theme="dark"] .open{color:#0f1218}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .open{color:#0f1218}}
+.dl{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:6px}
+.dl:hover{border-color:var(--accent)}
 .note{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--ink-2);display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
 .note a{color:var(--accent);font-weight:600}
 footer{color:var(--ink-3);font-size:12px;text-align:center;padding:8px 0 40px}
@@ -47,7 +50,7 @@ main.wrap{padding-top:24px;padding-bottom:48px}
 </div></header>
 <main class="wrap">
   <div class="grid">
-    <a class="tool" href="demand-planner.html">
+    <div class="tool">
       <div class="num">Tool 1</div>
       <h2>Demand Planner</h2>
       <p>Recalculates closing stock and stock cover for every trim and proposes the orders needed to reach the target cover.</p>
@@ -56,9 +59,12 @@ main.wrap{padding-top:24px;padding-bottom:48px}
         <li>Cover heatmap and order proposals by trim</li>
         <li>Planner overrides and Excel export</li>
       </ul>
-      <span class="open">Open Demand Planner →</span>
-    </a>
-    <a class="tool" href="vin-checker.html">
+      <div class="actions">
+        <a class="open" href="demand-planner.html">Open Demand Planner →</a>
+        <a class="dl" href="Demand_Planning_Model.xlsx" download>Download Excel model</a>
+      </div>
+    </div>
+    <div class="tool">
       <div class="num">Tool 2</div>
       <h2>VIN Arrival Checker</h2>
       <p>Reads the VIN on each scanned customs card and compares it with the master list.</p>
@@ -67,11 +73,13 @@ main.wrap{padding-top:24px;padding-bottom:48px}
         <li>Page number, card date and card number per vehicle</li>
         <li>Doubtful cards shown with the card image for review</li>
       </ul>
-      <span class="open">Open VIN Arrival Checker →</span>
-    </a>
+      <div class="actions">
+        <a class="open" href="vin-checker.html">Open VIN Arrival Checker →</a>
+      </div>
+    </div>
   </div>
   <div class="note">
-    <span>The solution overview describes the logic, test results, assumptions and roadmap for both tools.</span>
+    <span>The solution overview shows how both tools work, the test results and the next steps.</span>
     <a href="Solution-Overview.pdf" target="_blank" rel="noopener">Read the solution overview (PDF)</a>
   </div>
 </main>
