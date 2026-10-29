@@ -89,6 +89,12 @@ tbody tr.sel td{background:var(--accent-soft)!important}
 .order-now{font-weight:700;font-size:15px}
 .trim-name{font-weight:600}
 .frozen{background:var(--frozen)}
+.frozen-ink{color:var(--ink-3)}
+.sugg{background:var(--green);color:var(--green-ink);font-weight:600}
+.why{margin:0 16px 4px;padding:12px 14px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:6px;font-size:14px;color:var(--ink)}
+.why b{font-weight:600}
+.detail-grid input.sg{background:var(--green);border-color:transparent;color:var(--green-ink);font-weight:600}
+.working td{color:var(--ink-3);font-size:12px}
 .detail-grid td:first-child,.detail-grid th:first-child{position:sticky;left:0;background:var(--surface);text-align:left;z-index:1;min-width:230px}
 .detail-grid tr.strong td{font-weight:600}
 .detail-grid input{width:58px;font:inherit;font-family:"IBM Plex Mono",monospace;font-size:13px;text-align:right;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink)}
@@ -155,7 +161,7 @@ main.wrap{padding-top:24px;padding-bottom:48px}
 
     <div class="kpis">
       <div class="kpi"><div class="label" id="k1l">Units to order</div><div class="value" id="k1"></div><div class="hint">Sum of proposed orders, all trims</div></div>
-      <div class="kpi"><div class="label">Short until new orders land</div><div class="value" id="k2"></div><div class="hint">Trims below target in frozen months</div></div>
+      <div class="kpi"><div class="label">Short until new orders land</div><div class="value" id="k2"></div><div class="hint">Below target before new orders can arrive</div></div>
       <div class="kpi"><div class="label">Excess stock</div><div class="value" id="k3"></div><div class="hint">Trims more than 1 month above target</div></div>
       <div class="kpi"><div class="label">On target</div><div class="value" id="k4"></div><div class="hint">Trims within target range</div></div>
     </div>
@@ -166,7 +172,7 @@ main.wrap{padding-top:24px;padding-bottom:48px}
         <div class="chips" id="chips"></div>
       </div>
       <div class="scroll"><table id="sumTbl"></table></div>
-      <div class="card-b" style="font-size:12px;color:var(--ink-3)">Select a trim to see its full plan. The first months, up to the lead time, are frozen: an order placed now cannot arrive before then.</div>
+      <div class="card-b" style="font-size:12px;color:var(--ink-3)">Select a trim to see its plan and why the order is suggested. The first months are already decided by earlier orders: an order placed now arrives from month 4.</div>
     </div>
 
     <div class="card" id="detail">
@@ -174,12 +180,14 @@ main.wrap{padding-top:24px;padding-bottom:48px}
         <h2 id="dTitle"></h2>
         <div class="toolbar"><span id="dInfo" style="font-size:12px;color:var(--ink-3);align-self:center"></span><button id="resetBtn">Reset overrides</button></div>
       </div>
+      <div class="card-b" style="padding-bottom:0"><div class="why" id="dWhy"></div></div>
       <div class="card-b two">
         <div class="chart-box"><canvas id="chart"></canvas></div>
       </div>
       <div class="scroll"><table class="detail-grid" id="dTbl"></table></div>
-      <div class="card-b" style="font-size:12px;color:var(--ink-3)">
-        Type a number in "New arrivals" to override the proposal and see how later months react. Clear the box to return to the proposal. Overrides are kept only on this page and are included in the export.
+      <div class="card-b row" style="font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <span>Green = suggested by the tool. Grey arrivals are already fixed by earlier orders. Type your own number in the Order row to see how later months react; clear the box to return to the suggestion.</span>
+        <label style="display:flex;gap:6px;align-items:center;white-space:nowrap"><input type="checkbox" id="showWork"> Show the working</label>
       </div>
       <div class="card-b" style="padding-top:0">
         <h2 style="font-size:14px;margin:6px 0 8px">Orders already placed for this trim</h2>
@@ -189,15 +197,13 @@ main.wrap{padding-top:24px;padding-bottom:48px}
 
     <details>
       <summary>How the calculation works</summary>
+      <p style="color:var(--ink-2);margin:10px 0 6px"><b>In three sentences:</b> when stock is on target, order what you will sell. If you are short, order a bit extra; if you have too much, order less. Because orders take 3 months to arrive, every order is for the month 3 months away.</p>
       <ol>
-        <li>Sales for a month use the Actual value when one exists, otherwise the Forecast.</li>
-        <li>Arrivals come from the Orders sheet. Each order lands in its Confirmed arrival month if given, otherwise in order month + lead time.</li>
-        <li>Closing stock = opening stock + arrivals + new arrivals - sales. Each month opens with the previous month's closing stock.</li>
+        <li>Each month: closing stock = opening stock + arrivals - sales. Sales use the actual when there is one, otherwise the forecast.</li>
+        <li>Target stock = enough cars for the next 3 months: target cover x average forecast sales of the next 3 months.</li>
         <li>Stock cover = closing stock / average forecast sales of the next 3 months.</li>
-        <li>Target closing stock = target cover x average sales of the next 3 months.</li>
-        <li>New arrivals needed = target closing stock - (opening + arrivals - sales), rounded up, never below zero.</li>
-        <li>Months inside the lead time are frozen. No new order can arrive in time, so the tool only shows the gap.</li>
-        <li>The order to place in a month is the new arrival needed one lead time later.</li>
+        <li>An order placed this month arrives one lead time later. Arrivals before that are already fixed by earlier orders.</li>
+        <li>Order now = what that month sells + what it is short of target stock (less if it has extra, never below zero).</li>
       </ol>
     </details>
   </section>
@@ -333,23 +339,39 @@ function planTrim(model, t, overrides) {
     const closing = opening + arrivals + arrivalNew - sales;
     const cover = avg3 > 0 ? closing / avg3 : null;
     const s = model.sales[t.trim] && model.sales[t.trim][mk];
+    const placedOrders = model.orders.filter(o => o.trim === t.trim && o.orderMonth === mk).reduce((a, o) => a + o.units, 0);
     rows.push({ i, mk, opening, arrivals, proposed, arrivalNew, overridden, sales, isActual: !!(s && s.actual !== null),
-      notes: s ? s.notes : [], closing, avg3, targetClosing, cover, frozen });
+      notes: s ? s.notes : [], closing, avg3, targetClosing, cover, frozen, placedOrders });
     opening = closing;
   }
-  rows.forEach((r, i) => { r.orderToPlace = i + t.lead < HORIZON ? rows[i + t.lead].arrivalNew : null; });
+  rows.forEach((r, i) => {
+    r.orderToPlace = i + t.lead < HORIZON ? rows[i + t.lead].arrivalNew : null;
+    r.orderTotal = r.orderToPlace === null && !r.placedOrders ? null : r.placedOrders + (r.orderToPlace || 0);
+  });
+  /* the plain explanation: the first month a new order can reach, "order = what it sells + what it is short" */
+  const fr = rows[t.lead];
+  const why = fr ? { month: fr.mk, sells: fr.sales, has: fr.opening + fr.arrivals, need: Math.ceil(fr.targetClosing - 1e-9), order: fr.proposed } : null;
   const frozenCovers = rows.slice(0, t.lead).map(r => r.cover).filter(c => c !== null);
   const lowestFrozen = frozenCovers.length ? Math.min(...frozenCovers) : null;
   const firstNew = rows[t.lead] ? rows[t.lead].cover : null;
   let status = "On target";
   if (firstNew !== null && firstNew > t.target + 1) status = "Excess stock";
   else if (lowestFrozen !== null && lowestFrozen < t.target) status = "Short until new orders land";
-  return { ...t, rows, orderNow: rows[0].orderToPlace, lowestFrozen, firstNew, status };
+  return { ...t, rows, orderNow: rows[0].orderToPlace, lowestFrozen, firstNew, status, why };
 }
 
 function planAll(model, overrides) { return model.trims.map(t => planTrim(model, t, overrides)); }
 
-if (typeof module !== "undefined") module.exports = { toMonthKey, monthLabel, buildModel, planAll, planTrim, HORIZON };
+/* one plain sentence per trim, the same wording as the Excel Plan sheet */
+function whyText(w){
+  if (!w) return "";
+  const m = monthLabel(w.month), base = `starts with ${w.has} cars, and the 3 months after it need ${w.need}`;
+  if (w.order > 0 && w.order >= w.sells) return `${m} sells ${w.sells} and is ${w.order - w.sells} short (it ${base}). Order ${w.sells} + ${w.order - w.sells} = ${w.order} now.`;
+  if (w.order > 0) return `${m} sells ${w.sells} and has ${w.sells - w.order} extra (it ${base}). Order ${w.sells} - ${w.sells - w.order} = ${w.order} now.`;
+  return `${m} sells ${w.sells} and has ${w.has - w.need} extra (it ${base}). The extra covers its sales, so no order is needed now.`;
+}
+
+if (typeof module !== "undefined") module.exports = { toMonthKey, monthLabel, buildModel, planAll, planTrim, whyText, HORIZON };
 
 const DEMO = {"Settings":[{"Car line":"Territory","Trim":"Ambiente","Target cover (months)":3,"Lead time (months)":3},{"Car line":"Territory","Trim":"Trend","Target cover (months)":3,"Lead time (months)":3},{"Car line":"Territory","Trim":"Titanium","Target cover (months)":3,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Big Bend 2-door","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Big Bend 4-door","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Outer Banks","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Badlands","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Wildtrak","Target cover (months)":2,"Lead time (months)":3}],"Opening Stock":[{"Car line":"Territory","Trim":"Ambiente","Month":"2026-11","Stock":80},{"Car line":"Territory","Trim":"Trend","Month":"2026-11","Stock":210},{"Car line":"Territory","Trim":"Titanium","Month":"2026-11","Stock":45},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-11","Stock":14},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-11","Stock":25},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-11","Stock":19},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-11","Stock":9},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-11","Stock":9}],"Sales":[{"Car line":"Territory","Trim":"Ambiente","Month":"2026-08","Units":19,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-09","Units":21,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-10","Units":26,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-11","Units":25,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-12","Units":29,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-01","Units":26,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-02","Units":30,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-03","Units":28,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-04","Units":24,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-05","Units":22,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-06","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-07","Units":19,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-08","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-09","Units":24,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-10","Units":25,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-11","Units":25,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-12","Units":29,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2028-01","Units":26,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-08","Units":24,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-09","Units":34,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-10","Units":34,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-11","Units":35,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-12","Units":40,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-01","Units":37,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-02","Units":42,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-03","Units":38,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-04","Units":33,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-05","Units":32,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-06","Units":28,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-07","Units":26,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-08","Units":28,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-09","Units":33,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-10","Units":35,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-11","Units":35,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-12","Units":40,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2028-01","Units":37,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-08","Units":14,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-09","Units":19,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-10","Units":17,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-11","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-12","Units":23,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-01","Units":21,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-02","Units":24,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-03","Units":22,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-04","Units":59,"Type":"Forecast","Note":"Fleet deal +40"},{"Car line":"Territory","Trim":"Titanium","Month":"2027-05","Units":18,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-06","Units":16,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-07","Units":15,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-08","Units":16,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-09","Units":19,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-10","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-11","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-12","Units":23,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2028-01","Units":21,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-08","Units":5,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-09","Units":5,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-10","Units":5,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-11","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-12","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-01","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-02","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-03","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-04","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-05","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-06","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-07","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-08","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-09","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-10","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-11","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-12","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2028-01","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-08","Units":8,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-09","Units":10,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-10","Units":9,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-11","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-12","Units":12,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-01","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-02","Units":12,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-03","Units":11,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-04","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-05","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-06","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-07","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-08","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-09","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-10","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-11","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-12","Units":12,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2028-01","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-08","Units":6,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-09","Units":8,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-10","Units":9,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-11","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-12","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-01","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-02","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-03","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-04","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-05","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-06","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-07","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-08","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-09","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-10","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-11","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-12","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2028-01","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-08","Units":6,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-09","Units":6,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-10","Units":8,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-11","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-12","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-01","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-02","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-03","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-04","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-05","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-06","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-07","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-08","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-09","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-10","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-11","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-12","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2028-01","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-08","Units":3,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-09","Units":4,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-10","Units":4,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-11","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-12","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-01","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-02","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-03","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-04","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-05","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-06","Units":3,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-07","Units":3,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-08","Units":3,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-09","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-10","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-11","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-12","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2028-01","Units":4,"Type":"Forecast","Note":""}],"Orders":[{"Order ID":"T-101","Car line":"Territory","Trim":"Ambiente","Order month":"2026-08","Units":25,"Confirmed arrival":null,"Note":""},{"Order ID":"T-102","Car line":"Territory","Trim":"Ambiente","Order month":"2026-09","Units":29,"Confirmed arrival":null,"Note":""},{"Order ID":"T-103","Car line":"Territory","Trim":"Ambiente","Order month":"2026-10","Units":26,"Confirmed arrival":null,"Note":""},{"Order ID":"T-104","Car line":"Territory","Trim":"Trend","Order month":"2026-08","Units":35,"Confirmed arrival":null,"Note":""},{"Order ID":"T-105","Car line":"Territory","Trim":"Trend","Order month":"2026-09","Units":40,"Confirmed arrival":null,"Note":""},{"Order ID":"T-106","Car line":"Territory","Trim":"Trend","Order month":"2026-10","Units":37,"Confirmed arrival":"2026-12","Note":"Arriving early"},{"Order ID":"T-107","Car line":"Territory","Trim":"Titanium","Order month":"2026-08","Units":20,"Confirmed arrival":null,"Note":""},{"Order ID":"T-108","Car line":"Territory","Trim":"Titanium","Order month":"2026-09","Units":23,"Confirmed arrival":null,"Note":""},{"Order ID":"T-109","Car line":"Territory","Trim":"Titanium","Order month":"2026-10","Units":21,"Confirmed arrival":null,"Note":""},{"Order ID":"B-110","Car line":"Bronco","Trim":"Big Bend 2-door","Order month":"2026-08","Units":6,"Confirmed arrival":null,"Note":""},{"Order ID":"B-111","Car line":"Bronco","Trim":"Big Bend 2-door","Order month":"2026-09","Units":7,"Confirmed arrival":null,"Note":""},{"Order ID":"B-112","Car line":"Bronco","Trim":"Big Bend 2-door","Order month":"2026-10","Units":6,"Confirmed arrival":null,"Note":""},{"Order ID":"B-113","Car line":"Bronco","Trim":"Big Bend 4-door","Order month":"2026-08","Units":10,"Confirmed arrival":null,"Note":""},{"Order ID":"B-114","Car line":"Bronco","Trim":"Big Bend 4-door","Order month":"2026-09","Units":12,"Confirmed arrival":null,"Note":""},{"Order ID":"B-115","Car line":"Bronco","Trim":"Big Bend 4-door","Order month":"2026-10","Units":10,"Confirmed arrival":null,"Note":""},{"Order ID":"B-116","Car line":"Bronco","Trim":"Outer Banks","Order month":"2026-08","Units":8,"Confirmed arrival":null,"Note":""},{"Order ID":"B-117","Car line":"Bronco","Trim":"Outer Banks","Order month":"2026-09","Units":9,"Confirmed arrival":null,"Note":""},{"Order ID":"B-118","Car line":"Bronco","Trim":"Outer Banks","Order month":"2026-10","Units":8,"Confirmed arrival":null,"Note":""},{"Order ID":"B-119","Car line":"Bronco","Trim":"Badlands","Order month":"2026-08","Units":10,"Confirmed arrival":"2026-11","Note":"Short shipment: 10 of 15 in Nov"},{"Order ID":"B-119","Car line":"Bronco","Trim":"Badlands","Order month":"2026-08","Units":5,"Confirmed arrival":"2027-01","Note":"Short shipment: balance 5 in Jan"},{"Order ID":"B-120","Car line":"Bronco","Trim":"Badlands","Order month":"2026-09","Units":8,"Confirmed arrival":null,"Note":""},{"Order ID":"B-121","Car line":"Bronco","Trim":"Badlands","Order month":"2026-10","Units":7,"Confirmed arrival":null,"Note":""},{"Order ID":"B-122","Car line":"Bronco","Trim":"Wildtrak","Order month":"2026-08","Units":4,"Confirmed arrival":null,"Note":""},{"Order ID":"B-123","Car line":"Bronco","Trim":"Wildtrak","Order month":"2026-09","Units":5,"Confirmed arrival":"2027-03","Note":"Delayed from Dec to Mar"},{"Order ID":"B-124","Car line":"Bronco","Trim":"Wildtrak","Order month":"2026-10","Units":4,"Confirmed arrival":null,"Note":""}]};
 
@@ -424,22 +446,28 @@ function renderDetail(){
   const p = PLANS.find(x => x.trim === SEL) || PLANS[0]; if (!p) return;
   $("dTitle").textContent = p.line + " " + p.trim;
   $("dInfo").textContent = `Target cover ${p.target} months · lead time ${p.lead} months · ${p.status}`;
+  $("dWhy").innerHTML = "<b>Why this order:</b> " + esc(whyText(p.why));
   const hasOv = OVERRIDES[p.trim] && Object.keys(OVERRIDES[p.trim]).length;
   $("resetBtn").disabled = !hasOv;
-  const cols = p.rows;
-  const row = (label, fn, cls = "") => `<tr class="${cls}"><td>${label}</td>${cols.map(r => `<td class="num ${r.frozen ? "frozen" : ""}">${fn(r)}</td>`).join("")}</tr>`;
-  let h = `<thead><tr><th>Month</th>${cols.map(r => `<th class="${r.frozen ? "frozen" : ""}">${monthLabel(r.mk)}${r.frozen ? '<span class="tag">FROZEN</span>' : ""}</th>`).join("")}</tr></thead><tbody>`;
-  h += row("Opening stock", r => f0(r.opening));
-  h += row("Arrivals (orders already placed)", r => f0(r.arrivals));
-  h += `<tr><td>New arrivals (proposed, editable)</td>${cols.map(r => r.frozen
-      ? `<td class="num frozen">-</td>`
-      : `<td class="num"><input type="number" min="0" step="1" data-i="${r.i}" value="${r.arrivalNew}" placeholder="${r.proposed}" class="${r.overridden ? "ov" : ""}" title="Proposed: ${r.proposed}"></td>`).join("")}</tr>`;
-  h += row("Sales (A = actual, F = forecast)", r => `${f0(r.sales)}<span class="tag">${r.isActual ? "A" : "F"}</span>${r.notes.length ? `<span class="note">${esc(r.notes.join(", "))}</span>` : ""}`);
+  const cols = p.rows, work = $("showWork").checked;
+  const row = (label, fn, cls = "", cellCls = () => "") => `<tr class="${cls}"><td>${label}</td>${cols.map(r => `<td class="num ${cellCls(r)}">${fn(r)}</td>`).join("")}</tr>`;
+  let h = `<thead><tr><th>Month</th>${cols.map(r => `<th>${monthLabel(r.mk)}</th>`).join("")}</tr></thead><tbody>`;
+  // Order: what to place in each month (editable). It lands one lead time later.
+  h += `<tr class="strong"><td>Order</td>${cols.map(r => {
+    if (r.orderToPlace === null) return `<td class="num">${r.placedOrders ? f0(r.placedOrders) : ""}</td>`;
+    const tgt = cols[r.i + p.lead], cls = tgt.overridden ? "ov" : (r.orderToPlace > 0 ? "sg" : "");
+    return `<td class="num"><input type="number" min="0" step="1" data-i="${tgt.i}" value="${r.orderToPlace}" class="${cls}" title="Suggested: ${tgt.proposed}. Arrives ${monthLabel(tgt.mk, true)}.">${r.placedOrders ? `<span class="note">+${r.placedOrders} placed</span>` : ""}</td>`;
+  }).join("")}</tr>`;
+  h += row("Arrival", r => f0(r.arrivals + r.arrivalNew), "", r => r.frozen ? "frozen frozen-ink" : (r.arrivalNew > 0 ? "sugg" : ""));
+  h += row("Sales", r => `${f0(r.sales)}<span class="tag">${r.isActual ? "A" : "F"}</span>${r.notes.length ? `<span class="note">${esc(r.notes.join(", "))}</span>` : ""}`);
   h += row("Closing stock", r => f0(r.closing), "strong");
-  h += row("Avg sales, next 3 months", r => f1(r.avg3));
-  h += row("Target closing stock", r => f1(r.targetClosing));
   h += `<tr class="strong"><td>Stock cover (months)</td>${cols.map(r => `<td class="num ${coverClass(r.cover, p.target)}">${f1(r.cover)}</td>`).join("")}</tr>`;
-  h += row("Order to place this month", r => r.orderToPlace === null ? `<span style="color:var(--ink-3)">beyond plan</span>` : `<b>${f0(r.orderToPlace)}</b>`, "strong");
+  if (work) {
+    h += row("Opening stock", r => f0(r.opening), "working");
+    h += row("Arrivals from placed orders", r => f0(r.arrivals), "working");
+    h += row("Avg sales, next 3 months", r => f1(r.avg3), "working");
+    h += row("Target stock (next 3 months)", r => f1(r.targetClosing), "working");
+  }
   $("dTbl").innerHTML = h + `</tbody>`;
   $("dTbl").querySelectorAll("input").forEach(inp => inp.onchange = () => {
     const i = +inp.dataset.i, v = inp.value.trim();
@@ -449,13 +477,14 @@ function renderDetail(){
   });
 
   const os = MODEL.orders.filter(o => o.trim === p.trim).sort((a, b) => a.orderMonth - b.orderMonth || a.effective - b.effective);
-  $("oTbl").innerHTML = `<thead><tr><th class="l">Order ID</th><th class="l">Order month</th><th>Units</th><th class="l">Planned arrival</th><th class="l">Confirmed arrival</th><th class="l">Note</th></tr></thead><tbody>` +
-    (os.length ? os.map(o => `<tr><td class="l mono">${esc(o.id)}</td><td class="l">${monthLabel(o.orderMonth, true)}</td><td class="num">${o.units}</td><td class="l">${monthLabel(o.planned, true)}</td><td class="l">${o.confirmed !== null ? monthLabel(o.confirmed, true) : "-"}</td><td class="l">${esc(o.note)}</td></tr>`).join("")
+  $("oTbl").innerHTML = `<thead><tr><th class="l">Order ID</th><th>Order month</th><th>Units</th><th>Planned arrival</th><th>Confirmed arrival</th><th class="l">Note</th></tr></thead><tbody>` +
+    (os.length ? os.map(o => `<tr><td class="l mono">${esc(o.id)}</td><td>${monthLabel(o.orderMonth, true)}</td><td class="num">${o.units}</td><td>${monthLabel(o.planned, true)}</td><td>${o.confirmed !== null ? monthLabel(o.confirmed, true) : "-"}</td><td class="l">${esc(o.note)}</td></tr>`).join("")
       : `<tr><td class="l" colspan="6">No placed orders in the file.</td></tr>`) + `</tbody>`;
 
   drawChart(p);
 }
 
+$("showWork").onchange = () => renderDetail();
 $("resetBtn").onclick = () => { const p = PLANS.find(x => x.trim === SEL); if (p) delete OVERRIDES[p.trim]; render(); };
 
 function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
@@ -466,7 +495,7 @@ function drawChart(p){
     labels,
     datasets: [
       { type: "bar", label: "Closing stock", data: p.rows.map(r => r.closing), backgroundColor: p.rows.map(r => r.frozen ? css("--ink-3") + "66" : css("--accent")), borderRadius: 3, order: 2 },
-      { type: "line", label: "Target closing stock", data: p.rows.map(r => +r.targetClosing.toFixed(1)), borderColor: css("--red-ink"), borderDash: [5, 4], pointRadius: 0, borderWidth: 2, tension: .25, order: 1 }
+      { type: "line", label: "Target stock (next 3 months)", data: p.rows.map(r => +r.targetClosing.toFixed(1)), borderColor: css("--red-ink"), borderDash: [5, 4], pointRadius: 0, borderWidth: 2, tension: .25, order: 1 }
     ]
   };
   const opts = { responsive: true, maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
@@ -482,12 +511,12 @@ $("expBtn").onclick = () => {
   const toPlace = [], detail = [], summary = [];
   for (const p of PLANS) {
     summary.push({ "Car line": p.line, "Trim": p.trim, "Target cover": p.target, ["Order to place in " + monthLabel(MODEL.start, true)]: p.orderNow ?? "", "Status": p.status,
-      "Lowest cover before new orders land": +((p.lowestFrozen ?? 0).toFixed(2)), "Cover when first new order lands": +((p.firstNew ?? 0).toFixed(2)) });
+      "Lowest cover before new orders land": +((p.lowestFrozen ?? 0).toFixed(2)), "Cover when first new order lands": +((p.firstNew ?? 0).toFixed(2)), "Why": whyText(p.why) });
     p.rows.forEach(r => {
       if (r.orderToPlace !== null) toPlace.push({ "Car line": p.line, "Trim": p.trim, "Order month": d(r.mk), "Units": r.orderToPlace, "Arrival month": d(r.mk + p.lead), "Overridden": p.rows[r.i + p.lead].overridden ? "Yes" : "" });
-      detail.push({ "Car line": p.line, "Trim": p.trim, "Month": d(r.mk), "Frozen": r.frozen ? "Yes" : "", "Opening stock": r.opening, "Arrivals (placed)": r.arrivals,
-        "New arrivals": r.arrivalNew, "Sales": r.sales, "Sales type": r.isActual ? "Actual" : "Forecast", "Closing stock": r.closing,
-        "Avg sales next 3": +r.avg3.toFixed(2), "Target closing": +r.targetClosing.toFixed(2), "Stock cover": r.cover === null ? "" : +r.cover.toFixed(2), "Order to place": r.orderToPlace ?? "" });
+      detail.push({ "Car line": p.line, "Trim": p.trim, "Month": d(r.mk), "Order": r.orderTotal ?? "", "Arrival": r.arrivals + r.arrivalNew,
+        "Sales": r.sales, "Sales type": r.isActual ? "Actual" : "Forecast", "Closing stock": r.closing, "Stock cover": r.cover === null ? "" : +r.cover.toFixed(2),
+        "Arrival fixed by earlier orders": r.frozen ? "Yes" : "", "Of which suggested arrival": r.arrivalNew, "Target stock (next 3 months)": +r.targetClosing.toFixed(2) });
     });
   }
   const wb = XLSX.utils.book_new();
