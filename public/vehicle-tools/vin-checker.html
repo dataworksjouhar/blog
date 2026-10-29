@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIN Arrival Checker</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<style>
+:root{
+  --bg:#f4f5f7; --surface:#ffffff; --surface-2:#f8f9fb; --ink:#14181f; --ink-2:#4a5160; --ink-3:#7c8494;
+  --line:#e2e5ea; --accent:#1f3a68; --accent-2:#2f5597; --accent-soft:#e6ecf6;
+  --red:#f6d0c2; --red-ink:#8a2a10; --green:#d3e8c6; --green-ink:#2e5a17; --amber:#fbe7a6; --amber-ink:#6b4e00; --grey:#e7e9ee; --grey-ink:#4a5160;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1218; --surface:#171b23; --surface-2:#1d222c; --ink:#e8ebf0; --ink-2:#b3bac6; --ink-3:#848c9a;
+    --line:#2a303b; --accent:#8fb0e8; --accent-2:#a9c2ef; --accent-soft:#1f2a3d;
+    --red:#5a2a1e; --red-ink:#ffcdbd; --green:#24401b; --green-ink:#cfeabf; --amber:#4d3d0c; --amber-ink:#ffe39a; --grey:#262b35; --grey-ink:#c5cbd6; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1218; --surface:#171b23; --surface-2:#1d222c; --ink:#e8ebf0; --ink-2:#b3bac6; --ink-3:#848c9a;
+  --line:#2a303b; --accent:#8fb0e8; --accent-2:#a9c2ef; --accent-soft:#1f2a3d;
+  --red:#5a2a1e; --red-ink:#ffcdbd; --green:#24401b; --green-ink:#cfeabf; --amber:#4d3d0c; --amber-ink:#ffe39a; --grey:#262b35; --grey-ink:#c5cbd6; --shadow:none;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+header{background:var(--surface);border-bottom:1px solid var(--line)}
+header .wrap{padding-top:18px;padding-bottom:18px}
+h1{font-size:20px;margin:0;letter-spacing:-.01em}
+.sub{color:var(--ink-3);font-size:13px;margin-top:2px}
+.badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+main{padding:24px 0 48px}
+button,.btn{font:inherit;font-size:13px;font-weight:500;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+button:hover,.btn:hover{border-color:var(--ink-3)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .primary{color:#0f1218}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .primary{color:#0f1218}}
+.small{padding:5px 10px;font-size:12px}
+input[type=file]{display:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}
+.card-h h2{font-size:15px;margin:0}
+.card-b{padding:14px 16px}
+.setup{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.drop{border:1px dashed var(--line);border-radius:8px;padding:16px;background:var(--surface-2)}
+.drop h3{margin:0 0 4px;font-size:14px}
+.drop p{margin:0 0 12px;color:var(--ink-2);font-size:13px}
+.status-line{font-size:13px;color:var(--ink-2);margin-top:10px;min-height:20px}
+.ok{color:var(--green-ink)}
+.banner{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--ink-2)}
+.banner.err{border-color:#d9826a;color:var(--red-ink);background:var(--red)}
+.bar{height:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.prog-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:8px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;box-shadow:var(--shadow)}
+.kpi .label{font-size:12px;color:var(--ink-3);font-weight:500}
+.kpi .value{font-size:26px;font-weight:600;margin-top:4px;font-family:"IBM Plex Mono",monospace}
+.kpi .hint{font-size:12px;color:var(--ink-3)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{border-radius:999px;padding:5px 12px;font-size:12px}
+.tab.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th,td{padding:7px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;background:var(--surface-2)}
+td.n,th.n{text-align:right}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500}
+.p-green{background:var(--green);color:var(--green-ink)}
+.p-red{background:var(--red);color:var(--red-ink)}
+.p-amber{background:var(--amber);color:var(--amber-ink)}
+.p-grey{background:var(--grey);color:var(--grey-ink)}
+.search{font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);min-width:220px}
+.review{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.review img{max-width:100%;border:1px solid var(--line);border-radius:6px;background:#fff}
+.review .facts{font-size:13px;color:var(--ink-2)}
+.review .facts b{color:var(--ink)}
+.review input{font:inherit;font-family:"IBM Plex Mono",monospace;font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;width:100%;background:var(--surface);color:var(--ink);text-transform:uppercase}
+.diff{font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.04em}
+.diff span.x{background:var(--amber);color:var(--amber-ink);border-radius:2px}
+.empty{padding:28px 16px;text-align:center;color:var(--ink-3)}
+pre.summary{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12px;white-space:pre-wrap;max-height:360px;overflow:auto}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+details summary{cursor:pointer;font-weight:600}
+details ol{color:var(--ink-2);padding-left:20px}
+footer{color:var(--ink-3);font-size:12px;text-align:center;padding:24px 0 40px}
+footer a{color:var(--ink-2)}
+.hidden{display:none!important}
+@media (max-width:900px){.setup{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.review{grid-template-columns:1fr}}
+.topnav{background:var(--surface-2);border-bottom:1px solid var(--line);font-size:13px}.topnav .wrap{display:flex;gap:18px;align-items:center;padding-top:9px;padding-bottom:9px;flex-wrap:wrap}.topnav a{color:var(--ink-2);text-decoration:none}.topnav a:hover{color:var(--ink)}.topnav a.here{color:var(--ink);font-weight:600}.topnav .sep{width:1px;height:14px;background:var(--line)}
+main.wrap{padding-top:24px;padding-bottom:48px}
+</style>
+</head>
+<body>
+<nav class="topnav"><div class="wrap"><a href="./">&larr; All tools</a><span class="sep"></span><a href="demand-planner.html">Demand Planner</a><a href="vin-checker.html" class="here">VIN Arrival Checker</a></div></nav>
+<header><div class="wrap">
+  <h1>VIN Arrival Checker <span class="badge">Demo</span></h1>
+  <div class="sub">Reads VINs from scanned customs cards and compares them with the master list. Files are processed in your browser and are not uploaded anywhere.</div>
+</div></header>
+
+<main class="wrap">
+  <div id="msg" class="banner hidden"></div>
+
+  <section class="card">
+    <div class="card-h"><h2>1. Load files</h2>
+      <div class="row"><button id="demoBtn" class="small">Load demo files</button>
+        <a class="btn small" href="vin-demo/Demo_Customs_Cards.pdf" download>Demo scans (PDF)</a>
+        <a class="btn small" href="vin-demo/Demo_Master_List.xlsx" download>Demo master list</a></div>
+    </div>
+    <div class="card-b setup">
+      <div class="drop">
+        <h3>Master list</h3>
+        <p>Excel or CSV with a VIN column. The column is found automatically.</p>
+        <label class="btn" for="mFile">Choose file</label><input id="mFile" type="file" accept=".xlsx,.xls,.csv">
+        <div class="status-line" id="mStatus">No master list loaded.</div>
+      </div>
+      <div class="drop">
+        <h3>Scanned cards</h3>
+        <p>One or more PDF files, or page images (JPG, PNG). One card per page.</p>
+        <label class="btn" for="sFile">Choose files</label><input id="sFile" type="file" accept=".pdf,image/*" multiple>
+        <div class="status-line" id="sStatus">No scans loaded.</div>
+      </div>
+    </div>
+    <div class="card-b" style="border-top:1px solid var(--line)">
+      <div class="row" style="justify-content:space-between">
+        <div class="row">
+          <button id="runBtn" class="primary" disabled>Check arrivals</button>
+          <button id="stopBtn" class="hidden">Stop</button>
+          <label style="font-size:13px;color:var(--ink-2);display:flex;gap:6px;align-items:center"><input type="checkbox" id="testMode"> Test mode (show how each page was read)</label>
+        </div>
+        <span id="engineNote" style="font-size:12px;color:var(--ink-3)"></span>
+      </div>
+      <div id="prog" class="hidden" style="margin-top:14px">
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="prog-meta"><span id="progText"></span><span id="progEta"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="kpis">
+      <div class="kpi"><div class="label">Vehicle cards read</div><div class="value" id="kCards"></div><div class="hint" id="kCardsH"></div></div>
+      <div class="kpi"><div class="label">Arrived</div><div class="value" id="kArr"></div><div class="hint">Master VINs with a card</div></div>
+      <div class="kpi"><div class="label">Not arrived</div><div class="value" id="kNot"></div><div class="hint">Master VINs, no card found</div></div>
+      <div class="kpi"><div class="label">Needs review</div><div class="value" id="kRev"></div><div class="hint">Pages to confirm by eye</div></div>
+      <div class="kpi"><div class="label">Not in master</div><div class="value" id="kExtra"></div><div class="hint">Cards not expected</div></div>
+      <div class="kpi"><div class="label">Duplicates</div><div class="value" id="kDup"></div><div class="hint">VINs on more than one card</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <div class="tabs" id="tabs"></div>
+        <div class="row"><input id="q" class="search" placeholder="Search VIN, order, page"><button id="expBtn" class="small">Download Excel</button></div>
+      </div>
+      <div id="view"></div>
+    </div>
+
+    <details>
+      <summary>How the check works</summary>
+      <ol>
+        <li>Each page is read in three ways, in order: hidden text inside the PDF, the QR code, then text recognition (OCR) on the image. The first method that gives a reliable VIN is used.</li>
+        <li>For OCR, the page is turned to each orientation until a VIN is found. Only Latin characters are needed, so Arabic text is ignored.</li>
+        <li>A VIN is 17 characters and never contains I, O or Q. Misreads such as O for 0 are corrected automatically.</li>
+        <li>The 9th character is a check digit. A VIN that fails it was misread, and the tool tries the most common one-character corrections.</li>
+        <li>A read that passes the check digit is never changed to fit the master list, because two real vehicles can differ by one character.</li>
+        <li>A VIN within 2 characters of one master VIN is shown as a probable match for a person to confirm, next to the image of the card.</li>
+      </ol>
+    </details>
+  </section>
+</main>
+<footer>Demo built with dummy data by <a href="https://mohammedjouhar.com" target="_blank" rel="noopener">Mohammed Jouhar</a>.</footer>
+
+<script>
+const CONFIG = {"pdfWorker": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js", "workerPath": null, "corePath": null, "langPath": null, "maxWorkers": 4};
+/* ---------- VIN logic (pure functions, no DOM) ---------- */
+const VIN_TR = { A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,J:1,K:2,L:3,M:4,N:5,P:7,R:9,S:2,T:3,U:4,V:5,W:6,X:7,Y:8,Z:9 };
+const VIN_WT = [8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2];
+const VIN_RE = /^[A-HJ-NPR-Z0-9]{17}$/;
+/* characters OCR often confuses, in both directions */
+const CONFUSE = { "0":"DQU", "D":"0", "1":"7LT", "7":"1T", "2":"Z", "Z":"2", "5":"S", "S":"5", "8":"B3", "B":"8", "6":"G", "G":"6",
+  "3":"8", "4":"A", "A":"4", "U":"0V", "V":"U", "T":"71", "L":"1", "H":"N", "N":"H", "M":"N", "C":"G", "E":"F", "F":"E", "R":"P", "P":"R" };
+
+function vinValue(c) { return c >= "0" && c <= "9" ? +c : VIN_TR[c]; }
+function checkDigit(v) {
+  let s = 0;
+  for (let i = 0; i < 17; i++) { const x = vinValue(v[i]); if (x === undefined) return null; s += x * VIN_WT[i]; }
+  s %= 11; return s === 10 ? "X" : String(s);
+}
+function checkOk(v) { return VIN_RE.test(v) && checkDigit(v) === v[8]; }
+/* VINs never use I, O or Q: map them to the digits they are usually confused with */
+function normVin(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "").replace(/O/g, "0").replace(/Q/g, "0").replace(/I/g, "1"); }
+function hamming(a, b) { let d = 0; for (let i = 0; i < 17; i++) if (a[i] !== b[i]) d++; return d; }
+
+/* Find every 17-character VIN-like string in OCR text. Tokens may be split, or carry leader dots and a colon.
+   OCR can also add one stray character (a speck read as a letter) or drop one, so 18-19 character reads are
+   tried with each character removed, and 16-character reads are kept for a lookup against the master list. */
+function vinCandidates(text) {
+  const out = new Map();
+  const add = (s, how) => { const n = normVin(s); if (n.length === 17 && VIN_RE.test(n) && !out.has(n)) out.set(n, how); };
+  const addShort = s => { const n = normVin(s); if (n.length === 16 && /^[A-HJ-NPR-Z0-9]{16}$/.test(n) && !out.has(n)) out.set(n, "short"); };
+  const edits = j => {
+    if (j.length > 22) return;
+    for (let k = 0; k + 17 <= j.length; k++) add(j.slice(k, k + 17), "trimmed");
+    if (j.length === 18) for (let i = 0; i < 18; i++) add(j.slice(0, i) + j.slice(i + 1), "edited");
+    if (j.length === 19) for (let i = 0; i < 19; i++) for (let k = i + 1; k < 19; k++) add(j.slice(0, i) + j.slice(i + 1, k) + j.slice(k + 1), "edited");
+  };
+  for (const line of String(text || "").split(/\n+/)) {
+    const toks = line.split(/\s+/).map(t => t.toUpperCase().replace(/[^A-Z0-9]/g, "")).filter(Boolean);
+    for (let i = 0; i < toks.length; i++) {
+      let joined = "";
+      for (let j = i; j < Math.min(toks.length, i + 3); j++) {
+        joined += toks[j];
+        if (joined.length === 16) addShort(joined);
+        if (joined.length === 17) add(joined, j === i ? "token" : "joined");
+        else if (joined.length > 17) edits(joined);
+        if (joined.length >= 17) break;
+      }
+    }
+  }
+  return [...out.entries()].map(([vin, how]) => ({ vin, how }));
+}
+
+/* Build an index of the master list for fast exact and near lookups */
+function masterIndex(vins) {
+  const list = [...new Set(vins.map(normVin).filter(v => v.length === 17))];
+  const del = new Map();      // each master VIN with one character missing, to recover a 16-character read
+  for (const m of list) for (let i = 0; i < 17; i++) { const k = m.slice(0, i) + m.slice(i + 1); if (!del.has(k)) del.set(k, new Set()); del.get(k).add(m); }
+  return { list, set: new Set(list), wmis: new Set(list.map(v => v.slice(0, 3))), del };
+}
+/* Looks like a real VIN of a manufacturer in the master list: same first 3 characters (WMI), last 4 characters numeric.
+   Random text that happens to pass the check digit (about 1 in 11) fails this. */
+function plausible(v, idx) { return /\d{4}$/.test(v) && (!idx.wmis || !idx.wmis.size || idx.wmis.has(v.slice(0, 3))); }
+function nearest(v, idx) {
+  let best = null, second = null;
+  for (const m of idx.list) {
+    const d = hamming(v, m);
+    if (!best || d < best.dist) { second = best; best = { vin: m, dist: d }; }
+    else if (!second || d < second.dist) second = { vin: m, dist: d };
+  }
+  return { best, unique: best && (!second || second.dist > best.dist) };
+}
+
+/* Try one-character confusion fixes: first towards an exact master VIN, then towards a valid check digit */
+function repair(v, idx) {
+  /* A read that already passes the check digit is trusted as read: it is never bent towards a master VIN,
+     because two real vehicles can differ by a single character. */
+  if (checkOk(v)) return null;
+  const variants = [];
+  for (let i = 0; i < 17; i++) for (const r of (CONFUSE[v[i]] || "")) variants.push(v.slice(0, i) + r + v.slice(i + 1));
+  const toMaster = variants.filter(x => idx.set.has(x) && checkOk(x));
+  if (toMaster.length === 1) return { vin: toMaster[0], fix: "master" };
+  const ok = variants.filter(x => checkOk(x) && plausible(x, idx));
+  if (ok.length === 1) return { vin: ok[0], fix: "check digit" };
+  return null;
+}
+
+/* Score every candidate on a page and pick the best. Returns a page verdict. */
+function judgePage(cands, idx) {
+  const scored = [];
+  for (const c of cands) {
+    if (c.how === "short") {     // 16 characters: only accepted when exactly one master VIN fits with one character added
+      const hits = idx.del && idx.del.get(c.vin);
+      if (hits && hits.size === 1) { const m = [...hits][0]; scored.push({ read: c.vin, vin: m, fixed: "missing character", exact: true, checkOk: checkOk(m), plausible: true, nearVin: m, dist: 0, uniqueNear: true, how: "short", score: 96 }); }
+      continue;
+    }
+    let vin = c.vin, fixed = null;
+    if (!idx.set.has(vin)) { const r = repair(vin, idx); if (r) { vin = r.vin; fixed = r.fix; } }
+    const exact = idx.set.has(vin), ck = checkOk(vin), plaus = plausible(vin, idx);
+    const near = exact ? { best: { vin, dist: 0 }, unique: true } : nearest(vin, idx);
+    const dist = near.best ? near.best.dist : 99, close = dist <= 2 && near.unique;
+    if (!exact && !close && !plaus) continue;               // not a VIN: noise from other text or a wrong orientation
+    let score = exact ? 100 : ck && close ? 70 : ck && plaus ? 60 : close ? 40 : 20;
+    const edited = c.how === "trimmed" || c.how === "edited";
+    if (edited) { score -= exact ? 3 : 15; if (exact && !fixed) fixed = "extra character"; }
+    scored.push({ read: c.vin, vin, fixed, exact, checkOk: ck, plausible: plaus, nearVin: near.best ? near.best.vin : null, dist, uniqueNear: near.unique, how: c.how, score });
+  }
+  scored.sort((a, b) => b.score - a.score);
+  const top = scored[0] || null;
+  let status = "No VIN found";
+  if (top) {
+    if (top.exact) status = "Matched";
+    else if (top.dist <= 2 && top.uniqueNear) status = "Probable match";
+    else if (top.checkOk) status = "Not in master";
+    else status = "Unclear read";
+  }
+  /* a reading that had to be cut or edited is only trusted when it lands exactly on a master VIN */
+  const edited = top && (top.how === "trimmed" || top.how === "edited");
+  if (top && edited && !top.exact && status === "Not in master") status = "Unclear read";
+  return { status, top, all: scored, strong: !!top && (top.exact || (!edited && top.checkOk && (top.plausible || (top.dist <= 2 && top.uniqueNear)))) };
+}
+
+function findDate(text) { const m = String(text || "").match(/\b([0-3]\d)[-.\/]([01]\d)[-.\/](20\d\d)\b/); return m ? `${m[1]}-${m[2]}-${m[3]}` : ""; }
+function findCardNo(text) { const m = String(text || "").match(/\b(\d{2}\/\d{1,4}-\d{3,6})\b/); return m ? m[1] : ""; }
+
+if (typeof module !== "undefined" && module.exports) module.exports = { plausible, checkDigit, checkOk, normVin, hamming, vinCandidates, masterIndex, nearest, repair, judgePage, findDate, findCardNo };
+
+
+/* ---------------- state ---------------- */
+let MASTER = null;          // {rows, col, idx, cols}
+let SCANS = [];             // [{name, kind:'pdf'|'image', data:ArrayBuffer|Blob}]
+let PAGES = [];             // per-page results
+let TAB = "master", STOP = false, RUNSTATS = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function msg(t, err){ const m = $("msg"); m.textContent = t || ""; m.className = "banner" + (err ? " err" : ""); if (!t) m.classList.add("hidden"); }
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = CONFIG.pdfWorker;
+const libsOk = () => window.XLSX && window.pdfjsLib && window.jsQR && window.Tesseract;
+if (!libsOk()) msg("Some libraries could not load. Check the internet connection, then reload the page.", true);
+
+/* ---------------- master list ---------------- */
+function loadMaster(buf, name){
+  const wb = XLSX.read(new Uint8Array(buf), { type: "array" });
+  let best = null;
+  for (const sn of wb.SheetNames) {
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], { defval: "", raw: false });
+    if (!rows.length) continue;
+    for (const col of Object.keys(rows[0])) {
+      const hits = rows.filter(r => normVin(r[col]).length === 17).length;
+      if (!best || hits > best.hits) best = { sheet: sn, rows, col, hits };
+    }
+  }
+  if (!best || best.hits === 0) throw new Error("No column with 17-character VINs was found.");
+  const rows = best.rows.filter(r => normVin(r[best.col]).length === 17);
+  MASTER = { rows, col: best.col, cols: Object.keys(best.rows[0]), idx: masterIndex(rows.map(r => r[best.col])), name };
+  const bad = rows.filter(r => !checkOk(normVin(r[best.col]))).length;
+  $("mStatus").innerHTML = `<span class="ok">✓</span> ${MASTER.idx.list.length} VINs from column "${esc(best.col)}" in ${esc(name)}` +
+    (bad ? ` &middot; <span style="color:var(--amber-ink)">${bad} fail the check digit (possible typing errors in the list)</span>` : "");
+  ready();
+}
+$("mFile").onchange = e => { const f = e.target.files[0]; if (!f) return; f.arrayBuffer().then(b => { try { loadMaster(b, f.name); msg(""); } catch (err) { msg("Master list: " + err.message, true); } }); e.target.value = ""; };
+
+/* ---------------- scans ---------------- */
+async function setScans(files){
+  SCANS = []; let pages = 0;
+  for (const f of files) {
+    if (/pdf$/i.test(f.name) || f.type === "application/pdf") {
+      const data = await f.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: data.slice(0) }).promise;
+      SCANS.push({ name: f.name, kind: "pdf", data, pages: pdf.numPages }); pages += pdf.numPages; pdf.destroy();
+    } else { SCANS.push({ name: f.name, kind: "image", data: f, pages: 1 }); pages += 1; }
+  }
+  $("sStatus").innerHTML = `<span class="ok">✓</span> ${SCANS.length} file${SCANS.length > 1 ? "s" : ""}, ${pages} page${pages > 1 ? "s" : ""}`;
+  ready();
+}
+$("sFile").onchange = e => { const fs = [...e.target.files]; if (fs.length) setScans(fs).catch(err => msg("Scans: " + err.message, true)); e.target.value = ""; };
+function ready(){ $("runBtn").disabled = !(MASTER && SCANS.length && libsOk()); }
+
+$("demoBtn").onclick = async () => {
+  try {
+    const [m, s] = await Promise.all([fetch("vin-demo/Demo_Master_List.xlsx"), fetch("vin-demo/Demo_Customs_Cards.pdf")]);
+    if (!m.ok || !s.ok) throw new Error();
+    loadMaster(await m.arrayBuffer(), "Demo_Master_List.xlsx");
+    const blob = await s.blob(); await setScans([new File([blob], "Demo_Customs_Cards.pdf", { type: "application/pdf" })]);
+    msg("Demo files loaded: 30 fake customs cards and a declaration page. Press Check arrivals.");
+  } catch (e) { msg("The demo files load only when this page is opened from the website. Download them with the buttons above and choose them manually.", true); }
+};
+
+/* ---------------- image helpers ---------------- */
+function canvasOf(w, h){ const c = document.createElement("canvas"); c.width = w; c.height = h; return c; }
+function rotate(src, deg){
+  if (!deg) return src;
+  const swap = deg % 180 !== 0, c = canvasOf(swap ? src.height : src.width, swap ? src.width : src.height), g = c.getContext("2d");
+  g.translate(c.width / 2, c.height / 2); g.rotate(deg * Math.PI / 180); g.drawImage(src, -src.width / 2, -src.height / 2); return c;
+}
+/* greyscale + contrast stretch; optional hard threshold for a second attempt */
+function prep(src, threshold){
+  const c = canvasOf(src.width, src.height), g = c.getContext("2d"); g.drawImage(src, 0, 0);
+  const im = g.getImageData(0, 0, c.width, c.height), d = im.data, hist = new Uint32Array(256);
+  for (let i = 0; i < d.length; i += 4) { const v = (d[i] * 299 + d[i + 1] * 587 + d[i + 2] * 114) / 1000 | 0; d[i] = v; hist[v]++; }
+  const n = d.length / 4; let lo = 0, hi = 255, acc = 0;
+  for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc > n * 0.01) { lo = v; break; } }
+  acc = 0; for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc > n * 0.30) { hi = v; break; } }
+  const span = Math.max(30, hi - lo);
+  for (let i = 0; i < d.length; i += 4) {
+    let v = Math.max(0, Math.min(255, (d[i] - lo) * 255 / span));
+    if (threshold) v = v < threshold ? 0 : 255;
+    d[i] = d[i + 1] = d[i + 2] = v;
+  }
+  g.putImageData(im, 0, 0); return c;
+}
+function thumb(src, maxW){ const s = Math.min(1, maxW / src.width), c = canvasOf(src.width * s | 0, src.height * s | 0); c.getContext("2d").drawImage(src, 0, 0, c.width, c.height); return c.toDataURL("image/jpeg", 0.8); }
+function cropAround(src, bbox){
+  const pad = 40, x0 = Math.max(0, bbox.x0 - 260), y0 = Math.max(0, bbox.y0 - pad), x1 = Math.min(src.width, bbox.x1 + 260), y1 = Math.min(src.height, bbox.y1 + pad);
+  const c = canvasOf(x1 - x0, y1 - y0); c.getContext("2d").drawImage(src, x0, y0, x1 - x0, y1 - y0, 0, 0, x1 - x0, y1 - y0);
+  return c.toDataURL("image/jpeg", 0.85);
+}
+
+/* ---------------- reading one page ---------------- */
+async function renderPage(job){
+  if (job.kind === "image") {
+    const bmp = await createImageBitmap(job.data); const s = Math.min(2.5, 2400 / Math.max(bmp.width, bmp.height));
+    const c = canvasOf(bmp.width * s | 0, bmp.height * s | 0); c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height); return { canvas: c, text: "" };
+  }
+  const page = await job.pdf.getPage(job.page);
+  let text = "";
+  try { const tc = await page.getTextContent(); text = tc.items.map(i => i.str).join(" "); } catch (e) {}
+  const v1 = page.getViewport({ scale: 1 }), scale = Math.min(4, 2400 / Math.max(v1.width, v1.height));
+  const vp = page.getViewport({ scale }), c = canvasOf(vp.width | 0, vp.height | 0), g = c.getContext("2d");
+  g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+  await page.render({ canvasContext: g, viewport: vp }).promise; page.cleanup();
+  return { canvas: c, text };
+}
+
+function findWord(data, vinRead){
+  const key = vinRead.slice(0, 6), words = [];
+  for (const b of data.blocks || []) for (const p of b.paragraphs || []) for (const l of p.lines || []) for (const w of l.words || []) words.push(w);
+  const hit = words.find(w => normVin(w.text).includes(key)) || words.find(w => normVin(w.text).includes(vinRead.slice(-6)));
+  return hit ? hit.bbox : null;
+}
+
+let LAST_ROT = 90, LAYOUT = null, QR_SEEN = 0, QR_HITS = 0;
+/* words that appear on a customs declaration page but not on a vehicle card */
+const DECL_WORDS = ["DECLARATION", "H.S. CODE", "HS CODE", "GOODS DESCRIPTION", "TOTAL DUTY", "CIF", "CLEARING AGENT", "PORT OF DISCHARGE",
+  "CURRENCY", "PACKAGES", "DELIVERY ORDER", "CREATED BY", "EXCHANGE RATE", "GROSS", "ORIGIN", "TARIFF"];
+function isDeclaration(text){ const t = String(text || "").toUpperCase(); return DECL_WORDS.filter(w => t.includes(w)).length >= 2; }
+function allWords(data){ const out = []; for (const b of data.blocks || []) for (const p of b.paragraphs || []) for (const l of p.lines || []) for (const w of l.words || []) out.push(w); return out; }
+function wordBox(data, re){ const w = allWords(data).find(w => re.test(String(w.text).replace(/^[:.,]+|[:.,]+$/g, ""))); return w ? w.bbox : null; }
+function normBox(b, img){ return { x0: b.x0 / img.width, y0: b.y0 / img.height, x1: b.x1 / img.width, y1: b.y1 / img.height }; }
+function cutBox(img, nb, padX, padY){
+  const x0 = Math.max(0, (nb.x0 - padX) * img.width | 0), y0 = Math.max(0, (nb.y0 - padY) * img.height | 0);
+  const x1 = Math.min(img.width, (nb.x1 + padX) * img.width | 0), y1 = Math.min(img.height, (nb.y1 + padY) * img.height | 0);
+  const c = canvasOf(x1 - x0, y1 - y0); c.getContext("2d").drawImage(img, x0, y0, x1 - x0, y1 - y0, 0, 0, x1 - x0, y1 - y0); return c;
+}
+/* learn where the VIN, card date and card number sit, from the first card read in full */
+function learnLayout(img, data, vinRead, rot){
+  if (LAYOUT) return;
+  const vb = findWord(data, vinRead); if (!vb) return;
+  const db = wordBox(data, /^[0-3]\d[-.\/][01]\d[-.\/]20\d\d$/), cb = wordBox(data, /^\d{2}\/\d{1,4}-\d{3,6}$/);
+  LAYOUT = { rot, landscape: img.width > img.height, vin: normBox(vb, img), date: db ? normBox(db, img) : null, card: cb ? normBox(cb, img) : null };
+}
+const OUT_FULL = { text: true, blocks: true, hocr: false, tsv: false }, OUT_TEXT = { text: true, blocks: false, hocr: false, tsv: false };
+
+async function readPage(job, worker){
+  const t0 = performance.now();
+  const r = { file: job.name, page: job.page, status: "No VIN found", method: "", vin: "", read: "", fixed: "", checkOk: false, nearVin: "", dist: null,
+    date: "", cardNo: "", rot: null, passes: 0, textLayer: false, qr: "none", crop: "", ms: 0, declaration: false, review: null };
+  const { canvas, text } = await renderPage(job);
+
+  // 1. hidden text in the PDF
+  if (text && text.replace(/\s/g, "").length > 20) {
+    r.textLayer = true;
+    const j = judgePage(vinCandidates(text), MASTER.idx);
+    if (j.strong) { apply(r, j, "PDF text"); r.date = findDate(text); r.cardNo = findCardNo(text); }
+  }
+  // 2. QR code (skipped once 5 pages show it never holds a VIN)
+  if (!r.method) {
+    if (QR_SEEN >= 5 && QR_HITS === 0) r.qr = "skipped";
+    else {
+      const small = canvas.width > 1600 ? (() => { const s = 1600 / canvas.width, c = canvasOf(1600, canvas.height * s | 0); c.getContext("2d").drawImage(canvas, 0, 0, c.width, c.height); return c; })() : canvas;
+      const g = small.getContext("2d"), im = g.getImageData(0, 0, small.width, small.height);
+      const code = jsQR(im.data, small.width, small.height, { inversionAttempts: "attemptBoth" });
+      QR_SEEN++;
+      if (code && code.data) {
+        const j = judgePage(vinCandidates(code.data.replace(/[^A-Za-z0-9]+/g, " ")), MASTER.idx);
+        r.qr = j.top ? "has VIN" : (/^https?:/i.test(code.data) ? "link, no VIN" : "text, no VIN");
+        if (j.top) QR_HITS++;
+        if (j.strong) apply(r, j, "QR code");
+      }
+    }
+  }
+  const base = r.method ? null : prep(canvas, 0);
+  let fastCrop = null;
+  // 3a. fast read: only the small areas learned from the first card
+  if (!r.method && LAYOUT && !STOP) {
+    const img = rotate(base, LAYOUT.rot);
+    if ((img.width > img.height) === LAYOUT.landscape) {
+      r.passes++;
+      const cut = cutBox(img, LAYOUT.vin, 0.12, 0.025);
+      const { data } = await worker.recognize(cut, {}, OUT_TEXT);
+      const j = judgePage(vinCandidates(data.text), MASTER.idx);
+      if (j.strong) {
+        apply(r, j, "OCR (learned layout)"); r.rot = LAYOUT.rot; fastCrop = cut;
+        const boxes = [LAYOUT.date, LAYOUT.card].filter(Boolean);
+        if (boxes.length) {   // date and card number sit on the same header line: one read of a thin strip
+          const u = { x0: Math.min(...boxes.map(b => b.x0)), y0: Math.min(...boxes.map(b => b.y0)), x1: Math.max(...boxes.map(b => b.x1)), y1: Math.max(...boxes.map(b => b.y1)) };
+          const o = await worker.recognize(cutBox(img, u, 0.06, 0.02), {}, OUT_TEXT);
+          r.date = findDate(o.data.text); r.cardNo = findCardNo(o.data.text);
+        }
+      }
+    }
+  }
+  // 3b. full read, trying orientations (the last one that worked goes first)
+  let best = null, bestCanvas = null, bestData = null, allText = "", decl = false;
+  if (!r.method) {
+    const order = [LAST_ROT, ...[90, 270, 0, 180].filter(x => x !== LAST_ROT)];
+    for (const rot of order) {
+      if (STOP) break;
+      const img = rotate(base, rot); r.passes++;
+      const { data } = await worker.recognize(img, { rotateAuto: true }, OUT_FULL);
+      allText += "\n" + data.text;
+      const j = judgePage(vinCandidates(data.text), MASTER.idx);
+      if (!best || (j.top && (!best.j.top || j.top.score > best.j.top.score))) { best = { j, rot, text: data.text }; bestCanvas = img; bestData = data; }
+      if (j.strong) { LAST_ROT = rot; learnLayout(img, data, j.top.read, rot); break; }
+      if (isDeclaration(data.text)) { decl = true; break; }
+    }
+    // second attempt with a hard black/white image at the best orientation
+    if (!STOP && best && !best.j.strong && !decl) {
+      const img = rotate(prep(canvas, 150), best.rot); r.passes++;
+      const { data } = await worker.recognize(img, { rotateAuto: true }, OUT_FULL);
+      allText += "\n" + data.text;
+      const j = judgePage(vinCandidates(data.text), MASTER.idx);
+      if (j.top && (!best.j.top || j.top.score > best.j.top.score)) { best = { j, rot: best.rot, text: data.text, second: true }; bestCanvas = img; bestData = data; }
+    }
+    if (best) {
+      r.rot = best.rot;
+      if (best.j.top) apply(r, best.j, best.second ? "OCR (second attempt)" : "OCR");
+      r.date = findDate(best.text); r.cardNo = findCardNo(best.text);
+      if (!best.j.top && (decl || isDeclaration(allText))) { r.declaration = true; r.status = "Declaration page"; r.method = "OCR"; r.rot = null; }
+    }
+  }
+  // image for the review screen
+  if (r.status !== "Matched" && r.status !== "Declaration page") {
+    if (fastCrop) { r.crop = fastCrop.toDataURL("image/jpeg", 0.85); r.cropFull = false; }
+    else {
+      const src = bestCanvas || canvas, bbox = bestData && r.read ? findWord(bestData, r.read) : null;
+      r.crop = bbox ? cropAround(src, bbox) : thumb(src, 1100);
+      r.cropFull = !bbox;
+    }
+  }
+  r.ms = Math.round(performance.now() - t0);
+  return r;
+}
+function apply(r, j, method){
+  const t = j.top; r.method = method; r.status = j.status; r.vin = t.vin; r.read = t.read; r.fixed = t.fixed || "";
+  r.checkOk = t.checkOk; r.nearVin = t.exact ? t.vin : (t.dist <= 2 && t.uniqueNear ? t.nearVin : ""); r.dist = t.dist;
+}
+
+/* ---------------- run ---------------- */
+let WORKERS = [];
+async function getWorkers(n){
+  while (WORKERS.length < n) {
+    const opts = {}; if (CONFIG.workerPath) opts.workerPath = CONFIG.workerPath; if (CONFIG.corePath) opts.corePath = CONFIG.corePath; if (CONFIG.langPath) opts.langPath = CONFIG.langPath;
+    const w = await Tesseract.createWorker("eng", 1, opts);
+    await w.setParameters({ tessedit_pageseg_mode: "11", preserve_interword_spaces: "1" });
+    WORKERS.push(w);
+  }
+  return WORKERS.slice(0, n);
+}
+
+$("runBtn").onclick = async () => {
+  STOP = false; PAGES = []; LAST_ROT = 90; LAYOUT = null; QR_SEEN = 0; QR_HITS = 0;
+  $("runBtn").disabled = true; $("stopBtn").classList.remove("hidden"); $("prog").classList.remove("hidden"); $("results").classList.add("hidden");
+  const jobs = [];
+  for (const s of SCANS) {
+    if (s.kind === "pdf") { const pdf = await pdfjsLib.getDocument({ data: s.data.slice(0) }).promise; s.pdf = pdf; for (let p = 1; p <= pdf.numPages; p++) jobs.push({ name: s.name, kind: "pdf", pdf, page: p }); }
+    else jobs.push({ name: s.name, kind: "image", data: s.data, page: 1 });
+  }
+  const nW = Math.max(1, Math.min(CONFIG.maxWorkers || 4, (navigator.hardwareConcurrency || 4) - 1, jobs.length));
+  $("progText").textContent = "Loading the text recognition engine (first run downloads about 5 MB)...";
+  const t0 = performance.now(); let done = 0;
+  try {
+    const workers = await getWorkers(nW);
+    $("engineNote").textContent = `${nW} reader${nW > 1 ? "s" : ""} running in parallel`;
+    let next = 0;
+    const tick = () => {
+      const el = (performance.now() - t0) / 1000, per = el / Math.max(1, done), left = per * (jobs.length - done);
+      $("barFill").style.width = (100 * done / jobs.length) + "%";
+      $("progText").textContent = `Page ${done} of ${jobs.length} read`;
+      $("progEta").textContent = done ? `${per.toFixed(1)} s per page · about ${Math.ceil(left / 60)} min left` : "";
+    };
+    const runOne = async w => {
+      const job = jobs[next++];
+      try { PAGES.push(await readPage(job, w)); }
+      catch (e) { PAGES.push({ file: job.name, page: job.page, status: "Error", method: "", vin: "", read: "", error: String(e.message || e), ms: 0, review: null }); }
+      done++; tick();
+    };
+    // the first card is read alone: it teaches the layout, so the other readers start in fast mode
+    while (!STOP && !LAYOUT && next < Math.min(jobs.length, 3)) await runOne(workers[0]);
+    await Promise.all(workers.map(async w => { while (!STOP && next < jobs.length) await runOne(w); }));
+    PAGES.sort((a, b) => a.file.localeCompare(b.file) || a.page - b.page);
+    RUNSTATS = { seconds: (performance.now() - t0) / 1000, pages: jobs.length, done, workers: nW, stopped: STOP };
+    $("progText").textContent = STOP ? `Stopped after ${done} of ${jobs.length} pages` : `Finished: ${done} pages in ${Math.round(RUNSTATS.seconds)} s`;
+    $("progEta").textContent = "";
+    TAB = summary().review.length ? "review" : "master";
+    render();
+  } catch (e) { msg("The check could not run. " + (e.message || e), true); }
+  for (const s of SCANS) if (s.pdf) { s.pdf.destroy(); s.pdf = null; }
+  $("runBtn").disabled = false; $("stopBtn").classList.add("hidden");
+};
+$("stopBtn").onclick = () => { STOP = true; $("stopBtn").disabled = true; setTimeout(() => $("stopBtn").disabled = false, 1500); };
+
+/* ---------------- aggregate (applies review decisions) ---------------- */
+function effective(p){
+  const e = { ...p };
+  if (!p.review) return e;
+  if (p.review.action === "confirm") { e.status = "Matched"; e.vin = p.nearVin; e.method += " + confirmed"; }
+  else if (p.review.action === "different") { e.status = MASTER.idx.set.has(p.vin) ? "Matched" : "Not in master"; }
+  else if (p.review.action === "typed") { const v = normVin(p.review.vin); e.vin = v; e.status = MASTER.idx.set.has(v) ? "Matched" : "Not in master"; e.method += " + typed"; }
+  else if (p.review.action === "skip") { e.status = "Not a vehicle card"; }
+  return e;
+}
+function summary(){
+  const eff = PAGES.map(effective);
+  const byVin = new Map();
+  for (const p of eff) if (p.status === "Matched") { if (!byVin.has(p.vin)) byVin.set(p.vin, []); byVin.get(p.vin).push(p); }
+  const pendingNear = new Map();
+  for (const p of eff) if (p.status === "Probable match" && p.nearVin) pendingNear.set(p.nearVin, p);
+  const master = MASTER.rows.map(row => {
+    const v = normVin(row[MASTER.col]), hits = byVin.get(v) || [];
+    const status = hits.length > 1 ? "Arrived (duplicate card)" : hits.length ? "Arrived" : pendingNear.has(v) ? "Possible, needs review" : "Not arrived";
+    const h = hits[0] || pendingNear.get(v);
+    return { row, vin: v, status, page: h ? `${h.page}${hits.length > 1 ? ", " + hits.slice(1).map(x => x.page).join(", ") : ""}` : "", date: h ? h.date : "", cardNo: h ? h.cardNo : "", method: h ? h.method : "", file: h ? h.file : "" };
+  });
+  const review = eff.filter(p => ["Probable match", "Unclear read", "No VIN found", "Error"].includes(p.status));
+  const extra = eff.filter(p => p.status === "Not in master");
+  const cards = eff.filter(p => !["Declaration page", "Not a vehicle card"].includes(p.status));
+  return { eff, master, review, extra, cards,
+    arrived: master.filter(m => m.status.startsWith("Arrived")).length, notArrived: master.filter(m => m.status === "Not arrived").length,
+    dups: master.filter(m => m.status.includes("duplicate")).length, decl: eff.filter(p => p.status === "Declaration page").length };
+}
+
+/* ---------------- render ---------------- */
+const pillFor = s => /^Arrived|^Matched/.test(s) ? "p-green" : /Not arrived|No VIN|Error|Unclear/.test(s) ? "p-red" : /Probable|Possible|Not in master/.test(s) ? "p-amber" : "p-grey";
+function render(){
+  const S = summary();
+  $("results").classList.remove("hidden");
+  $("kCards").textContent = S.cards.length; $("kCardsH").textContent = `${PAGES.length} pages${S.decl ? `, ${S.decl} declaration` : ""}`;
+  $("kArr").textContent = S.arrived; $("kNot").textContent = S.notArrived; $("kRev").textContent = S.review.length; $("kExtra").textContent = S.extra.length; $("kDup").textContent = S.dups;
+  const tabs = [["master", `Master list (${S.master.length})`], ["review", `Needs review (${S.review.length})`], ["extra", `Not in master (${S.extra.length})`], ["cards", `All pages (${PAGES.length})`]];
+  if ($("testMode").checked) tabs.push(["test", "Test summary"]);
+  if (!tabs.some(t => t[0] === TAB)) TAB = "master";
+  $("tabs").innerHTML = tabs.map(([k, l]) => `<button class="tab ${k === TAB ? "on" : ""}" data-k="${k}">${l}</button>`).join("");
+  $("tabs").querySelectorAll("button").forEach(b => b.onclick = () => { TAB = b.dataset.k; render(); });
+  const q = $("q").value.trim().toUpperCase();
+  const match = (...xs) => !q || xs.some(x => String(x ?? "").toUpperCase().includes(q));
+  const T = $("testMode").checked;
+  let h = "";
+  if (TAB === "master") {
+    const extraCols = MASTER.cols.filter(c => c !== MASTER.col).slice(0, 3);
+    const rows = S.master.filter(m => match(m.vin, m.page, ...extraCols.map(c => m.row[c])));
+    h = `<div class="scroll"><table><thead><tr><th>VIN</th>${extraCols.map(c => `<th>${esc(c)}</th>`).join("")}<th>Status</th><th class="n">Page</th><th>Card date</th><th>Card no.</th>${T ? "<th>Read by</th>" : ""}</tr></thead><tbody>` +
+      rows.map(m => `<tr><td class="mono">${esc(m.vin)}</td>${extraCols.map(c => `<td>${esc(m.row[c])}</td>`).join("")}<td><span class="pill ${pillFor(m.status)}">${esc(m.status)}</span></td><td class="n">${esc(m.page)}</td><td>${esc(m.date)}</td><td class="mono">${esc(m.cardNo)}</td>${T ? `<td>${esc(m.method)}</td>` : ""}</tr>`).join("") +
+      `</tbody></table></div>`;
+  } else if (TAB === "review") {
+    h = S.review.length ? S.review.map(p => reviewCard(p)).join("") : `<div class="empty">Nothing to review. Every vehicle card was read with confidence.</div>`;
+  } else if (TAB === "extra") {
+    const rows = S.extra.filter(p => match(p.vin, p.page));
+    h = rows.length ? `<div class="scroll"><table><thead><tr><th>VIN on card</th><th>File</th><th class="n">Page</th><th>Card date</th><th>Card no.</th><th>Check digit</th></tr></thead><tbody>` +
+      rows.map(p => `<tr><td class="mono">${esc(p.vin)}</td><td>${esc(p.file)}</td><td class="n">${p.page}</td><td>${esc(p.date)}</td><td class="mono">${esc(p.cardNo)}</td><td>${p.checkOk ? "Valid" : "Fails"}</td></tr>`).join("") + `</tbody></table></div>`
+      : `<div class="empty">Every card found matches the master list.</div>`;
+  } else if (TAB === "cards") {
+    const rows = S.eff.filter(p => match(p.vin, p.page, p.status));
+    h = `<div class="scroll"><table><thead><tr><th>File</th><th class="n">Page</th><th>VIN</th><th>Status</th><th>Card date</th><th>Card no.</th>${T ? "<th>Read by</th><th>As read</th><th>Fix</th><th>Check digit</th><th class='n'>Turned</th><th class='n'>Passes</th><th class='n'>Seconds</th><th>Text layer</th><th>QR</th>" : ""}</tr></thead><tbody>` +
+      rows.map(p => `<tr><td>${esc(p.file)}</td><td class="n">${p.page}</td><td class="mono">${esc(p.vin)}</td><td><span class="pill ${pillFor(p.status)}">${esc(p.status)}</span></td><td>${esc(p.date)}</td><td class="mono">${esc(p.cardNo)}</td>` +
+        (T ? `<td>${esc(p.method)}</td><td class="mono">${esc(p.read)}</td><td>${esc(p.fixed)}</td><td>${p.read ? (p.checkOk ? "Valid" : "Fails") : ""}</td><td class="n">${p.rot ?? ""}${p.rot != null ? "°" : ""}</td><td class="n">${p.passes ?? ""}</td><td class="n">${p.ms ? (p.ms / 1000).toFixed(1) : ""}</td><td>${p.textLayer ? "Yes" : "No"}</td><td>${esc(p.qr || "")}</td>` : "") + `</tr>`).join("") + `</tbody></table></div>`;
+  } else if (TAB === "test") {
+    h = `<div class="card-b"><p style="margin:0 0 10px;color:var(--ink-2);font-size:13px">This summary contains no VINs, names or card numbers. It can be shared to tune the tool.</p><pre class="summary" id="sumText">${esc(testSummary(S))}</pre><button id="copyBtn" class="small">Copy summary</button></div>`;
+  }
+  $("view").innerHTML = h;
+  $("view").querySelectorAll("[data-act]").forEach(b => b.onclick = () => decide(b.dataset.key, b.dataset.act));
+  const cp = $("copyBtn"); if (cp) cp.onclick = () => { navigator.clipboard.writeText($("sumText").textContent).then(() => { cp.textContent = "Copied"; }); };
+}
+function diffHtml(a, b){ return [...a].map((c, i) => b && b[i] !== c ? `<span class="x">${esc(c)}</span>` : esc(c)).join(""); }
+function reviewCard(p){
+  const key = `${p.file}|${p.page}`;
+  let facts = `<div><b>${esc(p.file)}</b>, page ${p.page}</div><div style="margin:6px 0"><span class="pill ${pillFor(p.status)}">${esc(p.status)}</span></div>`;
+  let actions = "";
+  if (p.status === "Probable match") {
+    facts += `<div>Read on card</div><div class="diff">${diffHtml(p.vin, p.nearVin)}</div><div style="margin-top:6px">Closest in master list</div><div class="diff">${diffHtml(p.nearVin, p.vin)}</div>
+      <div style="margin-top:6px">${p.dist} character${p.dist > 1 ? "s" : ""} different &middot; check digit ${p.checkOk ? "valid, so the card was probably read correctly" : "fails, so the card was probably misread"}</div>`;
+    actions = `<button class="small primary" data-act="confirm" data-key="${esc(key)}">Same vehicle</button><button class="small" data-act="different" data-key="${esc(key)}">Different vehicle</button>`;
+  } else if (p.status === "Unclear read") {
+    facts += `<div>Best reading</div><div class="diff">${esc(p.vin)}</div><div style="margin-top:6px">Fails the check digit and is not close to any master VIN.</div>`;
+  } else if (p.status === "Error") {
+    facts += `<div>The page could not be processed: ${esc(p.error || "")}</div>`;
+  } else facts += `<div>No VIN could be read on this page. ${p.cropFull ? "The whole page is shown." : ""}</div>`;
+  const typed = `<div style="margin-top:10px">Type the VIN from the image</div><div class="row" style="margin-top:4px"><input id="t-${esc(key)}" maxlength="20" placeholder="17 characters" value="${p.review && p.review.vin ? esc(p.review.vin) : ""}"><button class="small" data-act="typed" data-key="${esc(key)}">Save</button></div>`;
+  const skip = p.status !== "Probable match" ? `<button class="small" data-act="skip" data-key="${esc(key)}">Not a vehicle card</button>` : "";
+  return `<div class="review"><div>${p.crop ? `<img src="${p.crop}" alt="Scanned card, page ${p.page}">` : ""}</div><div class="facts">${facts}<div class="row" style="margin-top:10px">${actions}${skip}</div>${typed}</div></div>`;
+}
+function decide(key, act){
+  const p = PAGES.find(x => `${x.file}|${x.page}` === key); if (!p) return;
+  if (act === "typed") { const v = normVin(document.getElementById("t-" + key).value); if (v.length !== 17) { msg("A VIN has 17 characters.", true); return; } p.review = { action: "typed", vin: v }; }
+  else p.review = { action: act };
+  msg(""); render();
+}
+$("q").oninput = () => render();
+$("testMode").onchange = () => { if (PAGES.length) render(); };
+
+/* ---------------- test summary (no VINs) ---------------- */
+function testSummary(S){
+  const count = (arr, f) => arr.reduce((m, x) => (m[f(x)] = (m[f(x)] || 0) + 1, m), {});
+  const fmt = o => Object.keys(o).length ? Object.entries(o).map(([k, v]) => `  ${k || "(none)"}: ${v}`).join("\n") : "  none";
+  const lines = [];
+  lines.push("VIN Arrival Checker - test summary (no VINs included)");
+  lines.push(`Pages: ${PAGES.length} | readers: ${RUNSTATS ? RUNSTATS.workers : "-"} | total time: ${RUNSTATS ? Math.round(RUNSTATS.seconds) : "-"} s | avg per page: ${RUNSTATS ? (RUNSTATS.seconds / Math.max(1, RUNSTATS.done)).toFixed(1) : "-"} s`);
+  lines.push(`Master list: ${MASTER.idx.list.length} VINs | failing check digit in list: ${MASTER.rows.filter(r => !checkOk(normVin(r[MASTER.col]))).length}`);
+  lines.push("Page status:\n" + fmt(count(PAGES, p => p.status)));
+  lines.push("Read by:\n" + fmt(count(PAGES, p => p.method)));
+  lines.push(`PDF text layer present on: ${PAGES.filter(p => p.textLayer).length} pages`);
+  lines.push("QR code:\n" + fmt(count(PAGES, p => p.qr || "none")));
+  lines.push("Orientation used:\n" + fmt(count(PAGES.filter(p => p.rot != null), p => p.rot + " deg")));
+  lines.push("Corrections applied:\n" + fmt(count(PAGES.filter(p => p.fixed), p => p.fixed)));
+  lines.push(`Card date found: ${PAGES.filter(p => p.date).length} | card number found: ${PAGES.filter(p => p.cardNo).length}`);
+  lines.push(`Master: arrived ${S.arrived}, not arrived ${S.notArrived}, duplicates ${S.dups}, not in master ${S.extra.length}, needs review ${S.review.length}`);
+  const prob = PAGES.filter(p => !["Matched", "Declaration page"].includes(p.status));
+  if (prob.length) {
+    lines.push("Pages not matched automatically:");
+    for (const p of prob) lines.push(`  page ${p.page}: ${p.status}; read by ${p.method || "-"}; chars read ${p.read ? p.read.length : 0}; check digit ${p.read ? (p.checkOk ? "valid" : "fails") : "-"}; distance to nearest master ${p.dist ?? "-"}; passes ${p.passes ?? "-"}; ${((p.ms || 0) / 1000).toFixed(1)} s`);
+  }
+  return lines.join("\n");
+}
+
+/* ---------------- export ---------------- */
+$("expBtn").onclick = () => {
+  const S = summary(), wb = XLSX.utils.book_new();
+  const add = (rows, name) => { const ws = XLSX.utils.json_to_sheet(rows.length ? rows : [{ Note: "No rows" }]); ws["!cols"] = Object.keys(rows[0] || { Note: 1 }).map(k => ({ wch: Math.max(12, k.length + 2) })); XLSX.utils.book_append_sheet(wb, ws, name); };
+  add([{ Item: "Pages read", Value: PAGES.length }, { Item: "Vehicle cards", Value: S.cards.length }, { Item: "Master VINs", Value: S.master.length },
+       { Item: "Arrived", Value: S.arrived }, { Item: "Not arrived", Value: S.notArrived }, { Item: "Needs review", Value: S.review.length },
+       { Item: "Not in master", Value: S.extra.length }, { Item: "Duplicates", Value: S.dups }], "Summary");
+  add(S.master.map(m => ({ ...m.row, Status: m.status, Page: m.page, "Card date": m.date, "Card no.": m.cardNo, "Read by": m.method, File: m.file })), "Master status");
+  add(S.eff.map(p => ({ File: p.file, Page: p.page, VIN: p.vin, Status: p.status, "Card date": p.date, "Card no.": p.cardNo, "Read by": p.method, "Check digit": p.read ? (p.checkOk ? "Valid" : "Fails") : "", "Closest master VIN": p.status === "Probable match" ? p.nearVin : "", Review: p.review ? p.review.action : "" })), "Scanned pages");
+  add(S.extra.map(p => ({ File: p.file, Page: p.page, VIN: p.vin, "Card date": p.date, "Card no.": p.cardNo })), "Not in master");
+  XLSX.writeFile(wb, "VIN_Arrival_Check.xlsx");
+};
+</script>
+</body>
+</html>

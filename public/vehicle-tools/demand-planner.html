@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vehicle Demand Planner</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f4f5f7; --surface:#ffffff; --surface-2:#f8f9fb; --ink:#14181f; --ink-2:#4a5160; --ink-3:#7c8494;
+  --line:#e2e5ea; --accent:#1f3a68; --accent-2:#2f5597; --accent-soft:#e6ecf6;
+  --red:#f6d0c2; --red-ink:#8a2a10; --green:#d3e8c6; --green-ink:#2e5a17; --amber:#fbe7a6; --amber-ink:#6b4e00;
+  --frozen:#eef0f3; --override:#fff4d6; --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1218; --surface:#171b23; --surface-2:#1d222c; --ink:#e8ebf0; --ink-2:#b3bac6; --ink-3:#848c9a;
+    --line:#2a303b; --accent:#8fb0e8; --accent-2:#a9c2ef; --accent-soft:#1f2a3d;
+    --red:#5a2a1e; --red-ink:#ffcdbd; --green:#24401b; --green-ink:#cfeabf; --amber:#4d3d0c; --amber-ink:#ffe39a;
+    --frozen:#1b1f27; --override:#3d3415; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1218; --surface:#171b23; --surface-2:#1d222c; --ink:#e8ebf0; --ink-2:#b3bac6; --ink-3:#848c9a;
+  --line:#2a303b; --accent:#8fb0e8; --accent-2:#a9c2ef; --accent-soft:#1f2a3d;
+  --red:#5a2a1e; --red-ink:#ffcdbd; --green:#24401b; --green-ink:#cfeabf; --amber:#4d3d0c; --amber-ink:#ffe39a;
+  --frozen:#1b1f27; --override:#3d3415; --shadow:none;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+.num,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+header{background:var(--surface);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:18px;padding-bottom:18px;flex-wrap:wrap}
+h1{font-size:20px;margin:0;letter-spacing:-.01em}
+.sub{color:var(--ink-3);font-size:13px;margin-top:2px}
+.badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{font:inherit;font-size:13px;font-weight:500;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+button:hover,.btn:hover{border-color:var(--ink-3)}
+.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .primary{color:#0f1218}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .primary{color:#0f1218}}
+.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+button:disabled{opacity:.45;cursor:not-allowed}
+input[type=file]{display:none}
+main{padding:24px 0 48px}
+.banner{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--ink-2)}
+.banner.err{border-color:#d9826a;color:var(--red-ink);background:var(--red)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:48px 24px;text-align:center}
+.empty h2{margin:0 0 6px;font-size:18px}
+.empty p{color:var(--ink-2);max-width:620px;margin:0 auto 20px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:760px;margin:24px auto 0;text-align:left}
+.step{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--ink-2)}
+.step b{display:block;color:var(--ink);margin-bottom:2px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;color:var(--ink-2);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;box-shadow:var(--shadow)}
+.kpi .label{font-size:12px;color:var(--ink-3);font-weight:500}
+.kpi .value{font-size:26px;font-weight:600;margin-top:4px;font-family:"IBM Plex Mono",monospace}
+.kpi .hint{font-size:12px;color:var(--ink-3)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}
+.card-h h2{font-size:15px;margin:0}
+.card-b{padding:14px 16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:999px;font-size:12px}
+.chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th,td{padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;background:var(--surface-2)}
+td.l,th.l{text-align:left}
+tbody tr.clickable{cursor:pointer}
+tbody tr.clickable:hover td{background:var(--surface-2)}
+tbody tr.sel td{background:var(--accent-soft)!important}
+.hm{font-family:"IBM Plex Mono",monospace;font-size:12px;text-align:center;min-width:52px}
+.c-red{background:var(--red);color:var(--red-ink)}
+.c-green{background:var(--green);color:var(--green-ink)}
+.c-amber{background:var(--amber);color:var(--amber-ink)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500}
+.order-now{font-weight:700;font-size:15px}
+.trim-name{font-weight:600}
+.frozen{background:var(--frozen)}
+.detail-grid td:first-child,.detail-grid th:first-child{position:sticky;left:0;background:var(--surface);text-align:left;z-index:1;min-width:230px}
+.detail-grid tr.strong td{font-weight:600}
+.detail-grid input{width:58px;font:inherit;font-family:"IBM Plex Mono",monospace;font-size:13px;text-align:right;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink)}
+.detail-grid input.ov{background:var(--override);border-color:#d8b44a}
+.tag{font-size:10px;font-weight:600;color:var(--ink-3);margin-left:3px}
+.note{font-size:11px;color:var(--accent);display:block}
+.chart-box{position:relative;height:260px}
+.two{display:grid;grid-template-columns:1fr;gap:16px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+details summary{cursor:pointer;font-weight:600}
+details ol,details ul{color:var(--ink-2);padding-left:20px}
+footer{color:var(--ink-3);font-size:12px;text-align:center;padding:24px 0 40px}
+footer a{color:var(--ink-2)}
+.hidden{display:none!important}
+@media (max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}}
+.topnav{background:var(--surface-2);border-bottom:1px solid var(--line);font-size:13px}.topnav .wrap{display:flex;gap:18px;align-items:center;padding-top:9px;padding-bottom:9px;flex-wrap:wrap}.topnav a{color:var(--ink-2);text-decoration:none}.topnav a:hover{color:var(--ink)}.topnav a.here{color:var(--ink);font-weight:600}.topnav .sep{width:1px;height:14px;background:var(--line)}
+main.wrap{padding-top:24px;padding-bottom:48px}
+</style>
+</head>
+<body>
+<nav class="topnav"><div class="wrap"><a href="./">&larr; All tools</a><span class="sep"></span><a href="demand-planner.html" class="here">Demand Planner</a><a href="vin-checker.html">VIN Arrival Checker</a></div></nav>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>Vehicle Demand Planner <span class="badge">Demo</span></h1>
+      <div class="sub">Rolling 12-month stock cover and proposed orders by trim. Files are read in your browser and are not uploaded anywhere.</div>
+    </div>
+    <div class="toolbar">
+      <label class="btn primary" for="file">Upload Excel</label>
+      <input id="file" type="file" accept=".xlsx,.xls,.xlsm">
+      <button id="demoBtn">Load demo data</button>
+      <button id="tplBtn">Download input template</button>
+      <button id="expBtn" disabled>Download proposals</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="msg" class="banner hidden"></div>
+
+  <section id="empty" class="empty">
+    <h2>Start with a planning file</h2>
+    <p>Upload the planning Excel file, or load the demo data. The tool recalculates closing stock and stock cover for every trim and proposes the orders needed to reach the target cover.</p>
+    <div class="toolbar" style="justify-content:center">
+      <label class="btn primary" for="file">Upload Excel</label>
+      <button onclick="loadDemo()">Load demo data</button>
+    </div>
+    <div class="steps">
+      <div class="step"><b>1. Enter changes in Excel</b>Actual sales, confirmed arrival months, split shipments, new forecasts.</div>
+      <div class="step"><b>2. Upload the file</b>Every trim is recalculated for the next 12 months.</div>
+      <div class="step"><b>3. Review and export</b>Check proposed orders, test overrides, download the result.</div>
+    </div>
+  </section>
+
+  <section id="dash" class="hidden">
+    <div class="meta">
+      <div id="metaText"></div>
+      <div class="legend">
+        <span><i class="c-red"></i>Below target</span>
+        <span><i class="c-green"></i>On target (up to +1 month)</span>
+        <span><i class="c-amber"></i>More than 1 month above target</span>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="label" id="k1l">Units to order</div><div class="value" id="k1"></div><div class="hint">Sum of proposed orders, all trims</div></div>
+      <div class="kpi"><div class="label">Short until new orders land</div><div class="value" id="k2"></div><div class="hint">Trims below target in frozen months</div></div>
+      <div class="kpi"><div class="label">Excess stock</div><div class="value" id="k3"></div><div class="hint">Trims more than 1 month above target</div></div>
+      <div class="kpi"><div class="label">On target</div><div class="value" id="k4"></div><div class="hint">Trims within target range</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h2>Orders and stock cover by trim</h2>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="scroll"><table id="sumTbl"></table></div>
+      <div class="card-b" style="font-size:12px;color:var(--ink-3)">Select a trim to see its full plan. The first months, up to the lead time, are frozen: an order placed now cannot arrive before then.</div>
+    </div>
+
+    <div class="card" id="detail">
+      <div class="card-h">
+        <h2 id="dTitle"></h2>
+        <div class="toolbar"><span id="dInfo" style="font-size:12px;color:var(--ink-3);align-self:center"></span><button id="resetBtn">Reset overrides</button></div>
+      </div>
+      <div class="card-b two">
+        <div class="chart-box"><canvas id="chart"></canvas></div>
+      </div>
+      <div class="scroll"><table class="detail-grid" id="dTbl"></table></div>
+      <div class="card-b" style="font-size:12px;color:var(--ink-3)">
+        Type a number in "New arrivals" to override the proposal and see how later months react. Clear the box to return to the proposal. Overrides are kept only on this page and are included in the export.
+      </div>
+      <div class="card-b" style="padding-top:0">
+        <h2 style="font-size:14px;margin:6px 0 8px">Orders already placed for this trim</h2>
+        <div class="scroll"><table id="oTbl"></table></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>How the calculation works</summary>
+      <ol>
+        <li>Sales for a month use the Actual value when one exists, otherwise the Forecast.</li>
+        <li>Arrivals come from the Orders sheet. Each order lands in its Confirmed arrival month if given, otherwise in order month + lead time.</li>
+        <li>Closing stock = opening stock + arrivals + new arrivals - sales. Each month opens with the previous month's closing stock.</li>
+        <li>Stock cover = closing stock / average forecast sales of the next 3 months.</li>
+        <li>Target closing stock = target cover x average sales of the next 3 months.</li>
+        <li>New arrivals needed = target closing stock - (opening + arrivals - sales), rounded up, never below zero.</li>
+        <li>Months inside the lead time are frozen. No new order can arrive in time, so the tool only shows the gap.</li>
+        <li>The order to place in a month is the new arrival needed one lead time later.</li>
+      </ol>
+    </details>
+  </section>
+</main>
+<footer>Demo built with dummy data by <a href="https://mohammedjouhar.com" target="_blank" rel="noopener">Mohammed Jouhar</a>. Same logic as the companion Excel model.</footer>
+
+<script>
+/* ---------- Planning engine (pure functions, no DOM) ---------- */
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const HORIZON = 12;
+
+/* Month key = year*12 + monthIndex. Accepts Excel serial, Date, "YYYY-MM", "Mon-YYYY", "Mon-YY". */
+function toMonthKey(v) {
+  if (v === null || v === undefined || v === "") return null;
+  if (typeof v === "number" && isFinite(v)) {
+    const d = new Date(Math.round((v - 25569) * 86400000));
+    return d.getUTCFullYear() * 12 + d.getUTCMonth();
+  }
+  if (v instanceof Date && !isNaN(v)) {
+    const d = new Date(v.getTime() + 12 * 3600000); // guard against timezone drift at midnight
+    return d.getUTCFullYear() * 12 + d.getUTCMonth();
+  }
+  const s = String(v).trim();
+  let m = s.match(/^(\d{4})-(\d{1,2})/);
+  if (m) return +m[1] * 12 + (+m[2] - 1);
+  m = s.match(/^([A-Za-z]{3})[A-Za-z]*[-\s/](\d{2,4})$/);
+  if (m) {
+    const mi = MONTHS.findIndex(x => x.toLowerCase() === m[1].toLowerCase());
+    if (mi >= 0) { let y = +m[2]; if (y < 100) y += 2000; return y * 12 + mi; }
+  }
+  const d = new Date(s);
+  if (!isNaN(d)) return d.getFullYear() * 12 + d.getMonth();
+  return null;
+}
+function monthLabel(k, long) {
+  const y = Math.floor(k / 12), mi = k % 12;
+  return MONTHS[mi] + "-" + (long ? y : String(y).slice(2));
+}
+
+/* Pick a column by header name, case-insensitive, tolerant of extra words. */
+function col(row, ...names) {
+  const keys = Object.keys(row);
+  for (const n of names) {
+    const k = keys.find(k => k.trim().toLowerCase() === n.toLowerCase());
+    if (k !== undefined) return row[k];
+  }
+  for (const n of names) {
+    const k = keys.find(k => k.trim().toLowerCase().startsWith(n.toLowerCase()));
+    if (k !== undefined) return row[k];
+  }
+  return undefined;
+}
+const num = v => { const n = Number(v); return isFinite(n) ? n : 0; };
+
+/* sheets: { Settings:[rows], "Opening Stock":[rows], Sales:[rows], Orders:[rows] } -> model */
+function buildModel(sheets) {
+  const find = name => {
+    const key = Object.keys(sheets).find(k => k.trim().toLowerCase() === name.toLowerCase());
+    if (!key) throw new Error('Sheet "' + name + '" was not found in the file.');
+    return sheets[key];
+  };
+  const trims = [];
+  for (const r of find("Settings")) {
+    const trim = String(col(r, "Trim") ?? "").trim();
+    if (!trim) continue;
+    trims.push({
+      line: String(col(r, "Car line") ?? "").trim(),
+      trim,
+      target: num(col(r, "Target cover (months)", "Target")),
+      lead: num(col(r, "Lead time (months)", "Lead")) || 3
+    });
+  }
+  if (!trims.length) throw new Error("The Settings sheet has no trims.");
+  const byTrim = Object.fromEntries(trims.map(t => [t.trim, t]));
+
+  const opening = {};
+  let start = null;
+  for (const r of find("Opening Stock")) {
+    const trim = String(col(r, "Trim") ?? "").trim(), mk = toMonthKey(col(r, "Month"));
+    if (!trim || mk === null) continue;
+    opening[trim] = (opening[trim] || 0) + num(col(r, "Stock"));
+    if (start === null || mk < start) start = mk;
+  }
+  if (start === null) throw new Error("The Opening Stock sheet has no valid month.");
+
+  const sales = {};
+  for (const r of find("Sales")) {
+    const trim = String(col(r, "Trim") ?? "").trim(), mk = toMonthKey(col(r, "Month"));
+    if (!trim || mk === null) continue;
+    const type = String(col(r, "Type") ?? "Forecast").trim().toLowerCase().startsWith("a") ? "actual" : "forecast";
+    const s = ((sales[trim] ||= {})[mk] ||= { actual: null, forecast: 0, notes: [] });
+    if (type === "actual") s.actual = (s.actual || 0) + num(col(r, "Units"));
+    else s.forecast += num(col(r, "Units"));
+    const note = col(r, "Note"); if (note) s.notes.push(String(note));
+  }
+
+  const orders = [];
+  for (const r of find("Orders")) {
+    const trim = String(col(r, "Trim") ?? "").trim();
+    const om = toMonthKey(col(r, "Order month"));
+    if (!trim || om === null) continue;
+    const lead = byTrim[trim] ? byTrim[trim].lead : 3;
+    const conf = toMonthKey(col(r, "Confirmed arrival"));
+    orders.push({
+      id: String(col(r, "Order ID") ?? ""), trim, orderMonth: om, units: num(col(r, "Units")),
+      planned: om + lead, confirmed: conf, effective: conf ?? om + lead, note: String(col(r, "Note") ?? "")
+    });
+  }
+  return { trims, opening, sales, orders, start };
+}
+
+function salesFor(model, trim, mk) {
+  const s = model.sales[trim] && model.sales[trim][mk];
+  if (!s) return 0;
+  return s.actual !== null ? s.actual : s.forecast;
+}
+
+/* overrides: { trim: { monthIndex: units } } replaces the proposed arrival in that month */
+function planTrim(model, t, overrides) {
+  const ov = (overrides && overrides[t.trim]) || {};
+  const rows = [];
+  let opening = model.opening[t.trim] || 0;
+  for (let i = 0; i < HORIZON; i++) {
+    const mk = model.start + i;
+    const sales = salesFor(model, t.trim, mk);
+    const arrivals = model.orders.filter(o => o.trim === t.trim && o.effective === mk).reduce((a, o) => a + o.units, 0);
+    const avg3 = (salesFor(model, t.trim, mk + 1) + salesFor(model, t.trim, mk + 2) + salesFor(model, t.trim, mk + 3)) / 3;
+    const targetClosing = t.target * avg3;
+    const frozen = i + 1 <= t.lead;
+    const proposed = frozen ? 0 : Math.max(0, Math.ceil(targetClosing - (opening + arrivals - sales) - 1e-9));
+    const overridden = !frozen && ov[i] !== undefined && ov[i] !== null;
+    const arrivalNew = overridden ? ov[i] : proposed;
+    const closing = opening + arrivals + arrivalNew - sales;
+    const cover = avg3 > 0 ? closing / avg3 : null;
+    const s = model.sales[t.trim] && model.sales[t.trim][mk];
+    rows.push({ i, mk, opening, arrivals, proposed, arrivalNew, overridden, sales, isActual: !!(s && s.actual !== null),
+      notes: s ? s.notes : [], closing, avg3, targetClosing, cover, frozen });
+    opening = closing;
+  }
+  rows.forEach((r, i) => { r.orderToPlace = i + t.lead < HORIZON ? rows[i + t.lead].arrivalNew : null; });
+  const frozenCovers = rows.slice(0, t.lead).map(r => r.cover).filter(c => c !== null);
+  const lowestFrozen = frozenCovers.length ? Math.min(...frozenCovers) : null;
+  const firstNew = rows[t.lead] ? rows[t.lead].cover : null;
+  let status = "On target";
+  if (firstNew !== null && firstNew > t.target + 1) status = "Excess stock";
+  else if (lowestFrozen !== null && lowestFrozen < t.target) status = "Short until new orders land";
+  return { ...t, rows, orderNow: rows[0].orderToPlace, lowestFrozen, firstNew, status };
+}
+
+function planAll(model, overrides) { return model.trims.map(t => planTrim(model, t, overrides)); }
+
+if (typeof module !== "undefined") module.exports = { toMonthKey, monthLabel, buildModel, planAll, planTrim, HORIZON };
+
+const DEMO = {"Settings":[{"Car line":"Territory","Trim":"Ambiente","Target cover (months)":3,"Lead time (months)":3},{"Car line":"Territory","Trim":"Trend","Target cover (months)":3,"Lead time (months)":3},{"Car line":"Territory","Trim":"Titanium","Target cover (months)":3,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Big Bend 2-door","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Big Bend 4-door","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Outer Banks","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Badlands","Target cover (months)":2,"Lead time (months)":3},{"Car line":"Bronco","Trim":"Wildtrak","Target cover (months)":2,"Lead time (months)":3}],"Opening Stock":[{"Car line":"Territory","Trim":"Ambiente","Month":"2026-11","Stock":80},{"Car line":"Territory","Trim":"Trend","Month":"2026-11","Stock":210},{"Car line":"Territory","Trim":"Titanium","Month":"2026-11","Stock":45},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-11","Stock":14},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-11","Stock":25},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-11","Stock":19},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-11","Stock":9},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-11","Stock":9}],"Sales":[{"Car line":"Territory","Trim":"Ambiente","Month":"2026-08","Units":19,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-09","Units":21,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-10","Units":26,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-11","Units":25,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2026-12","Units":29,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-01","Units":26,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-02","Units":30,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-03","Units":28,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-04","Units":24,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-05","Units":22,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-06","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-07","Units":19,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-08","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-09","Units":24,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-10","Units":25,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-11","Units":25,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2027-12","Units":29,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Ambiente","Month":"2028-01","Units":26,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-08","Units":24,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-09","Units":34,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-10","Units":34,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-11","Units":35,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2026-12","Units":40,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-01","Units":37,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-02","Units":42,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-03","Units":38,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-04","Units":33,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-05","Units":32,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-06","Units":28,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-07","Units":26,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-08","Units":28,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-09","Units":33,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-10","Units":35,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-11","Units":35,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2027-12","Units":40,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Trend","Month":"2028-01","Units":37,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-08","Units":14,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-09","Units":19,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-10","Units":17,"Type":"Actual","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-11","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2026-12","Units":23,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-01","Units":21,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-02","Units":24,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-03","Units":22,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-04","Units":59,"Type":"Forecast","Note":"Fleet deal +40"},{"Car line":"Territory","Trim":"Titanium","Month":"2027-05","Units":18,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-06","Units":16,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-07","Units":15,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-08","Units":16,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-09","Units":19,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-10","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-11","Units":20,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2027-12","Units":23,"Type":"Forecast","Note":""},{"Car line":"Territory","Trim":"Titanium","Month":"2028-01","Units":21,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-08","Units":5,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-09","Units":5,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-10","Units":5,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-11","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2026-12","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-01","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-02","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-03","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-04","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-05","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-06","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-07","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-08","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-09","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-10","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-11","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2027-12","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 2-door","Month":"2028-01","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-08","Units":8,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-09","Units":10,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-10","Units":9,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-11","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2026-12","Units":12,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-01","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-02","Units":12,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-03","Units":11,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-04","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-05","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-06","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-07","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-08","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-09","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-10","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-11","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2027-12","Units":12,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Big Bend 4-door","Month":"2028-01","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-08","Units":6,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-09","Units":8,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-10","Units":9,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-11","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2026-12","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-01","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-02","Units":10,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-03","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-04","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-05","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-06","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-07","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-08","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-09","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-10","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-11","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2027-12","Units":9,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Outer Banks","Month":"2028-01","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-08","Units":6,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-09","Units":6,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-10","Units":8,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-11","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2026-12","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-01","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-02","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-03","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-04","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-05","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-06","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-07","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-08","Units":6,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-09","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-10","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-11","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2027-12","Units":8,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Badlands","Month":"2028-01","Units":7,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-08","Units":3,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-09","Units":4,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-10","Units":4,"Type":"Actual","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-11","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2026-12","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-01","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-02","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-03","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-04","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-05","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-06","Units":3,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-07","Units":3,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-08","Units":3,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-09","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-10","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-11","Units":4,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2027-12","Units":5,"Type":"Forecast","Note":""},{"Car line":"Bronco","Trim":"Wildtrak","Month":"2028-01","Units":4,"Type":"Forecast","Note":""}],"Orders":[{"Order ID":"T-101","Car line":"Territory","Trim":"Ambiente","Order month":"2026-08","Units":25,"Confirmed arrival":null,"Note":""},{"Order ID":"T-102","Car line":"Territory","Trim":"Ambiente","Order month":"2026-09","Units":29,"Confirmed arrival":null,"Note":""},{"Order ID":"T-103","Car line":"Territory","Trim":"Ambiente","Order month":"2026-10","Units":26,"Confirmed arrival":null,"Note":""},{"Order ID":"T-104","Car line":"Territory","Trim":"Trend","Order month":"2026-08","Units":35,"Confirmed arrival":null,"Note":""},{"Order ID":"T-105","Car line":"Territory","Trim":"Trend","Order month":"2026-09","Units":40,"Confirmed arrival":null,"Note":""},{"Order ID":"T-106","Car line":"Territory","Trim":"Trend","Order month":"2026-10","Units":37,"Confirmed arrival":"2026-12","Note":"Arriving early"},{"Order ID":"T-107","Car line":"Territory","Trim":"Titanium","Order month":"2026-08","Units":20,"Confirmed arrival":null,"Note":""},{"Order ID":"T-108","Car line":"Territory","Trim":"Titanium","Order month":"2026-09","Units":23,"Confirmed arrival":null,"Note":""},{"Order ID":"T-109","Car line":"Territory","Trim":"Titanium","Order month":"2026-10","Units":21,"Confirmed arrival":null,"Note":""},{"Order ID":"B-110","Car line":"Bronco","Trim":"Big Bend 2-door","Order month":"2026-08","Units":6,"Confirmed arrival":null,"Note":""},{"Order ID":"B-111","Car line":"Bronco","Trim":"Big Bend 2-door","Order month":"2026-09","Units":7,"Confirmed arrival":null,"Note":""},{"Order ID":"B-112","Car line":"Bronco","Trim":"Big Bend 2-door","Order month":"2026-10","Units":6,"Confirmed arrival":null,"Note":""},{"Order ID":"B-113","Car line":"Bronco","Trim":"Big Bend 4-door","Order month":"2026-08","Units":10,"Confirmed arrival":null,"Note":""},{"Order ID":"B-114","Car line":"Bronco","Trim":"Big Bend 4-door","Order month":"2026-09","Units":12,"Confirmed arrival":null,"Note":""},{"Order ID":"B-115","Car line":"Bronco","Trim":"Big Bend 4-door","Order month":"2026-10","Units":10,"Confirmed arrival":null,"Note":""},{"Order ID":"B-116","Car line":"Bronco","Trim":"Outer Banks","Order month":"2026-08","Units":8,"Confirmed arrival":null,"Note":""},{"Order ID":"B-117","Car line":"Bronco","Trim":"Outer Banks","Order month":"2026-09","Units":9,"Confirmed arrival":null,"Note":""},{"Order ID":"B-118","Car line":"Bronco","Trim":"Outer Banks","Order month":"2026-10","Units":8,"Confirmed arrival":null,"Note":""},{"Order ID":"B-119","Car line":"Bronco","Trim":"Badlands","Order month":"2026-08","Units":10,"Confirmed arrival":"2026-11","Note":"Short shipment: 10 of 15 in Nov"},{"Order ID":"B-119","Car line":"Bronco","Trim":"Badlands","Order month":"2026-08","Units":5,"Confirmed arrival":"2027-01","Note":"Short shipment: balance 5 in Jan"},{"Order ID":"B-120","Car line":"Bronco","Trim":"Badlands","Order month":"2026-09","Units":8,"Confirmed arrival":null,"Note":""},{"Order ID":"B-121","Car line":"Bronco","Trim":"Badlands","Order month":"2026-10","Units":7,"Confirmed arrival":null,"Note":""},{"Order ID":"B-122","Car line":"Bronco","Trim":"Wildtrak","Order month":"2026-08","Units":4,"Confirmed arrival":null,"Note":""},{"Order ID":"B-123","Car line":"Bronco","Trim":"Wildtrak","Order month":"2026-09","Units":5,"Confirmed arrival":"2027-03","Note":"Delayed from Dec to Mar"},{"Order ID":"B-124","Car line":"Bronco","Trim":"Wildtrak","Order month":"2026-10","Units":4,"Confirmed arrival":null,"Note":""}]};
+
+let MODEL = null, PLANS = [], OVERRIDES = {}, LINE = "All", SEL = null, CHART = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const f0 = v => v === null || v === undefined ? "" : Math.round(v).toLocaleString();
+const f1 = v => v === null || v === undefined ? "-" : v.toFixed(1);
+function coverClass(c, target){ if (c === null) return ""; if (c < target) return "c-red"; if (c > target + 1) return "c-amber"; return "c-green"; }
+function statusClass(s){ return s.startsWith("Excess") ? "c-amber" : s.startsWith("Short") ? "c-red" : "c-green"; }
+
+function msg(text, err){ const m = $("msg"); m.textContent = text; m.className = "banner" + (err ? " err" : ""); if (!text) m.classList.add("hidden"); }
+
+function setData(sheets, source){
+  try {
+    MODEL = buildModel(sheets); OVERRIDES = {}; LINE = "All";
+    SEL = MODEL.trims[0].trim;
+    msg("Loaded " + source + ": " + MODEL.trims.length + " trims, " + MODEL.orders.length + " placed order lines.");
+    $("empty").classList.add("hidden"); $("dash").classList.remove("hidden"); $("expBtn").disabled = false;
+    render();
+  } catch (e) { msg("Could not read the file. " + e.message, true); }
+}
+
+function loadDemo(){ setData(JSON.parse(JSON.stringify(DEMO)), "demo data"); }
+$("demoBtn").onclick = loadDemo;
+
+$("file").onchange = ev => {
+  const file = ev.target.files[0]; if (!file) return;
+  const rd = new FileReader();
+  rd.onload = e => {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
+      const sheets = {};
+      wb.SheetNames.forEach(n => sheets[n] = XLSX.utils.sheet_to_json(wb.Sheets[n], { defval: null }));
+      setData(sheets, '"' + file.name + '"');
+    } catch (err) { msg("Could not open the file. " + err.message, true); }
+    ev.target.value = "";
+  };
+  rd.readAsArrayBuffer(file);
+};
+
+function render(){
+  PLANS = planAll(MODEL, OVERRIDES);
+  const lines = ["All", ...new Set(MODEL.trims.map(t => t.line))];
+  $("chips").innerHTML = lines.map(l => `<button class="chip ${l === LINE ? "on" : ""}" data-l="${esc(l)}">${esc(l)}</button>`).join("");
+  $("chips").querySelectorAll("button").forEach(b => b.onclick = () => { LINE = b.dataset.l; render(); });
+  const vis = PLANS.filter(p => LINE === "All" || p.line === LINE);
+  const startLbl = monthLabel(MODEL.start, true), endLbl = monthLabel(MODEL.start + HORIZON - 1, true);
+  $("metaText").innerHTML = `Plan from <b>${startLbl}</b> to <b>${endLbl}</b> &middot; ${vis.length} trims shown`;
+  $("k1l").textContent = "Units to order in " + startLbl;
+  $("k1").textContent = vis.reduce((a, p) => a + (p.orderNow || 0), 0).toLocaleString();
+  $("k2").textContent = vis.filter(p => p.status.startsWith("Short")).length;
+  $("k3").textContent = vis.filter(p => p.status.startsWith("Excess")).length;
+  $("k4").textContent = vis.filter(p => p.status === "On target").length;
+
+  let h = `<thead><tr><th class="l">Car line</th><th class="l">Trim</th><th>Target</th><th>Order now</th><th class="l">Status</th>`;
+  for (let i = 0; i < HORIZON; i++) h += `<th class="hm">${monthLabel(MODEL.start + i)}</th>`;
+  h += `</tr></thead><tbody>`;
+  for (const p of vis) {
+    h += `<tr class="clickable ${p.trim === SEL ? "sel" : ""}" data-t="${esc(p.trim)}"><td class="l">${esc(p.line)}</td><td class="l trim-name">${esc(p.trim)}</td>
+      <td class="num">${p.target}</td><td class="num order-now">${f0(p.orderNow)}</td>
+      <td class="l"><span class="pill ${statusClass(p.status)}">${esc(p.status)}</span></td>`;
+    p.rows.forEach(r => { h += `<td class="hm ${coverClass(r.cover, p.target)}" title="${monthLabel(r.mk, true)}: closing ${f0(r.closing)}, cover ${f1(r.cover)}">${f1(r.cover)}</td>`; });
+    h += `</tr>`;
+  }
+  $("sumTbl").innerHTML = h + `</tbody>`;
+  $("sumTbl").querySelectorAll("tr.clickable").forEach(tr => tr.onclick = () => { SEL = tr.dataset.t; render(); $("detail").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  renderDetail();
+}
+
+function renderDetail(){
+  const p = PLANS.find(x => x.trim === SEL) || PLANS[0]; if (!p) return;
+  $("dTitle").textContent = p.line + " " + p.trim;
+  $("dInfo").textContent = `Target cover ${p.target} months · lead time ${p.lead} months · ${p.status}`;
+  const hasOv = OVERRIDES[p.trim] && Object.keys(OVERRIDES[p.trim]).length;
+  $("resetBtn").disabled = !hasOv;
+  const cols = p.rows;
+  const row = (label, fn, cls = "") => `<tr class="${cls}"><td>${label}</td>${cols.map(r => `<td class="num ${r.frozen ? "frozen" : ""}">${fn(r)}</td>`).join("")}</tr>`;
+  let h = `<thead><tr><th>Month</th>${cols.map(r => `<th class="${r.frozen ? "frozen" : ""}">${monthLabel(r.mk)}${r.frozen ? '<span class="tag">FROZEN</span>' : ""}</th>`).join("")}</tr></thead><tbody>`;
+  h += row("Opening stock", r => f0(r.opening));
+  h += row("Arrivals (orders already placed)", r => f0(r.arrivals));
+  h += `<tr><td>New arrivals (proposed, editable)</td>${cols.map(r => r.frozen
+      ? `<td class="num frozen">-</td>`
+      : `<td class="num"><input type="number" min="0" step="1" data-i="${r.i}" value="${r.arrivalNew}" placeholder="${r.proposed}" class="${r.overridden ? "ov" : ""}" title="Proposed: ${r.proposed}"></td>`).join("")}</tr>`;
+  h += row("Sales (A = actual, F = forecast)", r => `${f0(r.sales)}<span class="tag">${r.isActual ? "A" : "F"}</span>${r.notes.length ? `<span class="note">${esc(r.notes.join(", "))}</span>` : ""}`);
+  h += row("Closing stock", r => f0(r.closing), "strong");
+  h += row("Avg sales, next 3 months", r => f1(r.avg3));
+  h += row("Target closing stock", r => f1(r.targetClosing));
+  h += `<tr class="strong"><td>Stock cover (months)</td>${cols.map(r => `<td class="num ${coverClass(r.cover, p.target)}">${f1(r.cover)}</td>`).join("")}</tr>`;
+  h += row("Order to place this month", r => r.orderToPlace === null ? `<span style="color:var(--ink-3)">beyond plan</span>` : `<b>${f0(r.orderToPlace)}</b>`, "strong");
+  $("dTbl").innerHTML = h + `</tbody>`;
+  $("dTbl").querySelectorAll("input").forEach(inp => inp.onchange = () => {
+    const i = +inp.dataset.i, v = inp.value.trim();
+    OVERRIDES[p.trim] ||= {};
+    if (v === "" || isNaN(+v)) delete OVERRIDES[p.trim][i]; else OVERRIDES[p.trim][i] = Math.max(0, Math.round(+v));
+    render();
+  });
+
+  const os = MODEL.orders.filter(o => o.trim === p.trim).sort((a, b) => a.orderMonth - b.orderMonth || a.effective - b.effective);
+  $("oTbl").innerHTML = `<thead><tr><th class="l">Order ID</th><th class="l">Order month</th><th>Units</th><th class="l">Planned arrival</th><th class="l">Confirmed arrival</th><th class="l">Note</th></tr></thead><tbody>` +
+    (os.length ? os.map(o => `<tr><td class="l mono">${esc(o.id)}</td><td class="l">${monthLabel(o.orderMonth, true)}</td><td class="num">${o.units}</td><td class="l">${monthLabel(o.planned, true)}</td><td class="l">${o.confirmed !== null ? monthLabel(o.confirmed, true) : "-"}</td><td class="l">${esc(o.note)}</td></tr>`).join("")
+      : `<tr><td class="l" colspan="6">No placed orders in the file.</td></tr>`) + `</tbody>`;
+
+  drawChart(p);
+}
+
+$("resetBtn").onclick = () => { const p = PLANS.find(x => x.trim === SEL); if (p) delete OVERRIDES[p.trim]; render(); };
+
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function drawChart(p){
+  if (typeof Chart === "undefined") return;
+  const labels = p.rows.map(r => monthLabel(r.mk));
+  const data = {
+    labels,
+    datasets: [
+      { type: "bar", label: "Closing stock", data: p.rows.map(r => r.closing), backgroundColor: p.rows.map(r => r.frozen ? css("--ink-3") + "66" : css("--accent")), borderRadius: 3, order: 2 },
+      { type: "line", label: "Target closing stock", data: p.rows.map(r => +r.targetClosing.toFixed(1)), borderColor: css("--red-ink"), borderDash: [5, 4], pointRadius: 0, borderWidth: 2, tension: .25, order: 1 }
+    ]
+  };
+  const opts = { responsive: true, maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
+    plugins: { legend: { labels: { color: css("--ink-2"), boxWidth: 12, font: { family: "IBM Plex Sans" } } } },
+    scales: { x: { ticks: { color: css("--ink-3") }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: css("--ink-3") }, grid: { color: css("--line") } } } };
+  if (CHART) { CHART.data = data; CHART.options = opts; CHART.update(); }
+  else CHART = new Chart($("chart"), { data, options: opts });
+}
+
+/* ---------- Exports ---------- */
+function d(k){ return new Date(Math.floor(k / 12), k % 12, 1); }
+$("expBtn").onclick = () => {
+  const toPlace = [], detail = [], summary = [];
+  for (const p of PLANS) {
+    summary.push({ "Car line": p.line, "Trim": p.trim, "Target cover": p.target, ["Order to place in " + monthLabel(MODEL.start, true)]: p.orderNow ?? "", "Status": p.status,
+      "Lowest cover before new orders land": +((p.lowestFrozen ?? 0).toFixed(2)), "Cover when first new order lands": +((p.firstNew ?? 0).toFixed(2)) });
+    p.rows.forEach(r => {
+      if (r.orderToPlace !== null) toPlace.push({ "Car line": p.line, "Trim": p.trim, "Order month": d(r.mk), "Units": r.orderToPlace, "Arrival month": d(r.mk + p.lead), "Overridden": p.rows[r.i + p.lead].overridden ? "Yes" : "" });
+      detail.push({ "Car line": p.line, "Trim": p.trim, "Month": d(r.mk), "Frozen": r.frozen ? "Yes" : "", "Opening stock": r.opening, "Arrivals (placed)": r.arrivals,
+        "New arrivals": r.arrivalNew, "Sales": r.sales, "Sales type": r.isActual ? "Actual" : "Forecast", "Closing stock": r.closing,
+        "Avg sales next 3": +r.avg3.toFixed(2), "Target closing": +r.targetClosing.toFixed(2), "Stock cover": r.cover === null ? "" : +r.cover.toFixed(2), "Order to place": r.orderToPlace ?? "" });
+    });
+  }
+  const wb = XLSX.utils.book_new();
+  const add = (rows, name) => { const ws = XLSX.utils.json_to_sheet(rows, { cellDates: true, dateNF: "mmm-yyyy" }); ws["!cols"] = Object.keys(rows[0] || {}).map(k => ({ wch: Math.max(10, k.length + 2) })); XLSX.utils.book_append_sheet(wb, ws, name); };
+  add(summary, "Summary"); add(toPlace, "Orders to place"); add(detail, "Plan detail");
+  XLSX.writeFile(wb, "Proposed_Orders_" + monthLabel(MODEL.start, true) + ".xlsx");
+};
+
+$("tplBtn").onclick = () => {
+  const wb = XLSX.utils.book_new();
+  const conv = rows => rows.map(r => { const o = {}; for (const [k, v] of Object.entries(r)) o[k] = (typeof v === "string" && /^\d{4}-\d{2}$/.test(v)) ? d(toMonthKey(v)) : v; return o; });
+  for (const name of ["Settings", "Opening Stock", "Sales", "Orders"]) {
+    const rows = conv(DEMO[name]);
+    const ws = XLSX.utils.json_to_sheet(rows, { cellDates: true, dateNF: "mmm-yyyy" });
+    ws["!cols"] = Object.keys(rows[0]).map(k => ({ wch: Math.max(12, k.length + 2) }));
+    XLSX.utils.book_append_sheet(wb, ws, name);
+  }
+  XLSX.writeFile(wb, "Demand_Planning_Input_Template.xlsx");
+};
+
+if (typeof XLSX === "undefined") msg("The Excel library could not load. Check the internet connection, then reload the page. Demo data still works.", true);
+</script>
+</body>
+</html>

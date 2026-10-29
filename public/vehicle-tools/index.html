@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vehicle Planning Tools</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f7;--surface:#fff;--surface-2:#f8f9fb;--ink:#14181f;--ink-2:#4a5160;--ink-3:#7c8494;--line:#e2e5ea;--accent:#1f3a68;--accent-2:#2f5597;--accent-soft:#e6ecf6;--shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0f1218;--surface:#171b23;--surface-2:#1d222c;--ink:#e8ebf0;--ink-2:#b3bac6;--ink-3:#848c9a;--line:#2a303b;--accent:#8fb0e8;--accent-2:#a9c2ef;--accent-soft:#1f2a3d;--shadow:none}}
+:root[data-theme="dark"]{--bg:#0f1218;--surface:#171b23;--surface-2:#1d222c;--ink:#e8ebf0;--ink-2:#b3bac6;--ink-3:#848c9a;--line:#2a303b;--accent:#8fb0e8;--accent-2:#a9c2ef;--accent-soft:#1f2a3d;--shadow:none}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header{background:var(--surface);border-bottom:1px solid var(--line)}
+header .wrap{padding-top:36px;padding-bottom:32px}
+h1{font-size:26px;margin:0;letter-spacing:-.01em}
+.sub{color:var(--ink-2);margin-top:8px;max-width:640px}
+.badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+main{padding:28px 0 48px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tool{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.tool:hover{border-color:var(--accent);transform:translateY(-1px)}
+.num{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
+.tool h2{font-size:18px;margin:6px 0 8px}
+.tool p{margin:0 0 14px;color:var(--ink-2);font-size:14px}
+.tool ul{margin:0 0 18px;padding-left:18px;color:var(--ink-2);font-size:14px}
+.tool ul li{margin:3px 0}
+.open{margin-top:auto;display:inline-flex;align-self:flex-start;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#fff;background:var(--accent);padding:9px 16px;border-radius:6px}
+:root[data-theme="dark"] .open{color:#0f1218}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .open{color:#0f1218}}
+.note{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--ink-2);display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.note a{color:var(--accent);font-weight:600}
+footer{color:var(--ink-3);font-size:12px;text-align:center;padding:8px 0 40px}
+footer a{color:var(--ink-2)}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+main.wrap{padding-top:24px;padding-bottom:48px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Vehicle Planning Tools <span class="badge">Demo</span></h1>
+  <div class="sub">Two working tools: a rolling 12-month demand plan with proposed orders, and a check of scanned customs cards against the vehicle master list. All figures in the demos are dummy data. Files are processed in your browser and are not uploaded anywhere.</div>
+</div></header>
+<main class="wrap">
+  <div class="grid">
+    <a class="tool" href="demand-planner.html">
+      <div class="num">Tool 1</div>
+      <h2>Demand Planner</h2>
+      <p>Recalculates closing stock and stock cover for every trim and proposes the orders needed to reach the target cover.</p>
+      <ul>
+        <li>Input from the planning Excel file</li>
+        <li>Cover heatmap and order proposals by trim</li>
+        <li>Planner overrides and Excel export</li>
+      </ul>
+      <span class="open">Open Demand Planner →</span>
+    </a>
+    <a class="tool" href="vin-checker.html">
+      <div class="num">Tool 2</div>
+      <h2>VIN Arrival Checker</h2>
+      <p>Reads the VIN on each scanned customs card and compares it with the master list.</p>
+      <ul>
+        <li>Arrived, not arrived and not in master</li>
+        <li>Page number, card date and card number per vehicle</li>
+        <li>Doubtful cards shown with the card image for review</li>
+      </ul>
+      <span class="open">Open VIN Arrival Checker →</span>
+    </a>
+  </div>
+  <div class="note">
+    <span>The solution overview describes the logic, test results, assumptions and roadmap for both tools.</span>
+    <a href="Solution-Overview.pdf" target="_blank" rel="noopener">Read the solution overview (PDF)</a>
+  </div>
+</main>
+<footer>Prepared by <a href="https://mohammedjouhar.com" target="_blank" rel="noopener">Mohammed Jouhar</a></footer>
+</body>
+</html>
