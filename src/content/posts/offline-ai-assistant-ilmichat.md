@@ -8,7 +8,7 @@ level: "intermediate"
 tools: ["AI", "RAG", "ollama", "local-llm", "lancedb"]
 tags: ["ai", "data-quality"]
 featured: true
-priority: 3
+priority: 4
 ---
 
 > The documents in this demo are fictional and were created for
