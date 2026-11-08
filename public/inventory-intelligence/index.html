@@ -617,7 +617,6 @@ function render() {
   if (S.view === "tracker") trackerRows();
 }
 function go(v) { S.view = v; if (location.hash.slice(1) !== v) location.hash = v; render(); window.scrollTo(0, 0); }
-let resetArmed = false;
 document.addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t) return;
   if (t.dataset.go) { S.q = ""; go(t.dataset.go); }
@@ -633,8 +632,9 @@ document.addEventListener("click", e => {
   else if (t.dataset.filter) { S.filter = t.dataset.filter; render(); }
   else if (t.id === "export") exportExcel();
   else if (t.id === "reset") {
-    if (!resetArmed) { resetArmed = true; t.innerHTML = ic("reset", 1) + " Click again to reset"; setTimeout(() => { resetArmed = false; const r = $("#reset"); if (r) r.innerHTML = ic("reset", 1) + " Reset demo"; }, 3500); return; }
-    resetArmed = false; S.decisions = {}; S.filter = "All"; S.tq = ""; S.sel = HERO; save(); render(); toast("Demo reset");
+    const n = decidedCount();
+    S.decisions = {}; S.filter = "All"; S.tq = ""; S.sel = HERO; save(); render();
+    toast(n ? `Demo reset: ${n} decision${n === 1 ? "" : "s"} cleared` : "Demo reset");
   }
 });
 document.addEventListener("input", e => {
