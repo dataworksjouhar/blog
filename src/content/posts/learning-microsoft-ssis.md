@@ -66,23 +66,9 @@ Every new term got a place in the same picture:
 | SSISDB catalog | The plumbing office | Stores deployed projects and every run's history |
 | SQL Server Agent | The timer on the wall | Runs the job at 2 am without anyone pressing start |
 
-## Setting up the workshop
-
-My first surprise came before I built anything. I already had SQL Server
-2025 installed, but it was Express edition. Express has no SQL Server Agent
-and cannot host the SSIS catalog. I could have built packages, but never
-scheduled them or kept a history of their runs. A building with pipes but
-no office and no timer.
-
-The fix was free: SQL Server 2025 Enterprise Developer edition, installed
-as a second instance next to Express. That second instance caused its own
-lesson later. Twice I ran a script in a query window that was connected to
-Express, and twice the package failed because the table it wanted was in
-the other building. I now look at the server name in the status bar before
-I run anything.
-
-For the source system I used Microsoft's AdventureWorks sample database,
-a fictional bicycle company with products, orders and customers.
+For the lab I used SQL Server 2025 Developer edition, which is free and,
+unlike Express, can schedule jobs. The source system was Microsoft's
+AdventureWorks sample database, a fictional bicycle company.
 
 ## The two halves of every package
 
@@ -106,16 +92,11 @@ job sheet failed? And if it was the pipe, which part of the pipe?
 My first package copied 504 products from AdventureWorks into a staging
 table. It worked. Then I ran it again, and the table had 1,008 rows.
 
-Nothing in the package said "start fresh". So every run added the same
-products on top of the last ones. If a report had been reading that table,
-every product would have been counted twice.
-
-The fix was one extra box at the start: empty the staging table first.
-After that, every run ended with exactly 504 rows. A good job gives the
-same result whether it runs once or five times. You need that the first
-time someone reruns a failed job at 3 am.
-
-![The product package with three green tasks: empty staging, load products, and load the product dimension](/images/ssis-product-load.png)
+Nothing in the package said "start fresh", so every run added the same
+products on top of the last ones. One extra box at the start, emptying the
+staging table, fixed it. A good job gives the same result whether it runs
+once or five times. You need that the first time someone reruns a failed
+job at 3 am.
 
 ## The treatment room
 
@@ -124,50 +105,43 @@ the tank is emptied every night. Reports need a permanent, clean table.
 For me that was `dw.DimProduct`, the same kind of dimension table I had
 read from in Power BI for years.
 
-Between the two sits a stored procedure. In most SSIS setups a lot of the
-real logic lives here, not in the packages. That was good news for me,
-because SQL is where I am most comfortable.
+Between the two sits a stored procedure, and in most SSIS setups a lot of
+the real logic lives here. It uses `MERGE`, which asks one question for
+each product: is it already there? If not, add it. If yes but something
+changed, update it. If nothing changed, leave it alone.
 
-My first version simply inserted the cleaned rows. It worked once. The
-second run failed with a unique key error, because product 1 was already
-there. That rule on the table stopped the doubling I had seen in staging,
-but now the job would fail every night after the first.
+Then I wrapped it in a transaction, a TRY/CATCH block, and a small log
+table that records every run. The part I underestimated was the last line,
+`THROW`. Without it, the procedure catches the error, writes it to the log,
+and finishes quietly. SSIS then shows a green box while the warehouse is
+wrong. A leak nobody sees is worse than a burst pipe.
 
-The answer was `MERGE`. For each product it asks one question: is it
-already there? If not, add it. If yes but something changed, update it.
-If nothing changed, leave it alone. Updating in place like this is called
-SCD Type 1. The old value is overwritten and no history is kept.
-
-Then I wrapped it in a safety frame: a transaction, a TRY/CATCH block, and
-a small log table that records every run. The part I underestimated was
-the last line, `THROW`. Without it, the procedure catches the error, writes
-it to the log, and finishes quietly. SSIS then shows a green box while the
-warehouse is wrong. A leak nobody sees is worse than a burst pipe.
-
-I tested this by sending the same new product twice. The log recorded the
-failure with its exact message, and the dimension table did not change.
-
-## Files, loops, and a missing arrow
+## The result that was right by accident
 
 Real data does not always come from a database. A lot of it lands as files
 in a folder every night. So the next package picked up daily sales CSV files
-one by one with a Foreach Loop, loaded them into staging, and moved each
-file to an Archive folder so it could never be loaded twice.
+one by one with a Foreach Loop, loaded them into a fact table, and then
+moved each file to an Archive folder so it could never be loaded twice.
 
-The first run failed, and the reason taught me something I will look for in
-every inherited package. The data flow was red. The file move was green.
+Arrows caused my two most useful bugs here. The first time, the file move
+and the data flow had no arrow between them, so SSIS ran them at the same
+time and moved a file while it was still being read.
 
-![Inside the loop, the data flow failed while the file system task succeeded, with no arrow between them](/images/ssis-loop-parallel-failure.png)
+The second one was quieter. While reorganising the package, I left the
+fact-load task with no arrow in or out.
 
-There was no arrow between the two tasks. Without one, SSIS starts them at
-the same time. The file was being moved to Archive while the data flow was
-still trying to read it. One arrow fixed it.
+![The fact load task floating on its own, with no arrow connecting it to the two loops](/images/ssis-unconnected-task.png)
 
-![The same loop after the fix, with a green arrow from the data flow to the file move](/images/ssis-loop-fixed.png)
+The package ran green and the fact table showed the expected 63 rows. But
+the timestamps showed the fact load had started in the same second as the
+file loop, before staging was filled. The 63 rows were left over from an
+earlier run.
 
-The sales then went into `dw.FactSales`, linked to the product dimension
-by its surrogate key. 63 rows from three files, totalling 209,806.51, which
-matched the source files exactly.
+I emptied the fact table, connected the task properly, and ran it again.
+63 rows, this time for the right reason. A correct-looking number does not
+prove the package ran in the right order. The timestamps do.
+
+![The file loop after the fix, with a green arrow from the data flow to the next step](/images/ssis-loop-fixed.png)
 
 ## Topping up instead of refilling
 
@@ -196,32 +170,6 @@ understanding than any explanation.
 The watermark moves only after a successful load. If a night fails, the
 saved date stays where it was, and the next run picks up the missed rows.
 
-One small trap cost me an hour here. I had pasted a three-line query into
-the property cell of an Execute SQL Task. The cell kept only the first
-line, so the `FROM` clause was gone and SQL Server complained about a
-column that clearly existed. Paste SQL through the editor window, never the
-cell. In someone else's package, read the full statement there too.
-
-## The result that was right by accident
-
-Before deploying, I fixed a design flaw I had left in on purpose. Files
-were archived inside the loop, before the fact table loaded. If the fact
-load failed, the files were already gone, and a rerun would find nothing.
-So I moved archiving to the very end.
-
-While doing that, I left the fact-load task with no arrow in or out.
-
-![The fact load task floating on its own, with no arrow connecting it to the two loops](/images/ssis-unconnected-task.png)
-
-The package ran green and the fact table showed the expected 63 rows. But
-the timestamps showed the fact load had started in the same second as the
-file loop, before staging was filled. The 63 rows were left over from an
-earlier run.
-
-I emptied the fact table, connected the task properly, and ran it again.
-63 rows, this time for the right reason. A correct-looking number does not
-prove the package ran in the right order. The timestamps do.
-
 ## Moving the pipes into the building
 
 Packages that run inside Visual Studio are still on a workbench. In a
@@ -233,11 +181,6 @@ project to the catalog, and created a SQL Server Agent job that runs it
 every night at 2 am.
 
 ![The SSIS catalog in SSMS with the deployed project and its four packages](/images/ssis-catalog-deployed.png)
-
-One more surprise here. SSMS 22 showed no Integration Services Catalogs
-node at all. SSIS support in SSMS 22 is an optional component, added
-through the Visual Studio Installer. Ten minutes of searching, one
-checkbox.
 
 ## Breaking it on purpose
 
@@ -271,21 +214,17 @@ ORDER BY event_message_id;      -- oldest first, so row 1 is the cause
 ```
 
 Then I checked the damage. The file was still in the Inbox, because
-archiving now happens only after success. The fact table was still at 63
-rows, because nothing had been half loaded. I corrected the value, ran the
-job again, and it finished green with 67 rows.
+archiving happens only after success. The fact table was still at 63 rows,
+because nothing had been half loaded. I corrected the value, ran the job
+again, and it finished green with 67 rows.
 
 ## What the build taught me
 
 **Rerunnable comes first.** Almost every problem I hit was about what
 happens on the second run, not the first.
 
-**Arrows are logic.** Two of my bugs were a missing arrow. Tasks without an
-arrow between them run at the same time, and the result can still look
-right.
-
-**Keep the logic in SQL.** Packages move the data and call procedures. The
-rules live in T-SQL, where I can read them, test them, and explain them.
+**Arrows are logic.** Tasks without an arrow between them run at the same
+time, and the result can still look right.
 
 **Failures should be loud and clean.** Log the error, undo the half-done
 work, and let the job turn red.
