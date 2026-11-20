@@ -1,6 +1,6 @@
 ---
 title: "Learning Microsoft SSIS: A Practical Guide"
-description: "I spent twelve years reading reports at the end of the pipe. So I built the pipe: a nightly SSIS pipeline on SQL Server 2025, deployed, scheduled, and broken on purpose. These are my notes, explained through water and plumbing."
+description: "A nightly SSIS pipeline on SQL Server 2025, built end to end: designed, deployed, scheduled, and broken on purpose. These are my notes, explained through water and plumbing."
 date: 2026-11-18
 category: "notes"
 level: "intermediate"
@@ -11,25 +11,23 @@ thumbnail: "/images/thumbs/learning-microsoft-ssis.jpg"
 featured: false
 ---
 
-For most of my career I have worked at the end of the pipe. Power BI
-reports, dashboards, the numbers people open on a Monday morning. When
-those numbers looked wrong, I could usually tell. What I could not always
-explain was what had happened to the data on its way to me.
+I wanted to build an SSIS pipeline end to end myself, on SQL Server 2025:
+designed, deployed, scheduled, and tested by breaking it on purpose.
 
-That gap had been bothering me for a while. So I gave myself one week to
-learn Microsoft SQL Server Integration Services (SSIS) properly. Not by
-watching tutorials, but by building a small pipeline that runs every night,
-fails cleanly, and can be fixed by reading its own logs.
+It's a small nightly pipeline. It loads a product table, picks up daily
+sales files from a folder, and pulls only the orders that changed since
+the last run. It runs from the server at 2 am, logs every run, and leaves
+the data untouched when something goes wrong.
 
-These are my notes from that week. They are written for anyone who knows
-data but has never opened SSIS, which was me eight days ago.
+These are my notes from the build. They are written so that anyone who
+works with data can follow how SSIS works, even if they have never
+opened it.
 
 [**Code and SQL scripts on GitHub**](https://github.com/dataworksjouhar/ssis-daily-sales-pipeline)
 
-## Is SSIS still worth learning?
+## Why SSIS
 
-I asked myself this first. SSIS is old, and it is easy to assume it is on
-its way out.
+SSIS is old, and it is easy to assume it is on its way out.
 
 It is not. SSIS 2025 shipped with SQL Server 2025 in November 2025, and
 Microsoft Fabric now has an activity that runs existing SSIS packages
@@ -40,18 +38,22 @@ both ends of that move.
 The bigger reason for me was what sits underneath the tool. Loading only
 what changed, logging every run, recovering from a failed night, reading
 an error at 8 am and knowing where to look. Those skills carry over to
-Fabric, Databricks, or whatever comes next.
+Fabric, Databricks, or whatever comes next. I've built ETL in Python,
+KNIME and Alteryx, and worked alongside data engineers on Azure Data
+Factory and Databricks pipelines, and the same questions come up in all
+of them.
 
-## One story for the whole week
+## One story for the whole build
 
-New terms stick better for me when they belong to one picture. So I kept
-a single story going all week: water and plumbing.
+A pipeline is easier to explain when every part of it belongs to one
+picture, so I kept a single story going through the whole build: water
+and plumbing.
 
 ![Data sources as raw water on the left, SSIS as the plumbing in the middle with SQL stored procedures inside, and BI reports as the taps on the right](/images/ssis-bi-background.png)
 
 The sources are the water supply. SSIS is the plumbing. Reports are the
-taps. Twelve years at the taps means I already know what bad water looks
-like when it arrives. This week was about the pipes behind the wall.
+taps, and the taps are all most people ever see. This build is about the
+pipes behind the wall.
 
 Every new term got a place in the same picture:
 
@@ -149,8 +151,7 @@ Reloading 504 products every night is fine. Reloading years of sales
 every night is not. It takes hours and puts load on the live system people
 are using. So the third package loads only what changed.
 
-I will be honest: this took me three attempts to understand. What finally
-worked was a tiny example with real rows.
+The idea is easiest to see with a tiny example.
 
 The source table has a `ModifiedDate` column. Whenever an order is created
 or edited, that date is set to now. I keep one date in a small table,
@@ -164,8 +165,7 @@ Each run takes only orders with a later date, then moves the watermark up.
 | 3 | 3 Nov | Nothing changed | None |
 
 Three runs of my real package gave 31,465 orders, then 0, then 2 after I
-edited two orders in the source. Seeing those three numbers did more for my
-understanding than any explanation.
+edited two orders in the source.
 
 The watermark moves only after a successful load. If a night fails, the
 saved date stays where it was, and the next run picks up the missed rows.
@@ -235,5 +235,6 @@ reported again.
 There is still a list of things I would add next: sending bad rows to an
 error table instead of stopping the whole load, moving server names and
 folder paths into project parameters, and keeping price history with SCD
-Type 2. But for the first time, I can follow a row of data from the source
-to the report and explain every step it takes on the way.
+Type 2. As it stands, the pipeline does what a nightly job should: it
+loads only what changed, survives a rerun, and fails loudly and cleanly
+when the data is wrong.
