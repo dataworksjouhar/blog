@@ -4,7 +4,7 @@ description: "625 item codes from six GCC markets came down to 150 items, and th
 impact: "625 item codes into 150, and 7,676 KWD of Kuwait stock saved from expiring (synthetic data)"
 tools: ["Python", "RapidFuzz", "Claude", "Excel", "JavaScript"]
 demo: "https://mohammedjouhar.com/inventory-intelligence/"
-thumbnail: "/images/inventory-intelligence-dashboard.png"
+thumbnail: "/images/inventory-intelligence-thumbnail.jpg"
 date: 2026-11-25
 category: "projects"
 level: "intermediate"
