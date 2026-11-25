@@ -238,6 +238,43 @@ tr.hl td { background: #faf4ea; }
 .empty { text-align: center; padding: 34px; color: #8da29d; font-size: 12px; }
 .toast { position: fixed; right: calc(24px + env(safe-area-inset-right, 0px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; background: #25211c; color: #f7f3eb; border-radius: 3px; padding: 12px 16px; font-size: 12px; font-weight: 700; display: flex; gap: 8px; align-items: center; }
 
+/* Guided tour */
+.tour-block { position: fixed; inset: 0; z-index: 40; background: transparent; }
+.tour-block.dim { background: rgba(20, 17, 14, .64); }
+.tour-spot { position: fixed; z-index: 41; border-radius: 6px; box-shadow: 0 0 0 9999px rgba(20, 17, 14, .64); outline: 2px solid #c9a97e; outline-offset: 0; pointer-events: none; }
+.tour-card { position: fixed; z-index: 42; width: min(380px, calc(100vw - 32px)); background: var(--paper); color: var(--ink); border: 1px solid var(--stroke); border-radius: 4px; box-shadow: 0 22px 60px rgba(0, 0, 0, .3); padding: 20px 20px 16px; }
+.tour-card.center { left: 50% !important; top: 50% !important; transform: translate(-50%, -50%); width: min(440px, calc(100vw - 32px)); }
+.tc-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.tc-count { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+.tc-close { border: 0; background: none; color: var(--muted); padding: 4px; display: inline-flex; border-radius: 3px; }
+.tc-close:hover { color: var(--ink); background: var(--sunk); }
+.tour-card h3 { font-size: 19px; font-weight: 850; letter-spacing: -.5px; line-height: 1.25; margin: 8px 0 8px; }
+.tour-card p { font-size: 13px; color: var(--ink-2); line-height: 1.65; margin: 0 0 8px; }
+.tour-card ul { margin: 4px 0 8px; padding-left: 18px; font-size: 13px; color: var(--ink-2); line-height: 1.65; }
+.tour-card strong { color: var(--ink); }
+.tour-card .tc-note { font-size: 11.5px; color: var(--muted); }
+.tc-links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 2px; font-size: 12px; font-weight: 750; }
+.tc-links a { color: #6a4c37; }
+.tour-progress { height: 3px; background: #eee8e1; border-radius: 2px; overflow: hidden; margin: 14px 0 12px; }
+.tour-progress span { display: block; height: 100%; background: var(--bronze); }
+.tour-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tour-actions .btn { padding: 10px 14px; }
+.tour-welcome { position: fixed; z-index: 30; right: calc(24px + env(safe-area-inset-right, 0px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); width: min(370px, calc(100vw - 32px)); background: var(--dark); color: var(--dark-ink); border: 1px solid #3a3631; border-left: 4px solid #c2a47b; border-radius: 4px; box-shadow: 0 22px 60px rgba(0, 0, 0, .32); padding: 20px 20px 18px; }
+.tour-welcome .eyebrow { color: #d9c3a7; font-size: 9.5px; }
+.tour-welcome h3 { font-size: 18px; font-weight: 850; letter-spacing: -.4px; line-height: 1.3; margin: 8px 0 8px; color: #fffaf3; }
+.tour-welcome p { color: #c7bdb1; font-size: 12.5px; line-height: 1.65; margin: 0 0 14px; }
+.tw-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tw-actions .hero-btn { padding: 12px 15px; }
+.tw-skip { border: 0; background: none; color: #b9ae9f; font-size: 11.5px; font-weight: 700; padding: 8px 4px; }
+.tw-skip:hover { color: #fff; text-decoration: underline; }
+#tourBtn .icon { width: 13px; height: 13px; fill: currentColor; stroke: none; }
+@media (max-width: 720px) {
+  .tour-card:not(.center), .tour-welcome { left: 0 !important; right: 0; bottom: 0; top: auto !important; width: 100%; border-radius: 12px 12px 0 0; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+  .tour-welcome { border-left: 1px solid #3a3631; border-top: 4px solid #c2a47b; }
+}
+@media (max-width: 600px) { #export .lbl, .crumb span:nth-child(-n+2) { display: none; } #export { padding: 11px; } }
+@media (prefers-reduced-motion: no-preference) { .tour-spot { transition: top .25s ease, left .25s ease, width .25s ease, height .25s ease; } }
+
 @media (max-width: 1180px) {
   .app { --side: 214px; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -286,6 +323,7 @@ tr.hl td { background: #faf4ea; }
 <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></symbol>
 <symbol id="ic-check" viewBox="0 0 24 24"><path d="m4 12 5 5 11-11"/></symbol>
 <symbol id="ic-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="ic-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5L7 4.5Z"/></symbol>
 <symbol id="ic-reset" viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 3 7M3 4v7h7"/></symbol>
 </defs></svg>
 
@@ -313,7 +351,8 @@ tr.hl td { background: #faf4ea; }
       <div class="crumb"><span>GCC operations</span><span>/</span><strong id="crumb">Dashboard</strong></div>
       <div class="top-actions">
         <span class="date-pill"><svg class="icon sm"><use href="#ic-calendar"/></svg>Stock snapshot 1 Nov 2026</span>
-        <button type="button" class="btn" id="export"><svg class="icon sm"><use href="#ic-download"/></svg>Export to Excel</button>
+        <button type="button" class="btn dark" id="tourBtn"><svg class="icon"><use href="#ic-play"/></svg>Take the tour</button>
+        <button type="button" class="btn" id="export" aria-label="Export to Excel"><svg class="icon sm"><use href="#ic-download"/></svg><span class="lbl">Export to Excel</span></button>
       </div>
     </header>
     <main class="content" id="view" aria-live="polite"></main>
@@ -479,7 +518,7 @@ function caseList() {
 function reconcile(d) {
   const [a, b] = D.hero.cc, rk = D.hero.risk;
   const sys = a.system_qty * a.conv + b.system_qty * b.conv, cnt = a.counted_qty * a.conv + b.counted_qty * b.conv;
-  return `<section class="d-sec"><div class="sh"><span><span class="n">01</span>Reconcile the count</span><span class="tag rule">Unit conversion</span></div><div class="d-body">
+  return `<section class="d-sec" id="tour-reconcile"><div class="sh"><span><span class="n">01</span>Reconcile the count</span><span class="tag rule">Unit conversion</span></div><div class="d-body">
     <p class="case-note">Both codes are the same ${hn}. One is counted by the ${sg(a.uom)}, the other by the ${sg(b.uom)} of ${fmt(b.conv / a.conv)}. ${esc(D.hero.cause)} Cycle count on ${nice(D.count_date)}.</p>
     <div class="tbl"><table><thead><tr><th>Code</th><th class="r">System</th><th class="r">Counted</th><th class="r">Variance</th></tr></thead><tbody>
       ${[a, b].map(x => { const v = x.counted_qty - x.system_qty; return `<tr><td><span class="mono">${x.item_code}</span><div class="sub">1 ${esc(x.uom)} = ${fmt(x.conv)} ${BU}</div></td><td class="r num">${x.system_qty} ${esc(x.uom)}</td><td class="r num">${x.counted_qty} ${esc(x.uom)}</td><td class="r num ${v > 0 ? "pos" : v < 0 ? "neg" : ""}">${v > 0 ? "+" : ""}${v} ${esc(x.uom)}</td></tr>`; }).join("")}
@@ -493,7 +532,7 @@ function reconcile(d) {
 }
 function compare(d) {
   const rows = d.codes.map(c => ROW[c]);
-  return `<section class="d-sec"><div class="sh"><span><span class="n">01</span>Compare the records</span>${d.conf ? `<span class="conf">${d.conf}% confidence <i><b style="width:${d.conf}%"></b></i></span>` : `<span class="mk">${MK[d.m]}</span>`}</div><div class="d-body">
+  return `<section class="d-sec" id="tour-reconcile"><div class="sh"><span><span class="n">01</span>Compare the records</span>${d.conf ? `<span class="conf">${d.conf}% confidence <i><b style="width:${d.conf}%"></b></i></span>` : `<span class="mk">${MK[d.m]}</span>`}</div><div class="d-body">
     <div class="tbl"><table><thead><tr><th>Code</th><th>Description as recorded</th><th>Unit</th>${d.type === "duplicate" || d.type === "inactive" ? `<th class="r">Stock</th>` : ""}</tr></thead><tbody>
       ${rows.map(r => { const s = D.stock[r.c]; return `<tr><td class="mono">${esc(r.c)}${d.keep ? (r.c === d.keep ? ` <span class="tag ok">keep</span>` : ` <span class="tag warn">retire</span>`) : ""}</td><td class="desc-cell">${esc(r.d)}</td><td>${esc(r.n)}</td>${d.type === "duplicate" || d.type === "inactive" ? `<td class="r money">${s ? kwd(s.val) + `<div class="sub">${s.issued_lines ? s.issued_lines + " outlet deliveries" : "no outlet orders"} · exp. ${nice(s.exp)}</div>` : "-"}</td>` : ""}</tr>`; }).join("")}
     </tbody></table></div>
@@ -508,7 +547,7 @@ const STEPS = {
 };
 function decideBox(d) {
   const s = status(d.id), rec = S.decisions[d.id];
-  return `<section class="d-sec"><div class="sh"><span><span class="n">02</span>Decide the next action</span>${statusTag(d.id)}</div><div class="d-body rec">
+  return `<section class="d-sec" id="tour-decide"><div class="sh"><span><span class="n">02</span>Decide the next action</span>${statusTag(d.id)}</div><div class="d-body rec">
     <div class="eyebrow" style="font-size:9px">Proposed action</div>
     <div class="rec-title">${esc(d.suggest)}</div>
     <ol>${STEPS[d.type].map(x => `<li>${esc(x)}</li>`).join("")}</ol>
@@ -521,7 +560,7 @@ function decideBox(d) {
 function matched(d) {
   const g = G[d.g], rows = (rowsByG[d.g] || []).slice().sort((x, y) => MKO.indexOf(x.m) - MKO.indexOf(y.m) || x.c.localeCompare(y.c));
   const looks = (lookByG[d.g] || []).slice(0, 3);
-  return `<section class="d-sec"><div class="sh"><span>How ${esc(g.d)} was matched across the GCC</span><span class="sub" style="margin:0">${rows.length} codes in ${new Set(rows.map(r => r.m)).size} markets</span></div>
+  return `<section class="d-sec" id="tour-matched"><div class="sh"><span>How ${esc(g.d)} was matched across the GCC</span><span class="sub" style="margin:0">${rows.length} codes in ${new Set(rows.map(r => r.m)).size} markets</span></div>
     <div class="tbl"><table><thead><tr><th>Market</th><th>Code</th><th>Description as recorded</th><th>Unit conversion</th><th>Matched by and why</th></tr></thead><tbody>
       ${rows.map(r => `<tr class="${d.codes.includes(r.c) ? "hl" : ""}"><td><span class="mk">${r.m}</span></td><td class="mono">${esc(r.c)}</td><td class="desc-cell">${esc(r.d)}${r.s === "Inactive" ? ` <span class="tag bad">Inactive</span>` : ""}</td><td class="num">${esc(r.n)}</td><td style="min-width:210px">${method(r)}<div class="sub">${esc(r.w[0].toUpperCase() + r.w.slice(1))}</div></td></tr>`).join("")}
     </tbody></table></div>
@@ -559,7 +598,7 @@ function tracker() {
     <div class="mini"><small>Approved</small><div class="v" style="color:var(--ok)">${ap}</div></div>
     <div class="mini"><small>Rejected</small><div class="v" style="color:var(--bad)">${rj}</div></div>
   </div>
-  <section class="panel">
+  <section class="panel" id="tour-tracker">
     <div class="pad" style="border-bottom:1px solid var(--stroke)">
       <div style="display:flex;justify-content:space-between;font-weight:750;font-size:12px;gap:8px"><span>Review progress</span><span class="num">${ap + rj} of ${total} decided</span></div>
       <div class="progress"><span style="width:${(ap + rj) / total * 100}%"></span></div>
@@ -642,8 +681,136 @@ document.addEventListener("input", e => {
   if (e.target.id === "tq") { S.tq = e.target.value; trackerRows(); }
 });
 window.addEventListener("hashchange", () => { const h = location.hash.slice(1); if (VIEWS[h] && h !== S.view) { S.view = h; render(); } });
+
+// ---------- Guided tour: the tour does the clicking, then puts everything back as it was
+const TOUR_KEY = "ii-tour-seen-v1";
+const reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isPhone = () => window.innerWidth <= 720;
+let T = null;
+function tourSteps() {
+  const f = D.fefo, im = D.impact, a = D.acc, [x, y] = D.hero.cc;
+  const nMk = G[D.hero.g].mk.length, report = $(".report-link");
+  return [
+    { eyebrow: "Welcome", title: "Inventory Intelligence in 90 seconds", view: "dashboard",
+      body: `<p>A concept for the central warehouse of a GCC restaurant group, built on synthetic data. It follows one journey: <strong>see the risk, find the cause, act on it.</strong></p><p>Press Next or use the arrow keys. The tour does the clicking for you.</p>` },
+    { eyebrow: "Dashboard", title: "The finding comes first", view: "dashboard", target: ".page-head h1",
+      body: `<p><strong>${fmt(f.saved)} KWD</strong> of stock can be saved from expiring just by fixing item codes.</p><p>At today's usage, ${kwd(f.split)} will expire before it can be used. Merging duplicate codes brings that down to ${kwd(f.merged)}.</p>` },
+    { eyebrow: "Dashboard", title: "Where the risk sits", view: "dashboard", target: ".kpis",
+      body: `<p>${kwd(im.dup_val)} sits under ${im.dup_count} duplicate codes that outlets never order, and ${Math.round(im.expired_dup_val / im.expired_val * 100)}% of the stock that has already expired came from them.</p><p>So most of the waste is a data problem, not a forecasting problem.</p>` },
+    { eyebrow: "Item unification", title: `One ${hn}, two codes`, view: "unify", sel: HERO, target: "#tour-reconcile",
+      body: `<p>${esc(D.hero.cause)} At the cycle count, one code showed ${fmt(x.counted_qty - x.system_qty)} ${pl(x.uom)} extra and the other ${fmt(y.system_qty - y.counted_qty)} ${pl(y.uom)} missing.</p><p>A ${sg(y.uom)} is ${fmt(y.conv / x.conv)} ${pl(x.uom)}, so in ${BUW} the difference is zero. Nothing is missing. It was received under one code and counted under the other.</p>` },
+    { eyebrow: "Item unification", title: "Rule, AI or person", view: "unify", sel: HERO, target: "#tour-matched", showColumn: 5,
+      body: `<p>The same ${hn} in ${nMk} markets, each converted to ${BUW}. Every code shows how it was matched, and why.</p><ul><li><strong>Written rules</strong> matched ${fmt(a.matched_by_rules)} of ${fmt(a.country_codes)} codes.</li><li><strong>AI</strong> suggested ${a.ai_matches}, where rules can't know, such as Hamour and Grouper.</li><li><strong>A person</strong> decides every uncertain case.</li></ul>` },
+    { eyebrow: "Item unification", title: "Nothing changes without a person", view: "unify", sel: HERO, target: "#tour-decide", approve: true,
+      body: `<p>The tour has approved the proposed action for you: keep the code outlets order, retire the other one, and move the stock across.</p><p>The decision is logged with the time. Nothing in the ERP or Supy changes on its own.</p>` },
+    { eyebrow: "Action tracker", title: "From decision to follow-through", view: "tracker", target: "#tour-tracker",
+      body: `<p>All ${D.dec.length} cases in one place, ranked by the stock value involved, with each decision and when it was made.</p><p>The list exports to Excel, so the team can work with it.</p>` },
+    { eyebrow: "That's the tour", title: "What this shows", view: "tracker", last: true,
+      body: `<ul><li>Bad item data shows up as false variances and expired stock.</li><li>Rules do most of the matching. AI helps only where rules can't know. A person decides.</li><li>Every figure traces back to the data, and to an Excel report built on formulas.</li></ul>
+        <div class="tc-links">${report ? `<a href="${report.getAttribute("href")}" download>Download the Excel report</a>` : ""}<a href="https://mohammedjouhar.com" target="_blank" rel="noopener">mohammedjouhar.com</a><a href="https://www.linkedin.com/in/mohammedjouhar" target="_blank" rel="noopener">LinkedIn</a></div>
+        <p class="tc-note">When you close the tour, its approval is undone so you can try it yourself.</p>` },
+  ];
+}
+function startTour() {
+  closeWelcome();
+  if (T) return;
+  T = { i: 0, steps: tourSteps(), snap: JSON.parse(JSON.stringify({ decisions: S.decisions, view: S.view, sel: S.sel, q: S.q, tq: S.tq, filter: S.filter })) };
+  S.q = ""; S.tq = ""; S.filter = "All";
+  const block = document.createElement("div"); block.className = "tour-block";
+  const spot = document.createElement("div"); spot.className = "tour-spot"; spot.hidden = true;
+  const card = document.createElement("div"); card.className = "tour-card"; card.setAttribute("role", "dialog"); card.setAttribute("aria-modal", "true"); card.setAttribute("aria-labelledby", "tourTitle");
+  document.body.append(block, spot, card);
+  Object.assign(T, { block, spot, card });
+  window.addEventListener("scroll", place, { passive: true });
+  window.addEventListener("resize", place);
+  showStep(0);
+}
+function showStep(i) {
+  const st = T.steps[i]; T.i = i;
+  if (st.sel) S.sel = st.sel;
+  if (st.approve && !S.decisions[HERO]) S.decisions[HERO] = { status: "Approved", at: stamp() };
+  if (S.view !== st.view) { S.view = st.view; if (location.hash.slice(1) !== st.view) history.replaceState(null, "", "#" + st.view); }
+  render();
+  const n = T.steps.length;
+  T.card.className = "tour-card" + (st.target ? "" : " center");
+  T.card.innerHTML = `<div class="tc-top"><span class="eyebrow">${st.eyebrow}</span><span class="tc-count">${i + 1} of ${n}</span>
+      <button type="button" class="tc-close" data-tour="close" aria-label="Close the tour">${ic("x", 1)}</button></div>
+    <h3 id="tourTitle">${st.title}</h3>${st.body}
+    <div class="tour-progress"><span style="width:${(i + 1) / n * 100}%"></span></div>
+    <div class="tour-actions">${i ? `<button type="button" class="btn" data-tour="back">Back</button>` : `<button type="button" class="btn" data-tour="close">Skip tour</button>`}
+      <button type="button" class="btn dark" data-tour="${st.last ? "finish" : "next"}">${st.last ? "Explore on my own" : "Next"} ${st.last ? "" : ic("arrow", 1)}</button></div>`;
+  const el = st.target && $(st.target);
+  T.el = el || null;
+  if (el && st.showColumn) {   // on narrow screens, bring the "Matched by" column into view
+    const box = el.querySelector(".tbl"), th = el.querySelector(`th:nth-child(${st.showColumn})`);
+    if (box && th && box.scrollWidth > box.clientWidth) box.scrollLeft = Math.max(0, th.offsetLeft - 90);
+  }
+  if (el) {
+    const r = el.getBoundingClientRect(), vh = window.innerHeight;
+    const top = isPhone() || r.height > vh * 0.6 ? window.scrollY + r.top - 16 : window.scrollY + r.top - (vh - r.height) / 2 + 40;
+    window.scrollTo({ top: Math.max(0, top), behavior: reduced ? "auto" : "smooth" });
+  } else window.scrollTo({ top: 0, behavior: "auto" });
+  place(); setTimeout(place, reduced ? 0 : 450);
+  const btn = T.card.querySelector('[data-tour="next"],[data-tour="finish"]'); if (btn) btn.focus({ preventScroll: true });
+}
+function place() {
+  if (!T) return;
+  const { el, spot, card, block } = T, vw = window.innerWidth, vh = window.innerHeight;
+  if (!el) { spot.hidden = true; block.classList.add("dim"); card.style.left = card.style.top = ""; return; }
+  block.classList.remove("dim"); spot.hidden = false;
+  const r = el.getBoundingClientRect(), pad = 8, ch = card.offsetHeight, cw = card.offsetWidth;
+  const floor = isPhone() ? vh - ch - 8 : vh - 8;
+  const t = Math.max(r.top - pad, 8), b = Math.min(r.bottom + pad, floor), l = Math.max(r.left - pad, 8), rr = Math.min(r.right + pad, vw - 8);
+  Object.assign(spot.style, { top: t + "px", left: l + "px", width: Math.max(rr - l, 0) + "px", height: Math.max(b - t, 0) + "px" });
+  if (isPhone()) { card.style.left = card.style.top = ""; return; }
+  let top, left;
+  const midTop = Math.min(Math.max(t, 16), vh - ch - 16);
+  if (vh - b > ch + 24) { top = b + 14; left = Math.min(Math.max(l, 16), vw - cw - 16); }       // below
+  else if (t > ch + 24) { top = t - ch - 14; left = Math.min(Math.max(l, 16), vw - cw - 16); }  // above
+  else if (vw - rr > cw + 24) { top = midTop; left = rr + 14; }                                  // right
+  else if (l > cw + 24) { top = midTop; left = l - cw - 14; }                                    // left
+  else { top = vh - ch - 24; left = vw - cw - 24; }                                               // corner
+  card.style.top = top + "px"; card.style.left = left + "px";
+}
+function endTour(finished) {
+  if (!T) return;
+  window.removeEventListener("scroll", place); window.removeEventListener("resize", place);
+  T.block.remove(); T.spot.remove(); T.card.remove();
+  const s0 = T.snap; T = null;
+  Object.assign(S, { decisions: s0.decisions, sel: s0.sel, q: s0.q, tq: s0.tq, filter: s0.filter });
+  try { localStorage.setItem(TOUR_KEY, "1"); } catch (e) {}
+  go(finished ? "dashboard" : s0.view);
+  $("#tourBtn").focus({ preventScroll: true });
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-tour]");
+  if (b) { e.stopPropagation(); const a = b.dataset.tour; if (a === "next") showStep(T.i + 1); else if (a === "back") showStep(T.i - 1); else endTour(a === "finish"); return; }
+  if (e.target.closest("#tourBtn") || e.target.closest("[data-welcome='start']")) startTour();
+  else if (e.target.closest("[data-welcome='skip']")) closeWelcome(true);
+}, true);
+document.addEventListener("keydown", e => {
+  if (!T) return;
+  if (e.key === "Escape") { e.preventDefault(); endTour(false); }
+  else if (e.key === "ArrowRight" && T.i < T.steps.length - 1) { e.preventDefault(); showStep(T.i + 1); }
+  else if (e.key === "ArrowLeft" && T.i > 0) { e.preventDefault(); showStep(T.i - 1); }
+});
+function closeWelcome(remember) {
+  const w = $("#tourWelcome"); if (w) w.remove();
+  if (remember) { try { localStorage.setItem(TOUR_KEY, "1"); } catch (e) {} }
+}
+function offerTour() {
+  let seen = false; try { seen = localStorage.getItem(TOUR_KEY) === "1"; } catch (e) {}
+  if (seen || T) return;
+  const w = document.createElement("aside"); w.className = "tour-welcome"; w.id = "tourWelcome"; w.setAttribute("aria-label", "Guided tour");
+  w.innerHTML = `<div class="eyebrow">Interview concept · synthetic data</div>
+    <h3>See how bad item data turns into wasted stock, and how to fix it.</h3>
+    <p>A 90-second guided tour of the problem, the fix, and where AI fits. The tour does the clicking.</p>
+    <div class="tw-actions"><button type="button" class="hero-btn" data-welcome="start">${ic("play", 1)} Take the tour</button><button type="button" class="tw-skip" data-welcome="skip">Explore on my own</button></div>`;
+  document.body.append(w);
+}
 const h0 = location.hash.slice(1); if (VIEWS[h0]) S.view = h0;
 render();
+setTimeout(offerTour, 700);
 })();
 </script>
 
